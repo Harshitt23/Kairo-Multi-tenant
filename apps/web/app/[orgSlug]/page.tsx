@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { staggerContainer, staggerItem } from '../../lib/motion';
 import { useProjects } from '../../lib/hooks';
 import { CreateProjectDialog } from '../../components/create-project-dialog';
 import { Button } from '../../components/ui/button';
@@ -26,25 +28,30 @@ export default function OrgPage({ params }: { params: { orgSlug: string } }) {
         </Button>
       </div>
 
-      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.ul
+        className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+      >
         {projects.data?.map((p) => (
-          <li key={p.id}>
+          <motion.li key={p.id} variants={staggerItem}>
             <Link
               href={`/${orgSlug}/${p.key}/board`}
-              className="group block h-full rounded-lg border border-edge bg-panel p-4 transition-colors hover:border-indigo-500/50 hover:bg-elevated/50"
+              className="group block h-full rounded-lg border border-edge bg-panel p-4 shadow-card transition-all duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-glow"
             >
               <div className="flex items-center gap-2">
-                <span className="rounded bg-brand/15 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-indigo-300">
+                <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-indigo-700">
                   {p.key}
                 </span>
-                <span className="truncate text-[13px] font-medium text-zinc-100">{p.name}</span>
+                <span className="truncate text-[13px] font-medium text-zinc-900">{p.name}</span>
               </div>
               <p className="mt-2 line-clamp-2 text-[13px] text-zinc-500">
                 {p.description ?? 'No description'}
               </p>
               <p className="mt-3 text-xs text-zinc-600">{p._count.issues} issues</p>
             </Link>
-          </li>
+          </motion.li>
         ))}
         {projects.isLoading &&
           [0, 1, 2].map((i) => <Skeleton key={i} className="h-28" />)}
@@ -62,7 +69,7 @@ export default function OrgPage({ params }: { params: { orgSlug: string } }) {
             />
           </li>
         )}
-      </ul>
+      </motion.ul>
 
       <CreateProjectDialog orgSlug={orgSlug} open={creating} onOpenChange={setCreating} />
     </div>

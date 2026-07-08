@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, type ReactNode } from 'react';
 import { useMe, useNotifications, useOrgs, useProjects } from '../lib/hooks';
@@ -70,13 +71,20 @@ function NavLink({
       href={href}
       onClick={onNavigate}
       className={cn(
-        'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] transition-colors',
+        'relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] transition-colors',
         active
-          ? 'bg-elevated font-medium text-zinc-100'
-          : 'text-zinc-400 hover:bg-elevated/60 hover:text-zinc-200',
+          ? 'font-medium text-zinc-900'
+          : 'text-zinc-600 hover:bg-elevated/60 hover:text-zinc-800',
       )}
     >
-      {icon && <span className={cn('shrink-0', active ? 'text-indigo-400' : 'text-zinc-500')}>{icon}</span>}
+      {active && (
+        <motion.span
+          layoutId="nav-active"
+          className="absolute inset-0 -z-10 rounded-md bg-elevated"
+          transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+        />
+      )}
+      {icon && <span className={cn('shrink-0', active ? 'text-indigo-600' : 'text-zinc-500')}>{icon}</span>}
       <span className="truncate">{children}</span>
       {trailing && <span className="ml-auto shrink-0">{trailing}</span>}
     </Link>
@@ -106,7 +114,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
           <DropdownMenuTrigger className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-elevated">
             <Logo size={26} />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[13px] font-semibold text-zinc-100">
+              <span className="block truncate text-[13px] font-semibold text-zinc-900">
                 {currentOrg?.name ?? orgSlug}
               </span>
               <span className="block text-[11px] text-zinc-500">
@@ -127,7 +135,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
               >
                 <Avatar name={o.name} seed={o.id} size={20} />
                 <span className="truncate">{o.name}</span>
-                {o.slug === orgSlug && <span className="ml-auto text-indigo-400">✓</span>}
+                {o.slug === orgSlug && <span className="ml-auto text-indigo-600">✓</span>}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -142,7 +150,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
       <div className="px-3 pb-2">
         <button
           onClick={openCommandPalette}
-          className="flex w-full items-center gap-2 rounded-md border border-edge bg-elevated/50 px-2.5 py-1.5 text-[13px] text-zinc-500 transition-colors hover:border-zinc-600 hover:text-zinc-300"
+          className="flex w-full items-center gap-2 rounded-md border border-edge bg-elevated/50 px-2.5 py-1.5 text-[13px] text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-700"
         >
           <IconSearch />
           <span className="flex-1 text-left">Search…</span>
@@ -194,7 +202,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
           <button
             onClick={() => setCreatingProject(true)}
             aria-label="New project"
-            className="rounded p-0.5 text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-200"
+            className="rounded p-0.5 text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-800"
           >
             <IconPlus />
           </button>
@@ -207,7 +215,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
               active={pathname.startsWith(`/${orgSlug}/${p.key}/`)}
               onNavigate={onNavigate}
               icon={
-                <span className="inline-flex h-4 min-w-7 items-center justify-center rounded bg-brand/15 px-1 text-[10px] font-bold tracking-wide text-indigo-300">
+                <span className="inline-flex h-4 min-w-7 items-center justify-center rounded bg-indigo-50 px-1 text-[10px] font-bold tracking-wide text-indigo-700">
                   {p.key}
                 </span>
               }
@@ -228,7 +236,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
         <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
           <Avatar name={me.data?.name ?? '…'} seed={me.data?.id} size={26} />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13px] font-medium text-zinc-200">
+            <span className="block truncate text-[13px] font-medium text-zinc-800">
               {me.data?.name ?? 'Loading…'}
             </span>
             <span className="block truncate text-[11px] text-zinc-500">{me.data?.email}</span>
@@ -237,7 +245,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
             onClick={signOut}
             aria-label="Sign out"
             title="Sign out"
-            className="rounded-md p-1.5 text-zinc-500 transition-colors hover:bg-elevated hover:text-red-400"
+            className="rounded-md p-1.5 text-zinc-500 transition-colors hover:bg-elevated hover:text-red-600"
           >
             <IconLogout />
           </button>
@@ -267,7 +275,7 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
       {/* mobile drawer */}
       {drawerOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
+          <div className="absolute inset-0 bg-zinc-900/30 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
           <aside className="absolute inset-y-0 left-0 w-64 animate-fade-in border-r border-edge bg-panel">
             <SidebarContent orgSlug={orgSlug} onNavigate={() => setDrawerOpen(false)} />
           </aside>
@@ -280,12 +288,12 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
-            className="rounded-md p-1.5 text-zinc-400 hover:bg-elevated hover:text-zinc-200"
+            className="rounded-md p-1.5 text-zinc-600 hover:bg-elevated hover:text-zinc-800"
           >
             <IconMenu />
           </button>
           <Logo size={24} />
-          <span className="text-sm font-semibold text-zinc-100">PM SaaS</span>
+          <span className="text-sm font-semibold text-zinc-900">PM SaaS</span>
         </div>
 
         <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>

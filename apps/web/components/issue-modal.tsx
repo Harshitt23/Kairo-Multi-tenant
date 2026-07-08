@@ -50,7 +50,7 @@ function ModalShell({ onClose, children }: { onClose: () => void; children: Reac
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm sm:p-10"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-zinc-900/30 p-4 backdrop-blur-sm sm:p-10"
       onClick={onClose}
     >
       <div
@@ -75,7 +75,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const inputCls =
-  'w-full rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500';
+  'w-full rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-900 outline-none focus:border-indigo-500';
 const selectCls = inputCls + ' cursor-pointer';
 
 function AssigneeOptions({ members }: { members: Member[] }) {
@@ -132,7 +132,7 @@ function AttachmentsSection({ orgSlug, issueId }: { orgSlug: string; issueId: st
               href={f.downloadUrl}
               target="_blank"
               rel="noreferrer"
-              className="min-w-0 truncate text-indigo-300 hover:underline"
+              className="min-w-0 truncate text-indigo-700 hover:underline"
             >
               {f.fileName}
             </a>
@@ -140,7 +140,7 @@ function AttachmentsSection({ orgSlug, issueId }: { orgSlug: string; issueId: st
               <span>{formatSize(f.size)}</span>
               <button
                 onClick={() => del.mutate(f.id)}
-                className="text-zinc-500 hover:text-red-400"
+                className="text-zinc-500 hover:text-red-600"
                 aria-label="Delete attachment"
               >
                 ✕
@@ -150,11 +150,11 @@ function AttachmentsSection({ orgSlug, issueId }: { orgSlug: string; issueId: st
         ))}
         {files.length === 0 && <li className="text-xs text-zinc-600">No files attached.</li>}
       </ul>
-      <label className="mt-2 inline-block cursor-pointer text-xs text-indigo-400 hover:text-indigo-300">
+      <label className="mt-2 inline-block cursor-pointer text-xs text-indigo-600 hover:text-indigo-700">
         {upload.isPending ? 'Uploading…' : '+ Attach a file'}
         <input type="file" className="hidden" onChange={onFile} disabled={upload.isPending} />
       </label>
-      {err && <p className="mt-1 text-xs text-red-400">{err}</p>}
+      {err && <p className="mt-1 text-xs text-red-600">{err}</p>}
     </div>
   );
 }
@@ -189,7 +189,7 @@ export function IssueDetailModal({
         </span>
         <button
           onClick={onClose}
-          className="rounded p-1 text-zinc-500 hover:bg-surface hover:text-zinc-200"
+          className="rounded p-1 text-zinc-500 hover:bg-surface hover:text-zinc-800"
           aria-label="Close"
         >
           ✕
@@ -203,7 +203,7 @@ export function IssueDetailModal({
             const v = e.target.value.trim();
             if (v && v !== issue.title) save({ title: v });
           }}
-          className="w-full rounded-md bg-transparent px-1 text-lg font-semibold text-zinc-100 outline-none focus:bg-surface"
+          className="w-full rounded-md bg-transparent px-1 text-lg font-semibold text-zinc-900 outline-none focus:bg-surface"
           placeholder="Issue title"
         />
 
@@ -266,7 +266,7 @@ export function IssueDetailModal({
       <div className="flex items-center justify-between border-t border-edge px-5 py-3">
         {confirmDelete ? (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-zinc-400">Delete this issue?</span>
+            <span className="text-zinc-600">Delete this issue?</span>
             <button
               onClick={() => {
                 del.mutate(issue.id);
@@ -278,7 +278,7 @@ export function IssueDetailModal({
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
-              className="rounded-md px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-200"
+              className="rounded-md px-3 py-1.5 text-sm text-zinc-600 hover:text-zinc-800"
             >
               Cancel
             </button>
@@ -286,7 +286,7 @@ export function IssueDetailModal({
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="rounded-md px-3 py-1.5 text-sm text-red-400 hover:bg-red-500/10"
+            className="rounded-md px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
           >
             Delete
           </button>
@@ -337,10 +337,10 @@ export function NewIssueModal({
   return (
     <ModalShell onClose={onClose}>
       <div className="flex items-center justify-between border-b border-edge px-5 py-3">
-        <h2 className="text-sm font-medium text-zinc-200">New issue</h2>
+        <h2 className="text-sm font-medium text-zinc-800">New issue</h2>
         <button
           onClick={onClose}
-          className="rounded p-1 text-zinc-500 hover:bg-surface hover:text-zinc-200"
+          className="rounded p-1 text-zinc-500 hover:bg-surface hover:text-zinc-800"
           aria-label="Close"
         >
           ✕
@@ -409,7 +409,7 @@ export function NewIssueModal({
       <div className="flex items-center justify-end gap-2 border-t border-edge px-5 py-3">
         <button
           onClick={onClose}
-          className="rounded-md px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-200"
+          className="rounded-md px-3 py-1.5 text-sm text-zinc-600 hover:text-zinc-800"
         >
           Cancel
         </button>

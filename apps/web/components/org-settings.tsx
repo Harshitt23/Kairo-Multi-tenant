@@ -23,16 +23,16 @@ import { Dialog, DialogContent } from './ui/dialog';
 const ROLES = ['MEMBER', 'ADMIN', 'GUEST'];
 
 const ROLE_BADGE: Record<string, string> = {
-  OWNER: 'bg-indigo-600/30 text-indigo-200',
-  ADMIN: 'bg-emerald-600/30 text-emerald-200',
-  MEMBER: 'bg-zinc-700 text-zinc-300',
-  GUEST: 'bg-zinc-800 text-zinc-400',
+  OWNER: 'bg-indigo-50 text-indigo-700',
+  ADMIN: 'bg-emerald-50 text-emerald-700',
+  MEMBER: 'bg-zinc-100 text-zinc-700',
+  GUEST: 'bg-zinc-100 text-zinc-500',
 };
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-edge bg-panel p-5">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-200">{title}</h2>
+      <h2 className="mb-4 text-sm font-semibold text-zinc-800">{title}</h2>
       {children}
     </section>
   );
@@ -114,7 +114,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
             <div className="flex min-w-0 items-center gap-2.5">
               <Avatar name={m.user.name} seed={m.user.id} size={28} />
               <div className="min-w-0">
-                <p className="flex items-center gap-1.5 truncate text-sm text-zinc-100">
+                <p className="flex items-center gap-1.5 truncate text-sm text-zinc-900">
                   {m.user.name}
                   {me?.id === m.user.id && (
                     <span className="rounded bg-elevated px-1.5 py-px text-[10px] uppercase tracking-wide text-zinc-500">
@@ -131,7 +131,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
                   value={m.role}
                   disabled={updateRole.isPending}
                   onChange={(e) => changeRole(m, e.target.value)}
-                  className="rounded-md border border-edge bg-surface px-2 py-1 text-xs text-zinc-200 outline-none focus:border-indigo-500 disabled:opacity-50"
+                  className="rounded-md border border-edge bg-surface px-2 py-1 text-xs text-zinc-800 outline-none focus:border-indigo-500 disabled:opacity-50"
                 >
                   {ROLES.map((r) => (
                     <option key={r} value={r}>
@@ -143,7 +143,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
                   onClick={() => setRemoveTarget(m)}
                   aria-label={`Remove ${m.user.name}`}
                   title="Remove member"
-                  className="rounded-md p-1 text-zinc-500 transition-colors hover:bg-elevated hover:text-red-400"
+                  className="rounded-md p-1 text-zinc-500 transition-colors hover:bg-elevated hover:text-red-600"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
@@ -168,12 +168,12 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="teammate@company.com"
-          className="flex-1 rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500"
+          className="flex-1 rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-900 outline-none focus:border-indigo-500"
         />
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500"
+          className="rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-900 outline-none focus:border-indigo-500"
         >
           {ROLES.map((r) => (
             <option key={r} value={r}>
@@ -189,8 +189,8 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
           {invite.isPending ? 'Inviting…' : 'Invite'}
         </button>
       </form>
-      {notice && <p className="mt-2 text-xs text-emerald-400">{notice}</p>}
-      {errMsg && <p className="mt-2 text-xs text-red-400">{errMsg}</p>}
+      {notice && <p className="mt-2 text-xs text-emerald-600">{notice}</p>}
+      {errMsg && <p className="mt-2 text-xs text-red-600">{errMsg}</p>}
 
       {canManage && (invites.data?.length ?? 0) > 0 && (
         <div className="mt-5 border-t border-edge pt-4">
@@ -201,7 +201,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
             {invites.data!.map((inv) => (
               <li key={inv.id} className="flex items-center justify-between gap-3 py-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm text-zinc-300">{inv.email}</p>
+                  <p className="truncate text-sm text-zinc-700">{inv.email}</p>
                   <p className="text-xs text-zinc-600">{expiresIn(inv.expiresAt)}</p>
                 </div>
                 <span
@@ -258,7 +258,7 @@ function Toggle({
   return (
     <div className="flex items-center justify-between py-2">
       <div>
-        <p className="text-sm text-zinc-200">{label}</p>
+        <p className="text-sm text-zinc-800">{label}</p>
         <p className="text-xs text-zinc-500">{hint}</p>
       </div>
       <button
@@ -266,7 +266,7 @@ function Toggle({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-          checked ? 'bg-indigo-600' : 'bg-zinc-700'
+          checked ? 'bg-indigo-600' : 'bg-zinc-300'
         }`}
       >
         <span

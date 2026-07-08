@@ -72,7 +72,7 @@ function AcceptInvite() {
         title="Couldn't accept invite"
         description={error}
         action={
-          <Link href="/" className="mt-6 inline-block text-sm text-indigo-400 hover:underline">
+          <Link href="/" className="mt-6 inline-block text-sm text-indigo-600 hover:underline">
             Go to your organizations
           </Link>
         }
@@ -107,7 +107,7 @@ function StatusCard({
           <Logo size={44} />
         </div>
         <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-zinc-400">{description}</p>
+        <p className="mx-auto mt-2 max-w-sm text-sm text-zinc-600">{description}</p>
         {action}
       </div>
     </main>

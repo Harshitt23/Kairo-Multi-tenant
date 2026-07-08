@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import {
   useMarkAllNotificationsRead,
   useMarkNotificationsRead,
@@ -7,6 +8,7 @@ import {
   type AppNotification,
 } from '../../../lib/hooks';
 import { cn } from '../../../lib/cn';
+import { staggerContainer, staggerItem } from '../../../lib/motion';
 import { Button } from '../../../components/ui/button';
 import { EmptyState } from '../../../components/ui/empty-state';
 import { ErrorState } from '../../../components/ui/error-state';
@@ -139,11 +141,11 @@ export default function InboxPage() {
         />
       )}
 
-      <ul className="space-y-1.5">
+      <motion.ul className="space-y-1.5" variants={staggerContainer} initial="hidden" animate="show">
         {items.map((n) => {
           const isUnread = n.readAt === null;
           return (
-            <li key={n.id}>
+            <motion.li key={n.id} variants={staggerItem}>
               <button
                 onClick={() => isUnread && markRead.mutate([n.id])}
                 className={cn(
@@ -156,23 +158,23 @@ export default function InboxPage() {
                 <span
                   className={cn(
                     'grid h-8 w-8 shrink-0 place-items-center rounded-full',
-                    isUnread ? 'bg-brand/15 text-indigo-300' : 'bg-elevated text-zinc-500',
+                    isUnread ? 'bg-indigo-50 text-indigo-700' : 'bg-elevated text-zinc-500',
                   )}
                 >
                   <TypeIcon type={n.type} />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className={cn('block truncate text-sm', isUnread ? 'font-medium text-zinc-100' : 'text-zinc-400')}>
+                  <span className={cn('block truncate text-sm', isUnread ? 'font-medium text-zinc-900' : 'text-zinc-600')}>
                     {describe(n)}
                   </span>
                   <span className="mt-0.5 block text-xs text-zinc-600">{timeAgo(n.createdAt)}</span>
                 </span>
                 {isUnread && <span className="h-2 w-2 shrink-0 rounded-full bg-indigo-400" />}
               </button>
-            </li>
+            </motion.li>
           );
         })}
-      </ul>
+      </motion.ul>
     </div>
   );
 }

@@ -41,14 +41,14 @@ export function AppBar({ children }: { children?: ReactNode }) {
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4">
         <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
           <Logo size={28} />
-          <span className="hidden text-sm font-semibold tracking-tight text-zinc-100 sm:inline">
+          <span className="hidden text-sm font-semibold tracking-tight text-zinc-900 sm:inline">
             PM SaaS
           </span>
         </Link>
         {children && (
           <>
             <span className="text-zinc-700">/</span>
-            <div className="flex min-w-0 items-center gap-2 text-sm text-zinc-300">{children}</div>
+            <div className="flex min-w-0 items-center gap-2 text-sm text-zinc-700">{children}</div>
           </>
         )}
 
@@ -60,7 +60,7 @@ export function AppBar({ children }: { children?: ReactNode }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>
-                <span className="block truncate text-[13px] font-medium text-zinc-200">
+                <span className="block truncate text-[13px] font-medium text-zinc-800">
                   {me.data?.name ?? 'Loading…'}
                 </span>
                 <span className="block truncate text-xs text-zinc-500">{me.data?.email}</span>

@@ -106,7 +106,7 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
     <>
       <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
         <DialogPrimitive.Portal>
-          <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+          <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-zinc-900/30 backdrop-blur-sm data-[state=open]:animate-fade-in" />
           <DialogPrimitive.Content
             aria-describedby={undefined}
             className="fixed left-1/2 top-[18vh] z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-xl border border-edge bg-panel shadow-card focus:outline-none"
@@ -118,7 +118,7 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onInputKeyDown}
               placeholder="Type a command or search…"
-              className="w-full border-b border-edge bg-transparent px-4 py-3.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
+              className="w-full border-b border-edge bg-transparent px-4 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
             />
             <div className="max-h-[50vh] overflow-y-auto p-1.5">
               {filtered.length === 0 && (
@@ -141,12 +141,12 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
                           onMouseEnter={() => setActiveIdx(idx)}
                           className={cn(
                             'flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm transition-colors',
-                            idx === activeIdx ? 'bg-elevated text-zinc-100' : 'text-zinc-400',
+                            idx === activeIdx ? 'bg-elevated text-zinc-900' : 'text-zinc-600',
                           )}
                         >
                           <span className="min-w-0 flex-1 truncate">{c.label}</span>
                           {c.hint && (
-                            <span className="shrink-0 rounded bg-brand/15 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-indigo-300">
+                            <span className="shrink-0 rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-indigo-700">
                               {c.hint}
                             </span>
                           )}

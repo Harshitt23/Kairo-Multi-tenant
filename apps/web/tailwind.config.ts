@@ -5,10 +5,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        surface: '#0b0c10',
-        panel: '#141519',
-        elevated: '#1a1c22',
-        edge: '#23262e',
+        // Light/day surfaces. Names kept from the original dark theme so every
+        // existing `bg-panel` / `bg-elevated` / `border-edge` class keeps working.
+        surface: '#f5f6f8', // page background — slightly grey so white panels pop
+        panel: '#ffffff', // cards, dialogs, menus, main content
+        elevated: '#eef0f3', // inputs, secondary/ghost fills, skeletons, hover
+        edge: '#e2e5ea', // borders / hairlines
+        // Semantic text tokens.
+        ink: '#101828', // strong headings / primary text
+        muted: '#667085', // secondary / muted text
+        accent: '#6366f1', // brand indigo
       },
       fontFamily: {
         sans: [
@@ -27,8 +33,8 @@ export default {
         brand: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(0,0,0,0.35), 0 10px 30px -18px rgba(0,0,0,0.7)',
-        glow: '0 6px 20px -6px rgba(99,102,241,0.55)',
+        card: '0 1px 2px rgba(16,24,40,0.05), 0 4px 16px -8px rgba(16,24,40,0.18)',
+        glow: '0 8px 24px -8px rgba(99,102,241,0.45)',
       },
       keyframes: {
         'fade-in': {

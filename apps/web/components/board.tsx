@@ -21,7 +21,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { rankBetween, issuePrioritySchema, type IssueStatusValue } from '@pm/types';
 import { useIssues, useMembers, useMoveIssue, type Issue, type Member } from '../lib/hooks';
 import { useBoardRealtime } from '../lib/use-board-realtime';
+import { motion } from 'framer-motion';
 import { cn } from '../lib/cn';
+import { staggerContainer, staggerItem } from '../lib/motion';
 import { Avatar } from './brand';
 import { Button } from './ui/button';
 import { ErrorState } from './ui/error-state';
@@ -158,7 +160,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
     : null;
 
   const selectClass =
-    'h-7 rounded-md border border-edge bg-elevated px-2 text-[13px] text-zinc-300 transition-colors focus:border-indigo-500';
+    'h-7 rounded-md border border-edge bg-elevated px-2 text-[13px] text-zinc-700 transition-colors focus:border-indigo-500';
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -170,7 +172,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
           onChange={(e) => setQuery(e.target.value)}
           title="Press / to focus"
           placeholder="Search issues…"
-          className="h-7 w-48 rounded-md border border-edge bg-elevated px-2.5 text-[13px] text-zinc-200 placeholder:text-zinc-600 transition-colors focus:border-indigo-500"
+          className="h-7 w-48 rounded-md border border-edge bg-elevated px-2.5 text-[13px] text-zinc-800 placeholder:text-zinc-400 transition-colors focus:border-indigo-500"
         />
         <select value={priority} onChange={(e) => setPriority(e.target.value)} className={selectClass}>
           <option value="ALL">All priorities</option>
@@ -196,7 +198,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
               setPriority('ALL');
               setAssignee('ALL');
             }}
-            className="h-7 rounded-md px-2 text-[13px] text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-200"
+            className="h-7 rounded-md px-2 text-[13px] text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-800"
           >
             Clear
           </button>
@@ -231,18 +233,24 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
           onDragEnd={onDragEnd}
         >
           <div className="min-h-0 flex-1 overflow-x-auto">
-            <div className="flex h-full gap-3 px-4 py-3">
+            <motion.div
+              className="flex h-full gap-3 px-4 py-3"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="show"
+            >
               {COLUMNS.map((col) => (
-                <Column
-                  key={col.status}
-                  status={col.status}
-                  label={col.label}
-                  issues={byStatus.get(col.status) ?? []}
-                  memberByUserId={memberByUserId}
-                  onOpen={openIssue}
-                />
+                <motion.div key={col.status} variants={staggerItem} className="h-full">
+                  <Column
+                    status={col.status}
+                    label={col.label}
+                    issues={byStatus.get(col.status) ?? []}
+                    memberByUserId={memberByUserId}
+                    onOpen={openIssue}
+                  />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
           <DragOverlay>
             {activeIssue ? (
@@ -294,7 +302,7 @@ function Column({
   return (
     <div className="flex h-full w-72 shrink-0 flex-col">
       <div className="mb-2 flex shrink-0 items-center gap-2 px-1">
-        <span className="text-xs font-medium uppercase tracking-wide text-zinc-400">{label}</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-zinc-600">{label}</span>
         <span className="rounded-full bg-elevated px-1.5 py-px text-[11px] text-zinc-500">
           {issues.length}
         </span>
@@ -303,7 +311,7 @@ function Column({
         ref={setNodeRef}
         className={cn(
           'min-h-0 flex-1 space-y-2 overflow-y-auto rounded-lg border p-2 transition-colors',
-          isOver ? 'border-indigo-500/60 bg-indigo-500/5' : 'border-edge/60 bg-panel/40',
+          isOver ? 'border-indigo-400 bg-indigo-50/60' : 'border-edge bg-elevated/40',
         )}
       >
         <SortableContext items={issues.map((i) => i.id)} strategy={verticalListSortingStrategy}>
@@ -349,11 +357,11 @@ function Card({
       {...listeners}
       onClick={() => onOpen?.(issue.id)}
       className={cn(
-        'cursor-pointer rounded-md border border-edge bg-elevated p-2.5 text-[13px] shadow-card transition-colors hover:border-indigo-500/50',
+        'cursor-pointer rounded-md border border-edge bg-panel p-2.5 text-[13px] shadow-card transition-all duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-glow',
         overlay && 'rotate-1 shadow-glow',
       )}
     >
-      <p className="font-medium leading-snug text-zinc-100">{issue.title}</p>
+      <p className="font-medium leading-snug text-zinc-900">{issue.title}</p>
       <div className="mt-1.5 flex items-center gap-1.5 text-xs text-zinc-500">
         <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
         <span>{`#${issue.number} · ${issue.priority}`}</span>
@@ -398,7 +406,7 @@ function Presence({ users }: { users: { userId: string; name: string }[] }) {
         </span>
       ))}
       {users.length > 4 && (
-        <span className="z-10 inline-flex h-[22px] items-center rounded-full bg-elevated px-1.5 text-[10px] text-zinc-400 ring-2 ring-surface">
+        <span className="z-10 inline-flex h-[22px] items-center rounded-full bg-elevated px-1.5 text-[10px] text-zinc-600 ring-2 ring-surface">
           +{users.length - 4}
         </span>
       )}

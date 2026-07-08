@@ -24,7 +24,7 @@ export default function HomePage() {
             <Logo size={52} />
           </div>
           <h1 className="text-3xl font-semibold tracking-tight">PM SaaS</h1>
-          <p className="mx-auto mt-3 max-w-sm text-zinc-400">
+          <p className="mx-auto mt-3 max-w-sm text-zinc-600">
             Multi-tenant project management — boards, issues, and your team, all in one place.
           </p>
           <Link
@@ -62,8 +62,8 @@ export default function HomePage() {
                 <Avatar name={o.name} seed={o.id} size={40} />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2">
-                    <span className="truncate font-medium text-zinc-100">{o.name}</span>
-                    <span className="rounded-full bg-elevated px-2 py-0.5 text-[11px] uppercase tracking-wide text-zinc-400">
+                    <span className="truncate font-medium text-zinc-900">{o.name}</span>
+                    <span className="rounded-full bg-elevated px-2 py-0.5 text-[11px] uppercase tracking-wide text-zinc-600">
                       {o.memberships[0]?.role}
                     </span>
                   </span>
@@ -71,7 +71,7 @@ export default function HomePage() {
                     {o._count.projects} projects · {o._count.memberships} members
                   </span>
                 </span>
-                <span className="text-zinc-600 transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-400">
+                <span className="text-zinc-600 transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-600">
                   →
                 </span>
               </Link>

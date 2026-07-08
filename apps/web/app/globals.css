@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  @apply bg-surface text-zinc-100 antialiased;
+  @apply bg-surface text-zinc-900 antialiased;
   min-height: 100vh;
 }
 
@@ -15,14 +15,14 @@ body {
 @layer base {
   *:focus-visible {
     outline: none;
-    @apply ring-2 ring-indigo-500/60 ring-offset-0;
+    @apply ring-2 ring-indigo-500/50 ring-offset-0;
   }
   ::selection {
-    background: rgba(99, 102, 241, 0.35);
+    background: rgba(99, 102, 241, 0.18);
   }
 }
 
-/* Slim, unobtrusive dark scrollbars. */
+/* Slim, unobtrusive light scrollbars. */
 @layer utilities {
   ::-webkit-scrollbar {
     width: 10px;
@@ -32,13 +32,13 @@ body {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2a2e37;
+    background: #cbd0d8;
     border-radius: 9999px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3a3f4b;
+    background: #aab2bf;
     background-clip: content-box;
   }
 }

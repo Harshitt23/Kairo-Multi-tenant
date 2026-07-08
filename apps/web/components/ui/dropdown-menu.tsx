@@ -34,8 +34,8 @@ export const DropdownMenuItem = forwardRef<
     className={cn(
       'flex cursor-pointer select-none items-center gap-2 rounded-lg px-2.5 py-2 text-sm outline-none transition-colors',
       destructive
-        ? 'text-red-400 data-[highlighted]:bg-red-500/10'
-        : 'text-zinc-300 data-[highlighted]:bg-elevated data-[highlighted]:text-zinc-100',
+        ? 'text-red-600 data-[highlighted]:bg-red-50'
+        : 'text-zinc-700 data-[highlighted]:bg-elevated data-[highlighted]:text-zinc-900',
       className,
     )}
     {...props}

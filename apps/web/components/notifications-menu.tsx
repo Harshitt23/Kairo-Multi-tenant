@@ -54,7 +54,7 @@ export function NotificationsMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="relative rounded-full p-2 text-zinc-400 transition-colors hover:bg-elevated hover:text-zinc-200"
+        className="relative rounded-full p-2 text-zinc-600 transition-colors hover:bg-elevated hover:text-zinc-800"
         aria-label="Notifications"
       >
         <BellIcon />
@@ -73,7 +73,7 @@ export function NotificationsMenu() {
             <button
               onClick={() => markAllRead.mutate()}
               disabled={markAllRead.isPending}
-              className="text-xs text-indigo-400 hover:text-indigo-300 disabled:opacity-50"
+              className="text-xs text-indigo-600 hover:text-indigo-700 disabled:opacity-50"
             >
               Mark all read
             </button>
@@ -94,7 +94,7 @@ export function NotificationsMenu() {
                   aria-hidden
                 />
                 <span className="min-w-0 flex-1">
-                  <span className={n.readAt ? 'text-zinc-400' : 'text-zinc-100'}>
+                  <span className={n.readAt ? 'text-zinc-600' : 'text-zinc-900'}>
                     {describe(n)}
                   </span>
                   <span className="mt-0.5 block text-xs text-zinc-600">{timeAgo(n.createdAt)}</span>
