@@ -1,0 +1,379 @@
+// ============================================================================
+// PM SaaS — data model
+//
+// Multi-tenancy model: the `Organization` IS the tenant boundary. Every
+// tenant-scoped row carries `organizationId` so queries can be filtered by a
+// single column (tenant_id scoping). This is enforced at the request boundary
+// by TenantGuard (see apps/api), not sprinkled across call sites.
+//
+// Hierarchy: Organization -> Team -> Project -> Issue
+//            Organization -> Membership (user<->org with a role) = RBAC anchor
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  OWNER // full control, billing, delete org
+  ADMIN // manage members/projects/settings
+  MEMBER // create/edit issues, comment
+  GUEST // read + comment on assigned projects only
+}
+
+enum IssueStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  CANCELED
+}
+
+enum IssuePriority {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  ISSUE_ASSIGNED
+  ISSUE_STATUS_CHANGED
+  COMMENT_CREATED
+  MENTIONED
+  INVITED
+  INVITE_ACCEPTED
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  BUSINESS
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+}
+
+// ---------------------------------------------------------------------------
+// Identity
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  name         String
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Per-user email notification preferences (in-app rows are always written).
+  emailOnAssigned  Boolean @default(true)
+  emailOnMentioned Boolean @default(true)
+  emailOnComment   Boolean @default(true)
+
+  memberships    Membership[]
+  refreshTokens  RefreshToken[]
+  reportedIssues Issue[]        @relation("IssueReporter")
+  assignedIssues Issue[]        @relation("IssueAssignee")
+  comments       Comment[]
+  attachments    Attachment[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]     @relation("AuditActor")
+  mentions       Mention[]
+
+  @@map("users")
+}
+
+// Rotating refresh tokens. We store a hash, never the raw token. A token is
+// single-use: on refresh we revoke the old and issue a new one (rotation),
+// which lets us detect reuse of a stolen token.
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  familyId  String // token family for reuse detection
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  userAgent String?
+  ip        String?
+
+  @@index([userId])
+  @@index([familyId])
+  @@map("refresh_tokens")
+}
+
+// ---------------------------------------------------------------------------
+// Tenancy + RBAC
+// ---------------------------------------------------------------------------
+
+model Organization {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships   Membership[]
+  teams         Team[]
+  projects      Project[]
+  issues        Issue[]
+  labels        Label[]
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  subscription  Subscription?
+  invites       Invite[]
+
+  @@map("organizations")
+}
+
+model Membership {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  role           Role         @default(MEMBER)
+  createdAt      DateTime     @default(now())
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@map("memberships")
+}
+
+model Invite {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           Role         @default(MEMBER)
+  tokenHash      String       @unique
+  invitedById    String
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@map("invites")
+}
+
+model Team {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  key            String // short code, e.g. "ENG"
+  createdAt      DateTime     @default(now())
+
+  projects Project[]
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
+  @@map("teams")
+}
+
+// ---------------------------------------------------------------------------
+// Work items
+// ---------------------------------------------------------------------------
+
+model Project {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  teamId         String?
+  team           Team?        @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  key            String // e.g. "PM" -> issues PM-1, PM-2
+  name           String
+  description    String?
+  issueCounter   Int          @default(0) // monotonic per-project issue number
+  archivedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  issues Issue[]
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
+  @@map("projects")
+}
+
+model Issue {
+  id             String        @id @default(cuid())
+  organizationId String // denormalized tenant key for fast scoping + RLS
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  projectId      String
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  number         Int // per-project sequence (PM-1, PM-2…)
+  title          String
+  description    String?
+  status         IssueStatus   @default(BACKLOG)
+  priority       IssuePriority @default(NONE)
+  // Fractional ranking for drag/drop ordering within a status column,
+  // so a reorder touches one row instead of renumbering the whole column.
+  rank           String
+  reporterId     String
+  reporter       User          @relation("IssueReporter", fields: [reporterId], references: [id])
+  assigneeId     String?
+  assignee       User?         @relation("IssueAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  dueDate        DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  comments    Comment[]
+  attachments Attachment[]
+  labels      IssueLabel[]
+
+  @@unique([projectId, number])
+  @@index([organizationId])
+  @@index([projectId, status])
+  @@index([assigneeId])
+  @@map("issues")
+}
+
+model Label {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  color          String       @default("#6366f1")
+  createdAt      DateTime     @default(now())
+
+  issues IssueLabel[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("labels")
+}
+
+model IssueLabel {
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  labelId String
+  label   Label  @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([issueId, labelId])
+  @@map("issue_labels")
+}
+
+// ---------------------------------------------------------------------------
+// Collaboration
+// ---------------------------------------------------------------------------
+
+model Comment {
+  id        String   @id @default(cuid())
+  issueId   String
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mentions Mention[]
+
+  @@index([issueId])
+  @@map("comments")
+}
+
+model Mention {
+  id        String  @id @default(cuid())
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@map("mentions")
+}
+
+model Attachment {
+  id          String   @id @default(cuid())
+  issueId     String
+  issue       Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  uploaderId  String
+  uploader    User     @relation(fields: [uploaderId], references: [id])
+  fileName    String
+  fileKey     String // S3 object key
+  contentType String
+  size        Int
+  createdAt   DateTime @default(now())
+
+  @@index([issueId])
+  @@map("attachments")
+}
+
+// ---------------------------------------------------------------------------
+// Notifications + audit
+// ---------------------------------------------------------------------------
+
+model Notification {
+  id             String           @id @default(cuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           NotificationType
+  payload        Json
+  readAt         DateTime?
+  createdAt      DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+// Append-only audit trail. Written via AuditService for every mutating action.
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  actorId        String?
+  actor          User?        @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  action         String // e.g. "issue.updated"
+  entityType     String // e.g. "Issue"
+  entityId       String
+  metadata       Json? // before/after diff, request id, ip
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Billing
+// ---------------------------------------------------------------------------
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  organizationId       String             @unique
+  organization         Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  stripeCustomerId     String?            @unique
+  stripeSubscriptionId String?            @unique
+  plan                 SubscriptionPlan   @default(FREE)
+  status               SubscriptionStatus @default(ACTIVE)
+  seats                Int                @default(1)
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  updatedAt            DateTime           @updatedAt
+
+  @@map("subscriptions")
+}

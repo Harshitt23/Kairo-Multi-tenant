@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-surface text-zinc-100 antialiased;
+  min-height: 100vh;
+}
+
+/* Consistent, subtle focus ring across interactive elements. */
+@layer base {
+  *:focus-visible {
+    outline: none;
+    @apply ring-2 ring-indigo-500/60 ring-offset-0;
+  }
+  ::selection {
+    background: rgba(99, 102, 241, 0.35);
+  }
+}
+
+/* Slim, unobtrusive dark scrollbars. */
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2e37;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3f4b;
+    background-clip: content-box;
+  }
+}

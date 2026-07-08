@@ -1,0 +1,78 @@
+# Render Blueprint — deploys the NestJS API as a single always-on-when-awake
+# web service (free plan: sleeps after ~15 min idle, cold-starts on next hit).
+#
+# Postgres, Redis and object storage are NOT provisioned here — they live on
+# free managed tiers (Neon / Upstash / Cloudflare R2). Point the *_URL / S3_*
+# env vars below at them from the Render dashboard. See DEPLOYMENT.md.
+#
+# To use: Render Dashboard -> New -> Blueprint -> pick this repo. Render reads
+# this file, creates the service, and prompts for the `sync: false` secrets.
+services:
+  - type: web
+    name: pm-api
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    # Build the shared db/types packages, generate the Prisma client for
+    # Render's Linux runtime, then compile the API. pnpm ships pre-installed on
+    # Render's image (do NOT `corepack enable` — /usr/bin is read-only); pnpm
+    # self-provisions the packageManager-pinned version into a writable cache.
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @pm/types build && pnpm --filter @pm/db generate && pnpm --filter @pm/db build && pnpm --filter @pm/api build
+    # Apply any pending migrations (idempotent) then boot. `migrate deploy`
+    # never generates or resets — safe to run on every cold start.
+    # Migrations need DDL rights, so they run as the DB owner via
+    # MIGRATE_DATABASE_URL; the app process itself connects with DATABASE_URL,
+    # which in production points at the least-privilege `pm_app` role (subject
+    # to RLS). If MIGRATE_DATABASE_URL is unset, migrations fall back to
+    # DATABASE_URL (fine when it's still the owner).
+    startCommand: DATABASE_URL="${MIGRATE_DATABASE_URL:-$DATABASE_URL}" pnpm --filter @pm/db exec prisma migrate deploy && node apps/api/dist/main.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Pin to Node 22 LTS — the `>=20` engines range otherwise resolves to the
+      # newest release (26), which can break native deps (Prisma, bcrypt).
+      - key: NODE_VERSION
+        value: "22.14.0"
+      # Secrets — set in the dashboard (Neon / Upstash / R2). Never committed.
+      # DATABASE_URL is the app's runtime connection — point it at the
+      # least-privilege `pm_app` role in production.
+      - key: DATABASE_URL
+        sync: false
+      # Owner connection used ONLY for `prisma migrate deploy` (needs DDL).
+      # Leave unset to run migrations as whatever DATABASE_URL is.
+      - key: MIGRATE_DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      # Auth secrets — Render generates strong random values once.
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      # Set to the deployed Vercel URL after the web app is live (CORS origin).
+      - key: WEB_ORIGIN
+        sync: false
+      # Object storage (Cloudflare R2 or any S3-compatible endpoint).
+      - key: S3_ENDPOINT
+        sync: false
+      # Supabase S3 validates the region in the request signature, so it must
+      # match the project's region exactly (not R2's "auto").
+      - key: S3_REGION
+        value: ap-northeast-1
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ACCESS_KEY
+        sync: false
+      - key: S3_SECRET_KEY
+        sync: false
+      - key: S3_FORCE_PATH_STYLE
+        value: "true"
+      # Optional — leave blank to disable. Email logs to console when unset.
+      - key: SENTRY_DSN
+        sync: false
+      - key: SMTP_URL
+        sync: false
+      - key: MAIL_FROM
+        value: PM SaaS <no-reply@pm.local>
