@@ -7,11 +7,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
   createOrgSchema,
   inviteMemberSchema,
+  searchQuerySchema,
   updateMemberRoleSchema,
 } from '@pm/types';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -50,6 +52,22 @@ export class OrgsController {
   @Get(':orgSlug/members')
   members(@CurrentOrg() orgId: string) {
     return this.orgs.listMembers(orgId);
+  }
+
+  @UseGuards(TenantGuard, RbacGuard)
+  @Get(':orgSlug/search')
+  search(
+    @CurrentOrg() orgId: string,
+    @Query(new ZodValidationPipe(searchQuerySchema)) query: typeof searchQuerySchema._output,
+  ) {
+    return this.orgs.search(orgId, query);
+  }
+
+  // Personal case queue: everything assigned to the caller across the workspace.
+  @UseGuards(TenantGuard, RbacGuard)
+  @Get(':orgSlug/my-work')
+  myWork(@CurrentOrg() orgId: string, @CurrentUser() user: AuthUser) {
+    return this.orgs.myWork(orgId, user.sub);
   }
 
   @UseGuards(TenantGuard, RbacGuard)

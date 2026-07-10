@@ -26,7 +26,7 @@ function LoginForm() {
   const next = searchParams.get('next');
   const setAuth = useAuthStore((s) => s.setAuth);
   const [mode, setMode] = useState<Mode>('login');
-  const [form, setForm] = useState({ email: 'owner@acme.test', password: 'password123', name: '', orgName: '' });
+  const [form, setForm] = useState({ email: 'harshit@rolls-royce.com', password: 'password123', name: '', orgName: '' });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -137,7 +137,7 @@ function LoginForm() {
           </div>
 
           <p className="mt-6 text-center text-xs text-zinc-500 lg:text-left">
-            Demo login · owner@acme.test / password123
+            Demo login · harshit@rolls-royce.com / password123
           </p>
         </motion.div>
       </div>

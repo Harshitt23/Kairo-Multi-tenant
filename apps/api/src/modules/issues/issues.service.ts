@@ -33,6 +33,12 @@ const issueSelect = {
   updatedAt: true,
 } satisfies Prisma.IssueSelect;
 
+// Board/list rows also carry their labels so cards can render category chips.
+const issueListSelect = {
+  ...issueSelect,
+  labels: { select: { label: { select: { id: true, name: true, color: true } } } },
+} satisfies Prisma.IssueSelect;
+
 @Injectable()
 export class IssuesService {
   constructor(
@@ -74,7 +80,7 @@ export class IssuesService {
 
     return this.prisma.tenant.issue.findMany({
       where,
-      select: issueSelect,
+      select: issueListSelect,
       // Board ordering: group by column, ascending rank within the column.
       orderBy: [{ status: 'asc' }, { rank: 'asc' }],
       take: filter.limit,
@@ -199,6 +205,13 @@ export class IssuesService {
         ? { connect: { id: input.assigneeId } }
         : { disconnect: true };
     }
+    // Replace the full label set when labelIds is provided (empty clears them).
+    if (input.labelIds !== undefined) {
+      data.labels = {
+        deleteMany: {},
+        create: input.labelIds.map((labelId) => ({ labelId })),
+      };
+    }
 
     const issue = await this.prisma.tenant.issue.update({
       where: { id: issueId },
@@ -206,13 +219,39 @@ export class IssuesService {
       select: issueSelect,
     });
 
+    // Record a rich diff so the per-issue activity timeline can read like
+    // "changed status Todo → Done" / "reassigned" rather than a bare field list.
+    const changed: string[] = [];
+    const meta: Record<string, unknown> = {};
+    if (input.title !== undefined && input.title !== before.title) changed.push('title');
+    if (
+      input.description !== undefined &&
+      (input.description ?? '') !== (before.description ?? '')
+    ) {
+      changed.push('description');
+    }
+    if (input.status !== undefined && input.status !== before.status) {
+      changed.push('status');
+      meta.status = { from: before.status, to: input.status };
+    }
+    if (input.priority !== undefined && input.priority !== before.priority) {
+      changed.push('priority');
+      meta.priority = { from: before.priority, to: input.priority };
+    }
+    if (input.assigneeId !== undefined && (input.assigneeId ?? null) !== before.assigneeId) {
+      changed.push('assignee');
+      meta.assignee = { from: before.assigneeId, to: input.assigneeId ?? null };
+    }
+    if (input.dueDate !== undefined) changed.push('dueDate');
+    if (input.labelIds !== undefined) changed.push('labels');
+
     await this.audit.record({
       organizationId,
       actorId,
       action: 'issue.updated',
       entityType: 'Issue',
       entityId: issue.id,
-      metadata: { changed: Object.keys(data) },
+      metadata: { changed, ...meta },
     });
 
     this.realtime.emitToProject(organizationId, issue.projectId, 'issue:updated', {

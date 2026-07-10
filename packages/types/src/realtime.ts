@@ -23,6 +23,13 @@ export interface IssueSnapshot {
   updatedAt: string;
 }
 
+export interface CommentSnapshot {
+  id: string;
+  body: string;
+  createdAt: string;
+  author: { id: string; name: string; avatarUrl: string | null };
+}
+
 // Server -> client
 export interface ServerToClientEvents {
   'presence:sync': (users: PresenceUser[]) => void;
@@ -32,6 +39,7 @@ export interface ServerToClientEvents {
   'issue:updated': (issue: IssueSnapshot) => void;
   'issue:moved': (payload: { id: string; status: IssueStatusValue; rank: string }) => void;
   'issue:deleted': (payload: { id: string }) => void;
+  'comment:created': (payload: { issueId: string; comment: CommentSnapshot }) => void;
 }
 
 // Client -> server

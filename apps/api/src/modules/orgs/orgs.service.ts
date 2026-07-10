@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { CreateOrgInput, Role } from '@pm/types';
+import type { CreateOrgInput, Role, SearchQuery } from '@pm/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AuditService } from '../../common/audit/audit.service';
 import { MailService } from '../../common/mail/mail.service';
@@ -75,6 +75,88 @@ export class OrgsService {
         _count: { select: { projects: true, memberships: true } },
       },
     });
+  }
+
+  /**
+   * Workspace-wide search: issues (by title/description) and projects (by
+   * name/key) across every project in the tenant. Powers the command palette
+   * and the /search page. Always tenant-scoped via `prisma.tenant`.
+   */
+  async search(organizationId: string, { q, limit }: SearchQuery) {
+    const [issues, projects] = await Promise.all([
+      this.prisma.tenant.issue.findMany({
+        where: {
+          organizationId,
+          OR: [
+            { title: { contains: q, mode: 'insensitive' } },
+            { description: { contains: q, mode: 'insensitive' } },
+          ],
+        },
+        select: {
+          id: true,
+          number: true,
+          title: true,
+          status: true,
+          priority: true,
+          project: { select: { key: true } },
+        },
+        orderBy: { updatedAt: 'desc' },
+        take: limit,
+      }),
+      this.prisma.tenant.project.findMany({
+        where: {
+          organizationId,
+          OR: [
+            { name: { contains: q, mode: 'insensitive' } },
+            { key: { contains: q, mode: 'insensitive' } },
+          ],
+        },
+        select: { id: true, key: true, name: true, description: true },
+        orderBy: { createdAt: 'asc' },
+        take: 5,
+      }),
+    ]);
+
+    return {
+      issues: issues.map((i) => ({
+        id: i.id,
+        number: i.number,
+        title: i.title,
+        status: i.status,
+        priority: i.priority,
+        projectKey: i.project.key,
+      })),
+      projects,
+    };
+  }
+
+  /**
+   * "My Work": every issue assigned to `userId` across all projects in the
+   * tenant, with the project key (for deep-links), due date and labels so the
+   * client can bucket them by SLA. Ordered soonest-due first.
+   */
+  async myWork(organizationId: string, userId: string) {
+    const issues = await this.prisma.tenant.issue.findMany({
+      where: { organizationId, assigneeId: userId },
+      select: {
+        id: true,
+        number: true,
+        title: true,
+        status: true,
+        priority: true,
+        dueDate: true,
+        updatedAt: true,
+        project: { select: { key: true, name: true } },
+        labels: { select: { label: { select: { id: true, name: true, color: true } } } },
+      },
+      orderBy: [{ dueDate: { sort: 'asc', nulls: 'last' } }, { updatedAt: 'desc' }],
+    });
+
+    return issues.map(({ project, ...i }) => ({
+      ...i,
+      projectKey: project.key,
+      projectName: project.name,
+    }));
   }
 
   listMembers(organizationId: string) {

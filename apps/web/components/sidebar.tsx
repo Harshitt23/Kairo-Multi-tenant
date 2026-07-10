@@ -36,6 +36,9 @@ const IconPlus = () => (
 const IconInbox = () => (
   <svg {...ic}><path d="M22 12h-6l-2 3h-4l-2-3H2" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" /></svg>
 );
+const IconMyWork = () => (
+  <svg {...ic}><path d="m9 11 3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
+);
 const IconChevrons = () => (
   <svg {...ic} width={13} height={13}><path d="m7 15 5 5 5-5M7 9l5-5 5 5" /></svg>
 );
@@ -167,6 +170,14 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
       <nav className="space-y-0.5 px-3">
         <NavLink href={`/${orgSlug}`} active={pathname === `/${orgSlug}`} icon={<IconGrid />} onNavigate={onNavigate}>
           Projects
+        </NavLink>
+        <NavLink
+          href={`/${orgSlug}/my-work`}
+          active={pathname === `/${orgSlug}/my-work`}
+          icon={<IconMyWork />}
+          onNavigate={onNavigate}
+        >
+          My Work
         </NavLink>
         <NavLink
           href={`/${orgSlug}/inbox`}

@@ -19,10 +19,11 @@ import { useDroppable } from '@dnd-kit/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { rankBetween, issuePrioritySchema, type IssueStatusValue } from '@pm/types';
-import { useIssues, useMembers, useMoveIssue, type Issue, type Member } from '../lib/hooks';
+import { useIssues, useLabels, useMembers, useMoveIssue, type Issue, type Member } from '../lib/hooks';
 import { useBoardRealtime } from '../lib/use-board-realtime';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/cn';
+import { dueBadge } from '../lib/due';
 import { staggerContainer, staggerItem } from '../lib/motion';
 import { Avatar } from './brand';
 import { Button } from './ui/button';
@@ -45,6 +46,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
   const issuesData = issuesQuery.data;
   const issues = useMemo(() => issuesData ?? [], [issuesData]);
   const { data: members = [] } = useMembers(orgSlug);
+  const { data: labels = [] } = useLabels(orgSlug);
   const move = useMoveIssue(orgSlug, projectKey);
   const presence = useBoardRealtime(orgSlug, projectKey);
   const router = useRouter();
@@ -82,6 +84,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
   const [query, setQuery] = useState('');
   const [priority, setPriority] = useState<string>('ALL');
   const [assignee, setAssignee] = useState<string>('ALL');
+  const [label, setLabel] = useState<string>('ALL');
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
@@ -91,12 +94,14 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
       if (priority !== 'ALL' && i.priority !== priority) return false;
       if (assignee === 'UNASSIGNED' && i.assigneeId !== null) return false;
       if (assignee !== 'ALL' && assignee !== 'UNASSIGNED' && i.assigneeId !== assignee) return false;
+      if (label !== 'ALL' && !i.labels?.some((l) => l.label.id === label)) return false;
       if (q && !(i.title.toLowerCase().includes(q) || `#${i.number}`.includes(q))) return false;
       return true;
     });
-  }, [issues, query, priority, assignee]);
+  }, [issues, query, priority, assignee, label]);
 
-  const filtersActive = query.trim() !== '' || priority !== 'ALL' || assignee !== 'ALL';
+  const filtersActive =
+    query.trim() !== '' || priority !== 'ALL' || assignee !== 'ALL' || label !== 'ALL';
 
   const memberByUserId = useMemo(
     () => new Map(members.map((m) => [m.user.id, m])),
@@ -191,12 +196,23 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
             </option>
           ))}
         </select>
+        {labels.length > 0 && (
+          <select value={label} onChange={(e) => setLabel(e.target.value)} className={selectClass}>
+            <option value="ALL">All labels</option>
+            {labels.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+        )}
         {filtersActive && (
           <button
             onClick={() => {
               setQuery('');
               setPriority('ALL');
               setAssignee('ALL');
+              setLabel('ALL');
             }}
             className="h-7 rounded-md px-2 text-[13px] text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-800"
           >
@@ -340,6 +356,7 @@ function Card({
   overlay?: boolean;
   onOpen?: (id: string) => void;
 }) {
+  const due = dueBadge(issue);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: issue.id,
   });
@@ -361,10 +378,28 @@ function Card({
         overlay && 'rotate-1 shadow-glow',
       )}
     >
+      {issue.labels && issue.labels.length > 0 && (
+        <div className="mb-1.5 flex flex-wrap gap-1">
+          {issue.labels.map(({ label }) => (
+            <span
+              key={label.id}
+              className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium"
+              style={{ backgroundColor: `${label.color}1f`, color: label.color }}
+            >
+              {label.name}
+            </span>
+          ))}
+        </div>
+      )}
       <p className="font-medium leading-snug text-zinc-900">{issue.title}</p>
       <div className="mt-1.5 flex items-center gap-1.5 text-xs text-zinc-500">
         <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
         <span>{`#${issue.number} · ${issue.priority}`}</span>
+        {due && (
+          <span className={cn('rounded px-1.5 py-0.5 text-[10px] font-medium', due.cls)}>
+            {due.text}
+          </span>
+        )}
         {assignee && (
           <span className="ml-auto" title={assignee.user.name}>
             <Avatar name={assignee.user.name} seed={assignee.user.id} size={18} />

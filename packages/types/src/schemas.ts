@@ -120,6 +120,29 @@ export const issueFilterSchema = z.object({
 export type IssueFilter = z.infer<typeof issueFilterSchema>;
 
 // ---------------------------------------------------------------------------
+// Labels
+// ---------------------------------------------------------------------------
+
+export const createLabelSchema = z.object({
+  name: z.string().min(1).max(40),
+  color: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/, 'must be a hex color like #6366f1')
+    .default('#6366f1'),
+});
+export type CreateLabelInput = z.infer<typeof createLabelSchema>;
+
+// ---------------------------------------------------------------------------
+// Search (workspace-wide)
+// ---------------------------------------------------------------------------
+
+export const searchQuerySchema = z.object({
+  q: z.string().min(1).max(280),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+export type SearchQuery = z.infer<typeof searchQuerySchema>;
+
+// ---------------------------------------------------------------------------
 // Comment
 // ---------------------------------------------------------------------------
 

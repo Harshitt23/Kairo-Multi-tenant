@@ -3,7 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { useProjects } from '../lib/hooks';
+import { useProjects, useSearch } from '../lib/hooks';
 import { cn } from '../lib/cn';
 import { CreateOrgDialog } from './create-org-dialog';
 import { CreateProjectDialog } from './create-project-dialog';
@@ -16,7 +16,7 @@ export function openCommandPalette() {
 export const isMac =
   typeof navigator !== 'undefined' && navigator.platform.toUpperCase().includes('MAC');
 
-type Group = 'Navigate' | 'Projects' | 'Actions';
+type Group = 'Issues' | 'Navigate' | 'Projects' | 'Actions';
 
 interface Command {
   id: string;
@@ -27,7 +27,7 @@ interface Command {
   run: () => void;
 }
 
-const GROUPS: Group[] = ['Navigate', 'Projects', 'Actions'];
+const GROUPS: Group[] = ['Issues', 'Navigate', 'Projects', 'Actions'];
 
 export function CommandPalette({ orgSlug }: { orgSlug: string }) {
   const router = useRouter();
@@ -37,6 +37,14 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [creatingProject, setCreatingProject] = useState(false);
   const [creatingOrg, setCreatingOrg] = useState(false);
+
+  // Debounce the query before hitting the search endpoint.
+  const [debouncedQ, setDebouncedQ] = useState('');
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQ(query), 150);
+    return () => clearTimeout(t);
+  }, [query]);
+  const search = useSearch(orgSlug, debouncedQ);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -74,10 +82,36 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
   );
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return commands;
-    return commands.filter((c) => `${c.label} ${c.keywords ?? ''}`.toLowerCase().includes(q));
-  }, [commands, query]);
+    const q = query.trim();
+    const ql = q.toLowerCase();
+
+    // Server-side issue matches (title/description) — not re-filtered locally,
+    // since a description hit won't appear in the label text.
+    const issueCommands = (search.data?.issues ?? []).map<Command>((i) => ({
+      id: `issue-${i.id}`,
+      group: 'Issues',
+      label: i.title,
+      hint: `${i.projectKey}-${i.number}`,
+      run: () => router.push(`/${orgSlug}/${i.projectKey}/board?issue=${i.number}`),
+    }));
+
+    const staticMatches = ql
+      ? commands.filter((c) => `${c.label} ${c.keywords ?? ''}`.toLowerCase().includes(ql))
+      : commands;
+
+    const searchEverything: Command[] = q
+      ? [
+          {
+            id: 'search-everything',
+            group: 'Actions',
+            label: `Search everything for “${q}”`,
+            run: () => router.push(`/${orgSlug}/search?q=${encodeURIComponent(q)}`),
+          },
+        ]
+      : [];
+
+    return [...issueCommands, ...staticMatches, ...searchEverything];
+  }, [commands, query, search.data, orgSlug, router]);
 
   useEffect(() => setActiveIdx(0), [query, open]);
   useEffect(() => {

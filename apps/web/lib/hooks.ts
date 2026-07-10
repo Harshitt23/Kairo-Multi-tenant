@@ -2,7 +2,9 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
+  CreateCommentInput,
   CreateIssueInput,
+  CreateLabelInput,
   CreateOrgInput,
   CreateProjectInput,
   IssueStatusValue,
@@ -39,6 +41,12 @@ export interface Project {
   _count: { issues: number };
 }
 
+export interface Label {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface Issue {
   id: string;
   number: number;
@@ -49,7 +57,9 @@ export interface Issue {
   rank: string;
   assigneeId: string | null;
   projectId: string;
+  dueDate: string | null;
   updatedAt: string;
+  labels?: { label: Label }[];
 }
 
 export interface Member {
@@ -175,6 +185,26 @@ export const useProjects = (orgSlug: string) =>
     enabled: !!orgSlug,
   });
 
+// --- labels -----------------------------------------------------------------
+
+export const labelsKey = (orgSlug: string) => ['labels', orgSlug];
+
+export const useLabels = (orgSlug: string) =>
+  useQuery({
+    queryKey: labelsKey(orgSlug),
+    queryFn: () => api.get<Label[]>(`/orgs/${orgSlug}/labels`, orgSlug),
+    enabled: !!orgSlug,
+  });
+
+export function useCreateLabel(orgSlug: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: CreateLabelInput) =>
+      api.post<Label>(`/orgs/${orgSlug}/labels`, input, orgSlug),
+    onSuccess: () => qc.invalidateQueries({ queryKey: labelsKey(orgSlug) }),
+  });
+}
+
 export const issuesKey = (orgSlug: string, projectKey: string) => ['issues', orgSlug, projectKey];
 
 export const useIssues = (orgSlug: string, projectKey: string) =>
@@ -235,8 +265,11 @@ export function useUpdateIssue(orgSlug: string, projectKey: string) {
     onMutate: async ({ id, input }) => {
       await qc.cancelQueries({ queryKey: key });
       const previous = qc.getQueryData<Issue[]>(key);
+      // `input` may carry dueDate (Date) / labelIds, which don't match the
+      // Issue shape 1:1 — the merge is just an optimistic placeholder until the
+      // onSettled refetch replaces it with the server row.
       qc.setQueryData<Issue[]>(key, (old) =>
-        (old ?? []).map((i) => (i.id === id ? { ...i, ...input } : i)),
+        (old ?? []).map((i) => (i.id === id ? ({ ...i, ...input } as Issue) : i)),
       );
       return { previous };
     },
@@ -301,6 +334,128 @@ export function useDeleteAttachment(orgSlug: string, issueId: string) {
       qc.invalidateQueries({ queryKey: attachmentsKey(orgSlug, issueId) }),
   });
 }
+
+// --- comments --------------------------------------------------------------
+
+export interface Comment {
+  id: string;
+  body: string;
+  createdAt: string;
+  author: { id: string; name: string; avatarUrl: string | null };
+}
+
+export const commentsKey = (orgSlug: string, issueId: string) => [
+  'comments',
+  orgSlug,
+  issueId,
+];
+
+export const useComments = (orgSlug: string, issueId: string) =>
+  useQuery({
+    queryKey: commentsKey(orgSlug, issueId),
+    queryFn: () =>
+      api.get<Comment[]>(`/orgs/${orgSlug}/issues/${issueId}/comments`, orgSlug),
+    enabled: !!orgSlug && !!issueId,
+  });
+
+export function useCreateComment(orgSlug: string, issueId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: CreateCommentInput) =>
+      api.post<Comment>(`/orgs/${orgSlug}/issues/${issueId}/comments`, input, orgSlug),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: commentsKey(orgSlug, issueId) });
+      qc.invalidateQueries({ queryKey: activityKey(orgSlug, issueId) });
+    },
+  });
+}
+
+// --- activity timeline ------------------------------------------------------
+
+export type ActivityItem = {
+  id: string;
+  at: string;
+  actor: { id: string; name: string; avatarUrl: string | null } | null;
+} & (
+  | { type: 'created' }
+  | { type: 'comment'; body: string }
+  | { type: 'status'; from: string | null; to: string | null }
+  | { type: 'priority'; from: string; to: string }
+  | { type: 'assignee'; from: string | null; to: string | null }
+  | { type: 'updated'; fields: string[] }
+);
+
+export const activityKey = (orgSlug: string, issueId: string) => [
+  'activity',
+  orgSlug,
+  issueId,
+];
+
+export const useActivity = (orgSlug: string, issueId: string) =>
+  useQuery({
+    queryKey: activityKey(orgSlug, issueId),
+    queryFn: () =>
+      api.get<ActivityItem[]>(`/orgs/${orgSlug}/issues/${issueId}/activity`, orgSlug),
+    enabled: !!orgSlug && !!issueId,
+  });
+
+// --- global search ----------------------------------------------------------
+
+export interface SearchIssue {
+  id: string;
+  number: number;
+  title: string;
+  status: IssueStatusValue;
+  priority: string;
+  projectKey: string;
+}
+
+export interface SearchProject {
+  id: string;
+  key: string;
+  name: string;
+  description: string | null;
+}
+
+export interface SearchResults {
+  issues: SearchIssue[];
+  projects: SearchProject[];
+}
+
+/** Workspace-wide search. Fires only once `q` is at least 2 chars. */
+export const useSearch = (orgSlug: string, q: string) =>
+  useQuery({
+    queryKey: ['search', orgSlug, q],
+    queryFn: () =>
+      api.get<SearchResults>(
+        `/orgs/${orgSlug}/search?q=${encodeURIComponent(q)}`,
+        orgSlug,
+      ),
+    enabled: !!orgSlug && q.trim().length >= 2,
+  });
+
+// --- my work ----------------------------------------------------------------
+
+export interface MyWorkIssue {
+  id: string;
+  number: number;
+  title: string;
+  status: IssueStatusValue;
+  priority: string;
+  dueDate: string | null;
+  updatedAt: string;
+  projectKey: string;
+  projectName: string;
+  labels: { label: Label }[];
+}
+
+/** Everything assigned to the signed-in user across the workspace. */
+export const useMyWork = (orgSlug: string) =>
+  useQuery({
+    queryKey: ['my-work', orgSlug],
+    queryFn: () => api.get<MyWorkIssue[]>(`/orgs/${orgSlug}/my-work`, orgSlug),
+    enabled: !!orgSlug,
+  });
 
 // --- invites ---------------------------------------------------------------
 
