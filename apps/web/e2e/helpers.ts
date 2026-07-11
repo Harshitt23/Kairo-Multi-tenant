@@ -1,11 +1,11 @@
 import { expect, type Page } from '@playwright/test';
 
 export const SEED = {
-  email: 'owner@acme.test',
+  email: 'harshit@rolls-royce.com',
   password: 'password123',
-  orgName: 'Acme Inc.',
-  orgSlug: 'acme',
-  projectKey: 'PM',
+  orgName: 'Rolls-Royce',
+  orgSlug: 'rolls-royce',
+  projectKey: 'ENG',
 };
 
 /**

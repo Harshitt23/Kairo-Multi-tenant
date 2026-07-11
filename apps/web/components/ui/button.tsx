@@ -4,15 +4,15 @@ import { cn } from '../../lib/cn';
 import { Spinner } from './spinner';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-all disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-all duration-150 ease-premium active:scale-[0.97] focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100',
   {
     variants: {
       variant: {
-        primary: 'bg-brand text-white shadow-glow hover:opacity-90',
+        primary: 'bg-brand text-white shadow-glow hover:opacity-95 hover:shadow-card-hover',
         secondary: 'border border-edge bg-panel text-zinc-700 hover:bg-elevated hover:text-zinc-900',
         ghost: 'text-zinc-600 hover:bg-elevated hover:text-zinc-900',
         outline: 'border border-edge text-zinc-700 hover:border-indigo-400 hover:text-zinc-900',
-        danger: 'bg-red-600 text-white hover:bg-red-700',
+        danger: 'bg-red-600 text-white hover:bg-red-700 hover:shadow-card-hover',
       },
       size: {
         sm: 'h-8 px-3 text-[13px]',

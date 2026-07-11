@@ -38,7 +38,7 @@ export default function OrgPage({ params }: { params: { orgSlug: string } }) {
           <motion.li key={p.id} variants={staggerItem}>
             <Link
               href={`/${orgSlug}/${p.key}/board`}
-              className="group block h-full rounded-lg border border-edge bg-panel p-4 shadow-card transition-all duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-glow"
+              className="group block h-full rounded-lg border border-edge bg-panel p-4 shadow-card transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-card-hover"
             >
               <div className="flex items-center gap-2">
                 <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-indigo-700">

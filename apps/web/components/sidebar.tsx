@@ -153,7 +153,7 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
       <div className="px-3 pb-2">
         <button
           onClick={openCommandPalette}
-          className="flex w-full items-center gap-2 rounded-md border border-edge bg-elevated/50 px-2.5 py-1.5 text-[13px] text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-700"
+          className="flex w-full items-center gap-2 rounded-md border border-edge bg-elevated/50 px-2.5 py-1.5 text-[13px] text-zinc-500 transition-all duration-150 hover:border-zinc-300 hover:bg-elevated hover:text-zinc-700 active:scale-[0.99]"
         >
           <IconSearch />
           <span className="flex-1 text-left">Search…</span>

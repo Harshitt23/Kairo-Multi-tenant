@@ -9,9 +9,10 @@ test('command palette navigates via keyboard shortcut', async ({ page }) => {
   const search = page.getByPlaceholder('Type a command or search…');
   await expect(search).toBeVisible();
 
-  // Filter to the Inbox command and run it with Enter.
+  // Filter to the Inbox command and run it with Enter. Use an exact name so we
+  // don't also match the "Search everything for …" action the palette now adds.
   await search.fill('Inbox');
-  await expect(page.getByRole('button', { name: 'Inbox' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Inbox', exact: true })).toBeVisible();
   await page.keyboard.press('Enter');
 
   await expect(page).toHaveURL(new RegExp(`/${SEED.orgSlug}/inbox$`));

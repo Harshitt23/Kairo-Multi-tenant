@@ -143,7 +143,7 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
           <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-zinc-900/30 backdrop-blur-sm data-[state=open]:animate-fade-in" />
           <DialogPrimitive.Content
             aria-describedby={undefined}
-            className="fixed left-1/2 top-[18vh] z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-xl border border-edge bg-panel shadow-card focus:outline-none"
+            className="fixed left-1/2 top-[18vh] z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-xl border border-edge bg-panel shadow-card-hover focus:outline-none data-[state=open]:animate-command-in"
           >
             <DialogPrimitive.Title className="sr-only">Command palette</DialogPrimitive.Title>
             <input

@@ -31,13 +31,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={client}>
       {ready ? children : <SplashScreen />}
       <Toaster
-        theme="dark"
+        theme="light"
         position="bottom-right"
+        richColors
+        closeButton
         toastOptions={{
           style: {
-            background: '#141519',
-            border: '1px solid #23262e',
-            color: '#e4e4e7',
+            background: '#ffffff',
+            border: '1px solid #e2e5ea',
+            color: '#101828',
+            boxShadow: '0 8px 24px -8px rgba(16,24,40,0.18)',
           },
         }}
       />

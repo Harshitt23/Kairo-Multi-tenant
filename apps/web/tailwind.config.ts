@@ -35,6 +35,12 @@ export default {
       boxShadow: {
         card: '0 1px 2px rgba(16,24,40,0.05), 0 4px 16px -8px rgba(16,24,40,0.18)',
         glow: '0 8px 24px -8px rgba(99,102,241,0.45)',
+        // Slightly stronger lift for hover states on interactive cards.
+        'card-hover': '0 2px 4px rgba(16,24,40,0.06), 0 12px 28px -10px rgba(16,24,40,0.22)',
+      },
+      transitionTimingFunction: {
+        // The signature "out-expo"-ish easing used across the app's motion.
+        premium: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
         'fade-in': {
@@ -51,11 +57,22 @@ export default {
           '0%': { opacity: '0', transform: 'translate(-50%, -50%) scale(0.97)' },
           '100%': { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
         },
+        // A light sweeping sheen for skeleton loaders.
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
+        // Command palette: scale/lift in while preserving its -50% x-centering.
+        'command-in': {
+          '0%': { opacity: '0', transform: 'translateX(-50%) translateY(-6px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'translateX(-50%) translateY(0) scale(1)' },
+        },
       },
       animation: {
-        'fade-in': 'fade-in 0.35s ease-out both',
+        'fade-in': 'fade-in 0.4s cubic-bezier(0.16,1,0.3,1) both',
         'scale-in': 'scale-in 0.18s ease-out both',
-        'dialog-in': 'dialog-in 0.18s ease-out both',
+        'dialog-in': 'dialog-in 0.2s cubic-bezier(0.16,1,0.3,1) both',
+        shimmer: 'shimmer 1.6s infinite',
+        'command-in': 'command-in 0.2s cubic-bezier(0.16,1,0.3,1) both',
       },
     },
   },

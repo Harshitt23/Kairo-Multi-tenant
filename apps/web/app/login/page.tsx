@@ -25,7 +25,10 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const next = searchParams.get('next');
   const setAuth = useAuthStore((s) => s.setAuth);
-  const [mode, setMode] = useState<Mode>('login');
+  // Allow deep-linking straight into sign-up (e.g. the landing "Start free" CTAs).
+  const [mode, setMode] = useState<Mode>(
+    searchParams.get('mode') === 'register' ? 'register' : 'login',
+  );
   const [form, setForm] = useState({ email: 'harshit@rolls-royce.com', password: 'password123', name: '', orgName: '' });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);

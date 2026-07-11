@@ -68,7 +68,8 @@ export interface Member {
   user: { id: string; name: string; email: string; avatarUrl: string | null };
 }
 
-export const useOrgs = () => useQuery({ queryKey: ['orgs'], queryFn: () => api.get<Org[]>('/orgs') });
+export const useOrgs = (enabled = true) =>
+  useQuery({ queryKey: ['orgs'], queryFn: () => api.get<Org[]>('/orgs'), enabled });
 
 /** Create an organization; caller navigates to the returned slug. */
 export function useCreateOrg() {
