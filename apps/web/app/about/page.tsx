@@ -72,7 +72,7 @@ export default function AboutPage() {
           Want to help us build it?
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
-          We're a small, fully-remote team — and we're hiring.
+          We’re a small, fully-remote team — and we’re hiring.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link

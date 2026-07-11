@@ -64,7 +64,8 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
 
   const commands: Command[] = useMemo(
     () => [
-      { id: 'nav-projects', group: 'Navigate', label: 'Projects', run: () => router.push(`/${orgSlug}`) },
+      { id: 'nav-home', group: 'Navigate', label: 'Home', run: () => router.push(`/${orgSlug}`) },
+      { id: 'nav-projects', group: 'Navigate', label: 'Projects', run: () => router.push(`/${orgSlug}/projects`) },
       { id: 'nav-inbox', group: 'Navigate', label: 'Inbox', keywords: 'notifications', run: () => router.push(`/${orgSlug}/inbox`) },
       { id: 'nav-settings', group: 'Navigate', label: 'Settings', keywords: 'members notifications', run: () => router.push(`/${orgSlug}/settings`) },
       ...(projects.data ?? []).map<Command>((p) => ({

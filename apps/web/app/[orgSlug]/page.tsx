@@ -1,77 +1,133 @@
 'use client';
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { staggerContainer, staggerItem } from '../../lib/motion';
-import { useProjects } from '../../lib/hooks';
+import { useRouter } from 'next/navigation';
+import { useMe, useMembers, useProjects } from '../../lib/hooks';
+import { openCommandPalette } from '../../components/command-palette';
 import { CreateProjectDialog } from '../../components/create-project-dialog';
-import { Button } from '../../components/ui/button';
-import { EmptyState } from '../../components/ui/empty-state';
-import { ErrorState } from '../../components/ui/error-state';
-import { Skeleton } from '../../components/ui/skeleton';
+import { NewIssueModal } from '../../components/issue-modal';
+import { NotificationsMenu } from '../../components/notifications-menu';
+import { ActivityFeed } from '../../components/dashboard/activity-feed';
+import { AssistantDrawer } from '../../components/dashboard/assistant-drawer';
+import { BoardPreview } from '../../components/dashboard/board-preview';
+import { CalendarWidget } from '../../components/dashboard/calendar-widget';
+import { DashboardStatCards } from '../../components/dashboard/stat-cards';
+import { TasksPanel } from '../../components/dashboard/tasks-panel';
+import { TeamPanel } from '../../components/dashboard/team-panel';
+import { DEFAULT_DASHBOARD_THEME, resolveDashboardTheme } from '../../lib/dashboard-theme';
 
-export default function OrgPage({ params }: { params: { orgSlug: string } }) {
+const theme = resolveDashboardTheme(DEFAULT_DASHBOARD_THEME);
+
+function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+export default function HomePage({ params }: { params: { orgSlug: string } }) {
   const { orgSlug } = params;
+  const router = useRouter();
+  const me = useMe();
   const projects = useProjects(orgSlug);
-  const [creating, setCreating] = useState(false);
+  const members = useMembers(orgSlug);
+
+  const [creatingProject, setCreatingProject] = useState(false);
+  const [creatingIssue, setCreatingIssue] = useState(false);
+  const [assistantOpen, setAssistantOpen] = useState(false);
+
+  const firstProject = projects.data?.[0];
+  const firstName = me.data?.name?.split(' ')[0] ?? '';
+  const today = new Date().toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
 
   return (
-    <div className="animate-fade-in px-6 py-6">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight">Projects</h1>
-          <p className="mt-0.5 text-[13px] text-zinc-500">Open a project to view its board.</p>
+    <div className="animate-fade-in px-6 py-6" style={{ backgroundColor: theme.surfaceTint }}>
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-6">
+        {/* header row */}
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+              {greeting()}{firstName ? `, ${firstName}` : ''}
+            </h1>
+            <p className="mt-1.5 text-[13.5px] text-zinc-500">
+              {today} · Here’s what’s happening.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={openCommandPalette}
+              className="flex items-center gap-2 rounded-lg border border-edge bg-panel px-3 py-2 text-[12.5px] text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-700"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+              </svg>
+              Search
+            </button>
+            <button
+              onClick={() => setAssistantOpen(true)}
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3 py-2 text-[12.5px] font-medium text-zinc-700 transition-colors hover:border-indigo-200"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+              </svg>
+              Assistant
+            </button>
+            <NotificationsMenu />
+          </div>
         </div>
-        <Button size="sm" onClick={() => setCreating(true)}>
-          + New project
-        </Button>
+
+        {/* quick actions */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setCreatingIssue(true)}
+            disabled={!firstProject}
+            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span className="text-indigo-600">+</span> New issue
+          </button>
+          <button
+            onClick={() => setCreatingProject(true)}
+            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+          >
+            <span className="text-indigo-600">+</span> New project
+          </button>
+          <button
+            onClick={() => router.push(`/${orgSlug}/settings`)}
+            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+          >
+            <span className="text-indigo-600">+</span> Invite
+          </button>
+        </div>
+
+        <DashboardStatCards orgSlug={orgSlug} theme={theme} />
+
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="flex flex-col gap-6">
+            <BoardPreview orgSlug={orgSlug} theme={theme} />
+            <ActivityFeed orgSlug={orgSlug} theme={theme} />
+          </div>
+          <div className="flex flex-col gap-6">
+            <TasksPanel orgSlug={orgSlug} theme={theme} />
+            <TeamPanel orgSlug={orgSlug} theme={theme} />
+            <CalendarWidget orgSlug={orgSlug} theme={theme} />
+          </div>
+        </div>
       </div>
 
-      <motion.ul
-        className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="show"
-      >
-        {projects.data?.map((p) => (
-          <motion.li key={p.id} variants={staggerItem}>
-            <Link
-              href={`/${orgSlug}/${p.key}/board`}
-              className="group block h-full rounded-lg border border-edge bg-panel p-4 shadow-card transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-card-hover"
-            >
-              <div className="flex items-center gap-2">
-                <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-indigo-700">
-                  {p.key}
-                </span>
-                <span className="truncate text-[13px] font-medium text-zinc-900">{p.name}</span>
-              </div>
-              <p className="mt-2 line-clamp-2 text-[13px] text-zinc-500">
-                {p.description ?? 'No description'}
-              </p>
-              <p className="mt-3 text-xs text-zinc-600">{p._count.issues} issues</p>
-            </Link>
-          </motion.li>
-        ))}
-        {projects.isLoading &&
-          [0, 1, 2].map((i) => <Skeleton key={i} className="h-28" />)}
-        {projects.isError && (
-          <li className="sm:col-span-2 lg:col-span-3">
-            <ErrorState title="Couldn’t load projects" onRetry={() => projects.refetch()} />
-          </li>
-        )}
-        {projects.data?.length === 0 && (
-          <li className="sm:col-span-2 lg:col-span-3">
-            <EmptyState
-              title="No projects yet"
-              description="Create a project to get a board and start tracking issues."
-              action={<Button onClick={() => setCreating(true)}>Create project</Button>}
-            />
-          </li>
-        )}
-      </motion.ul>
-
-      <CreateProjectDialog orgSlug={orgSlug} open={creating} onOpenChange={setCreating} />
+      <CreateProjectDialog orgSlug={orgSlug} open={creatingProject} onOpenChange={setCreatingProject} />
+      {creatingIssue && firstProject && (
+        <NewIssueModal
+          orgSlug={orgSlug}
+          projectKey={firstProject.key}
+          members={members.data ?? []}
+          onClose={() => setCreatingIssue(false)}
+        />
+      )}
+      <AssistantDrawer open={assistantOpen} onClose={() => setAssistantOpen(false)} />
     </div>
   );
 }

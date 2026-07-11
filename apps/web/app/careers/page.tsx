@@ -72,7 +72,7 @@ export default function CareersPage() {
             ))}
           </div>
           <p className="mt-6 text-sm text-zinc-500">
-            Don't see your role?{' '}
+            Don’t see your role?{' '}
             <Link
               href="mailto:careers@pmsaas.example?subject=Open%20application"
               className="font-medium text-indigo-600 hover:text-indigo-700"

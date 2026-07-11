@@ -18,6 +18,7 @@ import { AttachmentsModule } from './modules/attachments/attachments.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { LabelsModule } from './modules/labels/labels.module';
 import { ActivityModule } from './modules/activity/activity.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { RealtimeModule } from './modules/realtime/realtime.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { BillingModule } from './modules/billing/billing.module';
@@ -66,6 +67,7 @@ function parseRedis(url: string) {
     CommentsModule,
     LabelsModule,
     ActivityModule,
+    DashboardModule,
     RealtimeModule,
     NotificationsModule,
     BillingModule,

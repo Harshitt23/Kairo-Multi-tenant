@@ -27,6 +27,9 @@ const ic = { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 
 const IconGrid = () => (
   <svg {...ic}><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
 );
+const IconHome = () => (
+  <svg {...ic}><path d="M4 11.5 12 4l8 7.5" /><path d="M6 10v9h12v-9" /></svg>
+);
 const IconSettings = () => (
   <svg {...ic}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09c0 .68.4 1.3 1.03 1.56a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09c.26.63.88 1.03 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03Z" /></svg>
 );
@@ -168,7 +171,15 @@ function SidebarContent({ orgSlug, onNavigate }: { orgSlug: string; onNavigate?:
 
       {/* main nav */}
       <nav className="space-y-0.5 px-3">
-        <NavLink href={`/${orgSlug}`} active={pathname === `/${orgSlug}`} icon={<IconGrid />} onNavigate={onNavigate}>
+        <NavLink href={`/${orgSlug}`} active={pathname === `/${orgSlug}`} icon={<IconHome />} onNavigate={onNavigate}>
+          Home
+        </NavLink>
+        <NavLink
+          href={`/${orgSlug}/projects`}
+          active={pathname === `/${orgSlug}/projects`}
+          icon={<IconGrid />}
+          onNavigate={onNavigate}
+        >
           Projects
         </NavLink>
         <NavLink

@@ -458,6 +458,62 @@ export const useMyWork = (orgSlug: string) =>
     enabled: !!orgSlug,
   });
 
+// --- dashboard ---------------------------------------------------------------
+
+export interface DashboardStats {
+  openIssues: number;
+  overdueIssues: number;
+  closedThisWeek: number;
+  closedPriorWeek: number;
+  avgCycleTimeDays: number | null;
+}
+
+export interface DashboardActivityItem {
+  id: string;
+  action: string;
+  label: string;
+  issueNumber: number | null;
+  issueTitle: string | null;
+  projectKey: string | null;
+  at: string;
+  actor: { id: string; name: string; avatarUrl: string | null } | null;
+}
+
+export interface DashboardCalendarEvent {
+  date: string;
+  issueId: string;
+  issueNumber: number;
+  title: string;
+  projectKey: string;
+  priority: string;
+}
+
+export const useDashboardStats = (orgSlug: string) =>
+  useQuery({
+    queryKey: ['dashboard-stats', orgSlug],
+    queryFn: () => api.get<DashboardStats>(`/orgs/${orgSlug}/dashboard/stats`, orgSlug),
+    enabled: !!orgSlug,
+  });
+
+export const useDashboardActivity = (orgSlug: string) =>
+  useQuery({
+    queryKey: ['dashboard-activity', orgSlug],
+    queryFn: () => api.get<DashboardActivityItem[]>(`/orgs/${orgSlug}/dashboard/activity`, orgSlug),
+    enabled: !!orgSlug,
+  });
+
+/** `month` is "YYYY-MM"; defaults server-side to the current month. */
+export const useDashboardCalendar = (orgSlug: string, month?: string) =>
+  useQuery({
+    queryKey: ['dashboard-calendar', orgSlug, month],
+    queryFn: () =>
+      api.get<DashboardCalendarEvent[]>(
+        `/orgs/${orgSlug}/dashboard/calendar${month ? `?month=${month}` : ''}`,
+        orgSlug,
+      ),
+    enabled: !!orgSlug,
+  });
+
 // --- invites ---------------------------------------------------------------
 
 export interface AcceptInviteResult {

@@ -214,7 +214,11 @@ function LoginForm() {
             </div>
 
             {/* Segmented tab control */}
-            <div className="mt-[22px] flex w-full items-center gap-1 rounded-[11px] bg-[#f2f3f7] p-1">
+            <div
+              role="tablist"
+              aria-label="Authentication mode"
+              className="mt-[22px] flex w-full items-center gap-1 rounded-[11px] bg-[#f2f3f7] p-1"
+            >
               <TabButton active={!isRegister} onClick={() => switchMode('login')}>
                 Sign in
               </TabButton>
@@ -518,6 +522,8 @@ function TabButton({
   return (
     <button
       type="button"
+      role="tab"
+      aria-selected={active}
       onClick={onClick}
       className={cn(
         'flex-1 rounded-lg py-[9px] text-[13.5px] font-semibold transition-[background,color,box-shadow] duration-[250ms]',
