@@ -66,6 +66,27 @@ export default {
           '0%': { opacity: '0', transform: 'translateX(-50%) translateY(-6px) scale(0.98)' },
           '100%': { opacity: '1', transform: 'translateX(-50%) translateY(0) scale(1)' },
         },
+        // Auth card: a gentle indigo-tinted shadow pulse (login/signup screen).
+        'card-glow': {
+          '0%, 100%': {
+            boxShadow:
+              '0 20px 60px -20px rgba(16,24,40,0.18), 0 0 0 1px rgba(255,255,255,0.6) inset',
+          },
+          '50%': {
+            boxShadow:
+              '0 24px 70px -18px rgba(99,102,241,0.22), 0 0 0 1px rgba(255,255,255,0.6) inset',
+          },
+        },
+        // Auth brand panel: faint grid overlay drifting diagonally.
+        'grid-drift': {
+          '0%': { backgroundPosition: '0 0' },
+          '100%': { backgroundPosition: '48px 48px' },
+        },
+        // Auth brand panel: the "247 teams online" status dot.
+        'pulse-dot': {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.4s cubic-bezier(0.16,1,0.3,1) both',
@@ -73,6 +94,9 @@ export default {
         'dialog-in': 'dialog-in 0.2s cubic-bezier(0.16,1,0.3,1) both',
         shimmer: 'shimmer 1.6s infinite',
         'command-in': 'command-in 0.2s cubic-bezier(0.16,1,0.3,1) both',
+        'card-glow': 'card-glow 6s ease-in-out infinite',
+        'grid-drift': 'grid-drift 6s linear infinite',
+        'pulse-dot': 'pulse-dot 1.6s ease-in-out infinite',
       },
     },
   },
