@@ -1,5 +1,5 @@
 import type { Request } from 'express';
-import type { Role } from '@pm/types';
+import type { Role } from '@kairo/types';
 
 /** Decoded JWT access-token payload. */
 export interface AuthUser {

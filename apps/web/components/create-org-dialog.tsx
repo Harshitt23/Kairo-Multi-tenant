@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { createOrgSchema } from '@pm/types';
+import { createOrgSchema } from '@kairo/types';
 import { ApiError } from '../lib/api';
 import { useCreateOrg } from '../lib/hooks';
 import { Dialog, DialogContent } from './ui/dialog';

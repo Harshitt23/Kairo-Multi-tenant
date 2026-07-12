@@ -1,5 +1,5 @@
 {
-  "name": "pm-saas",
+  "name": "kairo",
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@11.9.0",
@@ -12,10 +12,10 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "db:generate": "pnpm --filter @pm/db generate",
-    "db:migrate": "pnpm --filter @pm/db migrate",
-    "db:seed": "pnpm --filter @pm/db seed",
-    "db:studio": "pnpm --filter @pm/db studio",
+    "db:generate": "pnpm --filter @kairo/db generate",
+    "db:migrate": "pnpm --filter @kairo/db migrate",
+    "db:seed": "pnpm --filter @kairo/db seed",
+    "db:studio": "pnpm --filter @kairo/db studio",
     "infra:up": "docker compose up -d",
     "infra:down": "docker compose down"
   },

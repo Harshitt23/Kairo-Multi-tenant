@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { Prisma } from '@pm/db';
-import type { CreateCommentInput } from '@pm/types';
+import type { Prisma } from '@kairo/db';
+import type { CreateCommentInput } from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AuditService } from '../../common/audit/audit.service';
 import { RealtimeGateway } from '../realtime/realtime.gateway';

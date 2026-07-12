@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@pm/db';
-import type { CreateLabelInput } from '@pm/types';
+import { Prisma } from '@kairo/db';
+import type { CreateLabelInput } from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AuditService } from '../../common/audit/audit.service';
 

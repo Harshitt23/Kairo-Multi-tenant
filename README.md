@@ -1,4 +1,4 @@
-# PM SaaS — Multi-Tenant Project Management
+# Kairo — Multi-Tenant Project Management
 
 A production-shaped, multi-tenant project-management app (Linear/Jira-lite):
 workspaces → teams → projects → issues, RBAC, a real-time drag-and-drop board
@@ -43,7 +43,7 @@ pnpm install
 
 # 3. database: generate client + apply schema + seed demo data
 pnpm db:generate
-pnpm --filter @pm/db migrate -- --name init
+pnpm --filter @kairo/db migrate -- --name init
 pnpm db:seed
 
 # 4. run everything (api on :4000, web on :3000)

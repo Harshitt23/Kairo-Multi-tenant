@@ -5,14 +5,14 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — PM SaaS',
-  description: 'How PM SaaS collects, uses, and protects your data.',
+  title: 'Privacy Policy — Kairo',
+  description: 'How Kairo collects, uses, and protects your data.',
 };
 
 const SECTIONS = [
   {
     heading: 'Overview',
-    body: 'This policy explains what information PM SaaS collects, how we use it, and the choices you have. We collect the minimum needed to run the product and never sell your data. This page is a product demo and is illustrative rather than legal advice.',
+    body: 'This policy explains what information Kairo collects, how we use it, and the choices you have. We collect the minimum needed to run the product and never sell your data. This page is a product demo and is illustrative rather than legal advice.',
   },
   {
     heading: 'Information we collect',
@@ -36,7 +36,7 @@ const SECTIONS = [
   },
   {
     heading: 'Contact',
-    body: 'Questions about privacy? Reach us at privacy@pmsaas.example.',
+    body: 'Questions about privacy? Reach us at privacy@kairo.example.',
   },
 ];
 

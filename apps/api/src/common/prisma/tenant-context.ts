@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import type { Prisma } from '@pm/db';
+import type { Prisma } from '@kairo/db';
 
 /**
  * Per-request tenant state, carried out-of-band via AsyncLocalStorage so it

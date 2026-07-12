@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { ExecutionContext } from '@nestjs/common';
-import type { Permission, Role } from '@pm/types';
+import type { Permission, Role } from '@kairo/types';
 import { RbacGuard } from './rbac.guard';
 import { PERMISSIONS_KEY, ROLES_KEY } from '../decorators';
 

@@ -5,14 +5,14 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — PM SaaS',
-  description: 'The terms that govern your use of PM SaaS.',
+  title: 'Terms of Service — Kairo',
+  description: 'The terms that govern your use of Kairo.',
 };
 
 const SECTIONS = [
   {
     heading: '1. Agreement',
-    body: 'By accessing or using PM SaaS, you agree to these terms. If you use the service on behalf of an organization, you agree on its behalf. This page is a product demo and is illustrative rather than a binding contract.',
+    body: 'By accessing or using Kairo, you agree to these terms. If you use the service on behalf of an organization, you agree on its behalf. This page is a product demo and is illustrative rather than a binding contract.',
   },
   {
     heading: '2. Your account',

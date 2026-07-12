@@ -23,7 +23,7 @@ export function Wordmark({ size = 32 }: { size?: number }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <Logo size={size} />
-      <span className="text-[15px] font-semibold tracking-tight text-zinc-900">PM SaaS</span>
+      <span className="text-[15px] font-semibold tracking-tight text-zinc-900">Kairo</span>
     </span>
   );
 }

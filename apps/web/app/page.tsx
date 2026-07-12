@@ -219,7 +219,7 @@ function MarketingLanding() {
             <path d="M0 24V13.5C0 5.6 5.2 0 13 0v6.2c-4 .5-6.4 3-6.7 6.3H10V24H0zm17 0V13.5c0-7.9 5.2-13.5 13-13.5v6.2c-4 .5-6.4 3-6.7 6.3H27V24H17z" />
           </svg>
           <p className="text-xl font-semibold leading-relaxed tracking-tight text-zinc-900 sm:text-2xl">
-            &ldquo;We ripped out three tools and moved forty engineers over in a week. PM SaaS is
+            &ldquo;We ripped out three tools and moved forty engineers over in a week. Kairo is
             the first tracker the whole team actually opens on its own.&rdquo;
           </p>
           <div className="mt-7 flex items-center justify-center gap-3">
@@ -481,8 +481,8 @@ const FEATURES = [
 
 const FAQS = [
   {
-    q: 'Can one PM SaaS account run multiple companies or clients?',
-    a: 'Yes — PM SaaS is multi-tenant by design. Create separate workspaces for each org or client, each with its own members, projects, and permissions.',
+    q: 'Can one Kairo account run multiple companies or clients?',
+    a: 'Yes — Kairo is multi-tenant by design. Create separate workspaces for each org or client, each with its own members, projects, and permissions.',
   },
   {
     q: 'Can we migrate from Jira or Linear?',
@@ -494,6 +494,6 @@ const FAQS = [
   },
   {
     q: "What's your uptime track record?",
-    a: 'PM SaaS runs on a 99.9% uptime SLA for Enterprise customers, with a public status page and real-time incident updates.',
+    a: 'Kairo runs on a 99.9% uptime SLA for Enterprise customers, with a public status page and real-time incident updates.',
   },
 ];

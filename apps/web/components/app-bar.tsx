@@ -42,7 +42,7 @@ export function AppBar({ children }: { children?: ReactNode }) {
         <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
           <Logo size={28} />
           <span className="hidden text-sm font-semibold tracking-tight text-zinc-900 sm:inline">
-            PM SaaS
+            Kairo
           </span>
         </Link>
         {children && (

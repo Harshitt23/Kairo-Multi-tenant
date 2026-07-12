@@ -7,7 +7,7 @@ import {
   MAX_ATTACHMENT_BYTES,
   type IssuePriorityValue,
   type IssueStatusValue,
-} from '@pm/types';
+} from '@kairo/types';
 import {
   useActivity,
   useCreateComment,

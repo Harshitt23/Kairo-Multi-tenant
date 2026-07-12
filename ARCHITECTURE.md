@@ -73,7 +73,7 @@ policies are a documented follow-up.)
   `httpOnly` cookie scoped to `/auth`; the access token stays in memory on the
   client (XSS-safer than localStorage).
 - **AuthZ:** RBAC with four tiers (OWNER > ADMIN > MEMBER > GUEST). The
-  permission matrix lives in `@pm/types` and is consumed by `RbacGuard` on the
+  permission matrix lives in `@kairo/types` and is consumed by `RbacGuard` on the
   server and the UI on the client, so they enforce identical rules.
   `@RequirePermission('issue:create')` / `@Roles('ADMIN')` decorate routes;
   the guard checks them against the resolved role.
@@ -105,7 +105,7 @@ get retries/observability for free.
 
 ## 6. Validation, rate limiting, audit
 
-- **Validation:** Zod schemas in `@pm/types`, applied via a `ZodValidationPipe`.
+- **Validation:** Zod schemas in `@kairo/types`, applied via a `ZodValidationPipe`.
   One schema validates the API DTO and types the client call.
 - **Rate limiting:** `@nestjs/throttler` globally, with tighter per-route limits
   on auth endpoints.
@@ -121,7 +121,7 @@ plan and keeps working when Stripe isn't configured (local dev).
 
 ## 8. Testing & CI
 
-- Unit (Vitest for `@pm/types`, Jest for API guards/services), integration
+- Unit (Vitest for `@kairo/types`, Jest for API guards/services), integration
   against a real Postgres+Redis in CI, e2e with Playwright (planned).
 - GitHub Actions: install → lint → typecheck → unit tests → `prisma migrate`
   check → build, with Postgres/Redis service containers.
@@ -132,10 +132,10 @@ Delivered after the initial build:
 
 - **Postgres RLS** — `tenant_isolation` policies on every tenant table keyed on
   `app.current_org_id` (GUC), `FORCE`d so the owner is subject to them, plus a
-  least-privilege `pm_app` role they apply to. Permissive when the GUC is unset,
+  least-privilege `kairo_app` role they apply to. Permissive when the GUC is unset,
   so the app keeps working; `PrismaService.runWithTenant(orgId, …)` opts a
   transaction into strict DB-level scoping. Verified: a mismatched org context
-  returns zero rows as `pm_app`. (Migrations `*_tenant_rls`, `*_app_role`.)
+  returns zero rows as `kairo_app`. (Migrations `*_tenant_rls`, `*_app_role`.)
 - **socket.io Redis adapter** — `RedisIoAdapter` (installed via
   `useWebSocketAdapter`) fans board broadcasts across API instances. Presence
   rosters remain per-node (documented caveat).
@@ -154,7 +154,7 @@ Delivered after the initial build:
 
 Remaining / production hardening:
 
-- Point the app's `DATABASE_URL` at `pm_app` and wrap mutations in
+- Point the app's `DATABASE_URL` at `kairo_app` and wrap mutations in
   `runWithTenant` to make RLS enforcement always-on (currently opt-in; dev runs
   as the superuser `pm`, which bypasses RLS).
 - Cross-node presence (move the in-memory roster into Redis).

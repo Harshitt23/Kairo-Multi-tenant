@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { CreateOrgInput, Role, SearchQuery } from '@pm/types';
+import type { CreateOrgInput, Role, SearchQuery } from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AuditService } from '../../common/audit/audit.service';
 import { MailService } from '../../common/mail/mail.service';
@@ -252,7 +252,7 @@ export class OrgsService {
     await this.mail.send({
       to: normalizedEmail,
       subject: `You've been invited to ${org.name}`,
-      text: `You've been invited to join ${org.name} on PM SaaS as ${role}.\n\nAccept your invite:\n${link}\n\nThis link expires in 7 days.`,
+      text: `You've been invited to join ${org.name} on Kairo as ${role}.\n\nAccept your invite:\n${link}\n\nThis link expires in 7 days.`,
     });
 
     await this.audit.record({

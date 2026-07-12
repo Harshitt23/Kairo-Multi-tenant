@@ -7,7 +7,7 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'About — PM SaaS',
+  title: 'About — Kairo',
   description: 'Why we build a calm, real-time project tracker for teams who ship.',
 };
 
@@ -39,7 +39,7 @@ export default function AboutPage() {
       <MarketingPageHeader
         eyebrow="About"
         title="We build the tracker we always wanted"
-        description="PM SaaS started because every project tool we used felt like it was working against us. We set out to build a calm, fast, multi-tenant tracker that teams actually open on their own."
+        description="Kairo started because every project tool we used felt like it was working against us. We set out to build a calm, fast, multi-tenant tracker that teams actually open on their own."
       />
 
       <section className="border-b border-edge bg-panel px-6 py-12 lg:px-14">
@@ -85,7 +85,7 @@ export default function AboutPage() {
             href={SIGN_UP_HREF}
             className="inline-flex h-11 items-center justify-center rounded-lg border border-edge px-5 text-sm font-medium text-zinc-700 transition-colors hover:border-indigo-400 hover:text-zinc-900"
           >
-            Try PM SaaS
+            Try Kairo
           </Link>
         </div>
       </section>

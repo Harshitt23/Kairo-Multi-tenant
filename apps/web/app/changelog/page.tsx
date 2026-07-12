@@ -5,8 +5,8 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Changelog — PM SaaS',
-  description: 'New features, improvements, and fixes shipped to PM SaaS.',
+  title: 'Changelog — Kairo',
+  description: 'New features, improvements, and fixes shipped to Kairo.',
 };
 
 const TAG_STYLES: Record<string, string> = {
@@ -64,7 +64,7 @@ export default function ChangelogPage() {
     <MarketingShell>
       <MarketingPageHeader
         eyebrow="Changelog"
-        title="What's new in PM SaaS"
+        title="What's new in Kairo"
         description="A running log of the features, improvements, and fixes we ship. Follow along as the product evolves."
       />
       <section className="px-6 py-16 lg:px-14 lg:py-20">

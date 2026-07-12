@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 // Minimal LexoRank-style midpoint generator for initial ordering. The API uses
-// the shared @pm/types rank helper; the seed only needs spaced-out values.
+// the shared @kairo/types rank helper; the seed only needs spaced-out values.
 function rankAt(i: number): string {
   // base-36 zero-padded keeps lexicographic order matching numeric order.
   return (i * 1000).toString(36).padStart(6, '0');

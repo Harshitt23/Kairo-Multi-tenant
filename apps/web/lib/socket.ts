@@ -1,5 +1,5 @@
 import { io, type Socket } from 'socket.io-client';
-import type { ClientToServerEvents, ServerToClientEvents } from '@pm/types';
+import type { ClientToServerEvents, ServerToClientEvents } from '@kairo/types';
 import { API_URL } from './api';
 
 export type AppSocket = Socket<ServerToClientEvents, ClientToServerEvents>;

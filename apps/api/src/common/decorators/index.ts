@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   CustomDecorator,
 } from '@nestjs/common';
-import type { Permission, Role } from '@pm/types';
+import type { Permission, Role } from '@kairo/types';
 import type { AuthenticatedRequest, AuthUser } from '../types/request';
 
 // --- metadata keys -------------------------------------------------------

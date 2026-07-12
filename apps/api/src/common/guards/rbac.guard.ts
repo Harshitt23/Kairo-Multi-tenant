@@ -5,13 +5,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { can, atLeast, type Permission, type Role } from '@pm/types';
+import { can, atLeast, type Permission, type Role } from '@kairo/types';
 import { PERMISSIONS_KEY, ROLES_KEY } from '../decorators';
 import type { AuthenticatedRequest } from '../types/request';
 
 /**
  * Authorizes based on the org role TenantGuard resolved. Reads @RequirePermission
- * and @Roles metadata and checks it against the shared RBAC matrix in @pm/types,
+ * and @Roles metadata and checks it against the shared RBAC matrix in @kairo/types,
  * so the API and the UI enforce the exact same rules. Runs AFTER TenantGuard.
  */
 @Injectable()

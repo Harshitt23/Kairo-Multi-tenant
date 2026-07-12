@@ -7,8 +7,8 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Docs — PM SaaS',
-  description: 'Guides and reference for building your workflow on PM SaaS.',
+  title: 'Docs — Kairo',
+  description: 'Guides and reference for building your workflow on Kairo.',
 };
 
 const SECTIONS = [
@@ -39,7 +39,7 @@ const SECTIONS = [
   },
   {
     title: 'API & webhooks',
-    blurb: 'Automate PM SaaS with our REST API and subscribe to real-time events.',
+    blurb: 'Automate Kairo with our REST API and subscribe to real-time events.',
     articles: ['Authentication', 'REST reference', 'Webhooks'],
   },
 ];
@@ -50,7 +50,7 @@ export default function DocsPage() {
       <MarketingPageHeader
         eyebrow="Docs"
         title="Everything you need to build your workflow"
-        description="Guides, concepts, and reference for getting the most out of PM SaaS — from your first board to the API."
+        description="Guides, concepts, and reference for getting the most out of Kairo — from your first board to the API."
       />
       <section className="px-6 py-16 lg:px-14 lg:py-20">
         <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">

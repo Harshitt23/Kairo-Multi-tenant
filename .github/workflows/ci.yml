@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DATABASE_URL: postgresql://pm:pm@localhost:5432/pm?schema=public
+  DATABASE_URL: postgresql://kairo:kairo@localhost:5432/kairo?schema=public
   REDIS_URL: redis://localhost:6379
   JWT_ACCESS_SECRET: ci-access-secret-ci-access-secret
   JWT_REFRESH_SECRET: ci-refresh-secret-ci-refresh-secret
@@ -23,12 +23,12 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: pm
-          POSTGRES_PASSWORD: pm
-          POSTGRES_DB: pm
+          POSTGRES_USER: kairo
+          POSTGRES_PASSWORD: kairo
+          POSTGRES_DB: kairo
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U pm"
+          --health-cmd "pg_isready -U kairo"
           --health-interval 5s --health-timeout 5s --health-retries 10
       redis:
         image: redis:7-alpine
@@ -67,7 +67,7 @@ jobs:
         run: pnpm test
 
       - name: Apply migrations (check)
-        run: pnpm --filter @pm/db migrate:deploy
+        run: pnpm --filter @kairo/db migrate:deploy
 
       - name: Build
         run: pnpm build
@@ -80,12 +80,12 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: pm
-          POSTGRES_PASSWORD: pm
-          POSTGRES_DB: pm
+          POSTGRES_USER: kairo
+          POSTGRES_PASSWORD: kairo
+          POSTGRES_DB: kairo
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U pm"
+          --health-cmd "pg_isready -U kairo"
           --health-interval 5s --health-timeout 5s --health-retries 10
       redis:
         image: redis:7-alpine
@@ -114,14 +114,14 @@ jobs:
 
       - name: Migrate + seed
         run: |
-          pnpm --filter @pm/db migrate:deploy
+          pnpm --filter @kairo/db migrate:deploy
           pnpm db:seed
 
       - name: Build
         run: pnpm build
 
       - name: Install Playwright browser
-        run: pnpm --filter @pm/web exec playwright install --with-deps chromium
+        run: pnpm --filter @kairo/web exec playwright install --with-deps chromium
 
       - name: Start API
         run: |
@@ -129,7 +129,7 @@ jobs:
           npx wait-on http://localhost:4000/health --timeout 60000
 
       - name: Run e2e
-        run: pnpm --filter @pm/web test:e2e
+        run: pnpm --filter @kairo/web test:e2e
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}

@@ -2,7 +2,7 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import type { PresenceUser } from '@pm/types';
+import type { PresenceUser } from '@kairo/types';
 import { getSocket } from './socket';
 import { useAuthStore } from './auth-store';
 import { issuesKey, useProjects, type Issue } from './hooks';

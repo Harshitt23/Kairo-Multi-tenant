@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { Prisma } from '@pm/db';
+import type { Prisma } from '@kairo/db';
 import {
   rankBetween,
   firstRank,
@@ -11,7 +11,7 @@ import {
   type IssueFilter,
   type MoveIssueInput,
   type UpdateIssueInput,
-} from '@pm/types';
+} from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AuditService } from '../../common/audit/audit.service';
 import { RealtimeGateway } from '../realtime/realtime.gateway';

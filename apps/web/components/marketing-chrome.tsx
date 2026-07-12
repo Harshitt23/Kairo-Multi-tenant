@@ -28,7 +28,7 @@ export function MarketingNav() {
     >
       <Link href="/" className="flex items-center gap-2.5">
         <Logo size={28} />
-        <span className="text-[17px] font-bold tracking-tight text-zinc-900">PM SaaS</span>
+        <span className="text-[17px] font-bold tracking-tight text-zinc-900">Kairo</span>
       </Link>
       <div className="hidden items-center gap-9 text-sm font-medium text-zinc-600 md:flex">
         {NAV_LINKS.map((l) => (
@@ -89,7 +89,7 @@ export function MarketingFooter() {
         <div>
           <Link href="/" className="mb-3.5 flex items-center gap-2.5">
             <Logo size={24} />
-            <span className="text-base font-bold text-white">PM SaaS</span>
+            <span className="text-base font-bold text-white">Kairo</span>
           </Link>
           <p className="max-w-xs text-[13.5px] leading-relaxed text-zinc-400">
             The calm, real-time project tracker for teams who ship.
@@ -100,7 +100,7 @@ export function MarketingFooter() {
         ))}
       </div>
       <div className="mt-12 border-t border-zinc-800 pt-6 text-[13px] text-zinc-500">
-        © {new Date().getFullYear()} PM SaaS, Inc. All rights reserved.
+        © {new Date().getFullYear()} Kairo, Inc. All rights reserved.
       </div>
     </footer>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { can, type Role } from '@pm/types';
+import { can, type Role } from '@kairo/types';
 import { ApiError } from '../lib/api';
 import {
   useInviteMember,

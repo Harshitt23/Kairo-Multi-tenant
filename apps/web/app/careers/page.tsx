@@ -6,8 +6,8 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Careers — PM SaaS',
-  description: 'Open roles at PM SaaS — a small, fully-remote team building a calm project tracker.',
+  title: 'Careers — Kairo',
+  description: 'Open roles at Kairo — a small, fully-remote team building a calm project tracker.',
 };
 
 const PERKS = [
@@ -63,7 +63,7 @@ export default function CareersPage() {
                   </div>
                 </div>
                 <Link
-                  href="mailto:careers@pmsaas.example?subject=Application"
+                  href="mailto:careers@kairo.example?subject=Application"
                   className="inline-flex h-9 items-center justify-center rounded-lg border border-edge px-4 text-[13px] font-medium text-zinc-700 transition-colors hover:border-indigo-400 hover:text-zinc-900"
                 >
                   Apply
@@ -74,7 +74,7 @@ export default function CareersPage() {
           <p className="mt-6 text-sm text-zinc-500">
             Don’t see your role?{' '}
             <Link
-              href="mailto:careers@pmsaas.example?subject=Open%20application"
+              href="mailto:careers@kairo.example?subject=Open%20application"
               className="font-medium text-indigo-600 hover:text-indigo-700"
             >
               Send us an open application

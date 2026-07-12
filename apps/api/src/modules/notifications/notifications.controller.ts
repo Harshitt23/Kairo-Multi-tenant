@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
 import { z } from 'zod';
-import { notificationPrefsSchema } from '@pm/types';
+import { notificationPrefsSchema } from '@kairo/types';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { CurrentUser } from '../../common/decorators';
 import type { AuthUser } from '../../common/types/request';

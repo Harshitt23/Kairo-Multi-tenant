@@ -9,7 +9,7 @@
 # this file, creates the service, and prompts for the `sync: false` secrets.
 services:
   - type: web
-    name: pm-api
+    name: kairo-api
     runtime: node
     plan: free
     region: oregon
@@ -18,15 +18,15 @@ services:
     # Render's Linux runtime, then compile the API. pnpm ships pre-installed on
     # Render's image (do NOT `corepack enable` — /usr/bin is read-only); pnpm
     # self-provisions the packageManager-pinned version into a writable cache.
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @pm/types build && pnpm --filter @pm/db generate && pnpm --filter @pm/db build && pnpm --filter @pm/api build
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @kairo/types build && pnpm --filter @kairo/db generate && pnpm --filter @kairo/db build && pnpm --filter @kairo/api build
     # Apply any pending migrations (idempotent) then boot. `migrate deploy`
     # never generates or resets — safe to run on every cold start.
     # Migrations need DDL rights, so they run as the DB owner via
     # MIGRATE_DATABASE_URL; the app process itself connects with DATABASE_URL,
-    # which in production points at the least-privilege `pm_app` role (subject
+    # which in production points at the least-privilege `kairo_app` role (subject
     # to RLS). If MIGRATE_DATABASE_URL is unset, migrations fall back to
     # DATABASE_URL (fine when it's still the owner).
-    startCommand: DATABASE_URL="${MIGRATE_DATABASE_URL:-$DATABASE_URL}" pnpm --filter @pm/db exec prisma migrate deploy && node apps/api/dist/main.js
+    startCommand: DATABASE_URL="${MIGRATE_DATABASE_URL:-$DATABASE_URL}" pnpm --filter @kairo/db exec prisma migrate deploy && node apps/api/dist/main.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -37,7 +37,7 @@ services:
         value: "22.14.0"
       # Secrets — set in the dashboard (Neon / Upstash / R2). Never committed.
       # DATABASE_URL is the app's runtime connection — point it at the
-      # least-privilege `pm_app` role in production.
+      # least-privilege `kairo_app` role in production.
       - key: DATABASE_URL
         sync: false
       # Owner connection used ONLY for `prisma migrate deploy` (needs DDL).
@@ -75,4 +75,4 @@ services:
       - key: SMTP_URL
         sync: false
       - key: MAIL_FROM
-        value: PM SaaS <no-reply@pm.local>
+        value: Kairo <no-reply@kairo.local>

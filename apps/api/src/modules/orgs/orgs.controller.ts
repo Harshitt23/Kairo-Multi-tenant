@@ -15,7 +15,7 @@ import {
   inviteMemberSchema,
   searchQuerySchema,
   updateMemberRoleSchema,
-} from '@pm/types';
+} from '@kairo/types';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RbacGuard } from '../../common/guards/rbac.guard';

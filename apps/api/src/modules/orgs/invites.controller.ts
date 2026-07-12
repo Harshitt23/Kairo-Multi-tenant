@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { acceptInviteSchema } from '@pm/types';
+import { acceptInviteSchema } from '@kairo/types';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { CurrentUser } from '../../common/decorators';
 import type { AuthUser } from '../../common/types/request';

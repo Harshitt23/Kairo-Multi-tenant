@@ -3,7 +3,7 @@ import './globals.css';
 import { Providers } from '../lib/providers';
 
 export const metadata: Metadata = {
-  title: 'PM SaaS — Project Management',
+  title: 'Kairo — Project Management',
   description: 'Multi-tenant project management',
 };
 

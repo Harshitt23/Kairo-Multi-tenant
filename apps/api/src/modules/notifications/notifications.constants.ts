@@ -1,4 +1,4 @@
-import type { NotificationType } from '@pm/db';
+import type { NotificationType } from '@kairo/db';
 
 export const NOTIFICATIONS_QUEUE = 'notifications';
 

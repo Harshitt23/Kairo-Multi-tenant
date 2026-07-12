@@ -393,7 +393,7 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
             <IconMenu />
           </button>
           <Logo size={24} />
-          <span className="text-sm font-semibold text-zinc-900">PM SaaS</span>
+          <span className="text-sm font-semibold text-zinc-900">Kairo</span>
         </div>
 
         {/* desktop utility bar — search / assistant / notifications, available

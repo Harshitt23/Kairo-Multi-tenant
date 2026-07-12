@@ -16,7 +16,7 @@ import {
   type ClientToServerEvents,
   type PresenceUser,
   type ServerToClientEvents,
-} from '@pm/types';
+} from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import type { Env } from '../../config/env';
 

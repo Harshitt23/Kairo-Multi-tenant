@@ -10,7 +10,7 @@ import type {
   IssueStatusValue,
   MoveIssueInput,
   UpdateIssueInput,
-} from '@pm/types';
+} from '@kairo/types';
 import { api, uploadAttachment, type Attachment } from './api';
 
 /** Shape returned by GET /auth/me. */

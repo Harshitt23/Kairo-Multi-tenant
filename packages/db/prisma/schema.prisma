@@ -1,5 +1,5 @@
 // ============================================================================
-// PM SaaS — data model
+// Kairo — data model
 //
 // Multi-tenancy model: the `Organization` IS the tenant boundary. Every
 // tenant-scoped row carries `organizationId` so queries can be filtered by a

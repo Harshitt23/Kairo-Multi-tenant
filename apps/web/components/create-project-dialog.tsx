@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { createProjectSchema } from '@pm/types';
+import { createProjectSchema } from '@kairo/types';
 import { ApiError } from '../lib/api';
 import { useCreateProject } from '../lib/hooks';
 import { Dialog, DialogContent } from './ui/dialog';

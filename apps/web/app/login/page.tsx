@@ -209,7 +209,7 @@ function LoginForm() {
                 </svg>
               </span>
               <span className="text-[15px] font-extrabold tracking-[-0.03em] text-[#101828]">
-                PM SaaS
+                Kairo
               </span>
             </div>
 
@@ -431,7 +431,7 @@ function LoginForm() {
                   <rect x="14" y="14" width="7" height="7" rx="1.5" />
                 </svg>
               </span>
-              PM SaaS
+              Kairo
             </div>
             {!isCalm && (
               <div className="flex items-center gap-1.5 rounded-full bg-white/12 px-[11px] py-1.5 text-[12px] text-white/75 backdrop-blur">

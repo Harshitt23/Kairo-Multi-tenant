@@ -6,8 +6,8 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Security — PM SaaS',
-  description: 'How PM SaaS keeps your workspace and data secure.',
+  title: 'Security — Kairo',
+  description: 'How Kairo keeps your workspace and data secure.',
 };
 
 const PRACTICES = [
@@ -91,7 +91,7 @@ export default function SecurityPage() {
           We appreciate responsible disclosure. Reach our security team directly.
         </p>
         <Link
-          href="mailto:security@pmsaas.example?subject=Security%20report"
+          href="mailto:security@kairo.example?subject=Security%20report"
           className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-brand px-5 text-sm font-medium text-white shadow-glow transition-opacity hover:opacity-90"
         >
           Contact security

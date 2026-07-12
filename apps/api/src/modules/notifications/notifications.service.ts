@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import type { NotificationPrefsInput } from '@pm/types';
+import type { NotificationPrefsInput } from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { NOTIFICATIONS_QUEUE, type NotificationJob } from './notifications.constants';
 

@@ -1,6 +1,6 @@
 # Deployment runbook
 
-Free-tier production deploy of the PM SaaS. Everything below has a $0 tier.
+Free-tier production deploy of Kairo. Everything below has a $0 tier.
 
 | Layer | Service | Free tier reality |
 |---|---|---|
@@ -23,12 +23,12 @@ Deploy order matters: **DB + Redis + R2 first** (the API needs their URLs),
 ## 1. Postgres — Neon
 
 1. Sign up at <https://neon.tech> (GitHub login).
-2. **Create project** → name `pm-saas`, region near you, Postgres 16.
+2. **Create project** → name `kairo`, region near you, Postgres 16.
 3. Copy the **pooled** connection string from the dashboard. It looks like:
    `postgresql://USER:PASS@ep-xxx-pooler.REGION.aws.neon.tech/neondb?sslmode=require`
 4. Save it — this is `DATABASE_URL`.
 
-> Migrations create a `pm_app` role and RLS policies. Neon's default role has the
+> Migrations create a `kairo_app` role and RLS policies. Neon's default role has the
 > privileges for this. If `migrate deploy` ever fails on the `app_role`
 > migration, it's non-fatal to the app (RLS is defense-in-depth) — tell me and
 > I'll make it conditional.
@@ -36,7 +36,7 @@ Deploy order matters: **DB + Redis + R2 first** (the API needs their URLs),
 ## 2. Redis — Upstash
 
 1. Sign up at <https://upstash.com>.
-2. **Create Database** → Redis → name `pm-saas`, region near your Render region,
+2. **Create Database** → Redis → name `kairo`, region near your Render region,
    type **Regional** (free).
 3. Copy the connection string in **`rediss://…`** form (the TLS one, port 6379).
    On the DB page: *Details → "Redis" connect → `ioredis`* shows it, or copy the
@@ -47,14 +47,14 @@ Deploy order matters: **DB + Redis + R2 first** (the API needs their URLs),
 
 1. Sign up at <https://dash.cloudflare.com> → **R2** (needs a card on file for
    verification, but the 10 GB tier is free).
-2. **Create bucket** → name `pm-attachments`.
+2. **Create bucket** → name `kairo-attachments`.
 3. **Manage R2 API Tokens → Create API Token** → *Object Read & Write*, scoped to
    the bucket. Copy **Access Key ID** and **Secret Access Key** (shown once).
 4. Note your account's **S3 API endpoint**:
    `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`
 5. Save these:
    - `S3_ENDPOINT` = the endpoint above
-   - `S3_BUCKET` = `pm-attachments`
+   - `S3_BUCKET` = `kairo-attachments`
    - `S3_ACCESS_KEY` = access key id
    - `S3_SECRET_KEY` = secret access key
    - `S3_REGION` = `auto`
@@ -67,7 +67,7 @@ The repo has `render.yaml`, so Render provisions the service for you.
 1. Sign up at <https://render.com> (GitHub login) and grant access to the
    `Harshitt23/Ai-saas-multi-tenant` repo.
 2. **New → Blueprint** → pick the repo → Render reads `render.yaml` and shows the
-   `pm-api` service. Apply.
+   `kairo-api` service. Apply.
 3. When prompted, fill the `sync: false` env vars from steps 1–3:
    `DATABASE_URL`, `REDIS_URL`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`,
    `S3_SECRET_KEY`. Leave `WEB_ORIGIN` as a placeholder for now (e.g.
@@ -75,15 +75,15 @@ The repo has `render.yaml`, so Render provisions the service for you.
    auto-generated; `S3_REGION=auto`, `S3_FORCE_PATH_STYLE=true` are preset.
 4. Deploy. Build takes a few minutes (installs, Prisma generate, Nest build).
    The start command runs `prisma migrate deploy` automatically.
-5. Once live, note the URL: `https://pm-api-XXXX.onrender.com`. Check
-   `https://pm-api-XXXX.onrender.com/health` → `{"status":"ok","db":"up"}`.
+5. Once live, note the URL: `https://kairo-api-XXXX.onrender.com`. Check
+   `https://kairo-api-XXXX.onrender.com/health` → `{"status":"ok","db":"up"}`.
 
 ### Seed the demo data (one time)
 
 Render free web services have a **Shell** tab. Open it and run:
 
 ```bash
-pnpm --filter @pm/db exec tsx prisma/seed.ts
+pnpm --filter @kairo/db exec tsx prisma/seed.ts
 ```
 
 Demo logins (all password `password123`): `owner@acme.test`, `alice@acme.test`,
@@ -95,14 +95,14 @@ Demo logins (all password `password123`): `owner@acme.test`, `alice@acme.test`,
 2. **Root Directory → `apps/web`** (important — it's a monorepo). Vercel detects
    Next.js + pnpm workspace automatically.
 3. Environment variables:
-   - `NEXT_PUBLIC_API_URL` = `https://pm-api-XXXX.onrender.com`
-   - `NEXT_PUBLIC_WS_URL` = `https://pm-api-XXXX.onrender.com`
-4. Deploy. Note the URL: `https://pm-web-XXXX.vercel.app`.
+   - `NEXT_PUBLIC_API_URL` = `https://kairo-api-XXXX.onrender.com`
+   - `NEXT_PUBLIC_WS_URL` = `https://kairo-api-XXXX.onrender.com`
+4. Deploy. Note the URL: `https://kairo-web-XXXX.vercel.app`.
 
 ## 6. Close the loop — CORS
 
-1. Back in Render → `pm-api` → Environment → set
-   `WEB_ORIGIN` = `https://pm-web-XXXX.vercel.app` (exact, no trailing slash).
+1. Back in Render → `kairo-api` → Environment → set
+   `WEB_ORIGIN` = `https://kairo-web-XXXX.vercel.app` (exact, no trailing slash).
 2. Save → Render redeploys. Cross-origin auth cookies (`SameSite=None; Secure`)
    and the WebSocket handshake now accept the web origin.
 
@@ -123,12 +123,12 @@ Demo logins (all password `password123`): `owner@acme.test`, `alice@acme.test`,
 |---|---|---|
 | `DATABASE_URL` | Render | `postgresql://…-pooler…neon.tech/neondb?sslmode=require` |
 | `REDIS_URL` | Render | `rediss://default:pw@host.upstash.io:6379` |
-| `WEB_ORIGIN` | Render | `https://pm-web-XXXX.vercel.app` |
+| `WEB_ORIGIN` | Render | `https://kairo-web-XXXX.vercel.app` |
 | `S3_ENDPOINT` | Render | `https://ACCT.r2.cloudflarestorage.com` |
 | `S3_BUCKET` / `S3_ACCESS_KEY` / `S3_SECRET_KEY` | Render | from R2 token |
 | `S3_REGION` / `S3_FORCE_PATH_STYLE` | Render | `auto` / `true` |
 | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` | Render | auto-generated |
-| `NEXT_PUBLIC_API_URL` / `NEXT_PUBLIC_WS_URL` | Vercel | `https://pm-api-XXXX.onrender.com` |
+| `NEXT_PUBLIC_API_URL` / `NEXT_PUBLIC_WS_URL` | Vercel | `https://kairo-api-XXXX.onrender.com` |
 
 ## Keeping the API warm (optional)
 

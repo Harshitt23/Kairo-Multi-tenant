@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
-import type { LoginInput, RegisterInput } from '@pm/types';
+import type { LoginInput, RegisterInput } from '@kairo/types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { AuditService } from '../../common/audit/audit.service';
 import { TokenService, type IssuedTokens } from './token.service';

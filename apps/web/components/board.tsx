@@ -18,7 +18,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { rankBetween, issuePrioritySchema, type IssueStatusValue } from '@pm/types';
+import { rankBetween, issuePrioritySchema, type IssueStatusValue } from '@kairo/types';
 import { useIssues, useLabels, useMembers, useMoveIssue, type Issue, type Member } from '../lib/hooks';
 import { useBoardRealtime } from '../lib/use-board-realtime';
 import { motion } from 'framer-motion';

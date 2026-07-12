@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import type { Job } from 'bullmq';
-import type { NotificationType, Prisma } from '@pm/db';
+import type { NotificationType, Prisma } from '@kairo/db';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { MailService } from '../../common/mail/mail.service';
 import { NOTIFICATIONS_QUEUE, type NotificationJob } from './notifications.constants';
@@ -77,7 +77,7 @@ export class NotificationsProcessor extends WorkerHost {
     await this.mail.send({
       to: user.email,
       subject: rule.subject,
-      text: `Hi ${user.name},\n\n${rule.subject}: "${title}".\n\nOpen PM SaaS to view it.`,
+      text: `Hi ${user.name},\n\n${rule.subject}: "${title}".\n\nOpen Kairo to view it.`,
     });
     this.logger.debug(`Notified ${recipientId} (${type}, email sent)`);
   }

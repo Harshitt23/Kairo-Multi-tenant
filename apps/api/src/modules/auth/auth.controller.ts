@@ -11,7 +11,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
-import { loginSchema, registerSchema } from '@pm/types';
+import { loginSchema, registerSchema } from '@kairo/types';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { CurrentUser, Public } from '../../common/decorators';
 import type { AuthUser } from '../../common/types/request';

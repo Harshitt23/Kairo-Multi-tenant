@@ -6,7 +6,7 @@ import {
 } from '../../components/marketing-chrome';
 
 export const metadata: Metadata = {
-  title: 'Blog — PM SaaS',
+  title: 'Blog — Kairo',
   description: 'Notes on shipping, team process, and building calm software.',
 };
 
@@ -54,7 +54,7 @@ export default function BlogPage() {
       <MarketingPageHeader
         eyebrow="Blog"
         title="Notes from the team"
-        description="Thoughts on shipping, process, and building calm software — straight from the people making PM SaaS."
+        description="Thoughts on shipping, process, and building calm software — straight from the people making Kairo."
       />
       <section className="px-6 py-16 lg:px-14 lg:py-20">
         <div className="mx-auto max-w-5xl">

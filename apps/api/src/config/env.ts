@@ -22,7 +22,7 @@ const envSchema = z.object({
 
   S3_ENDPOINT: z.string().default('http://localhost:9000'),
   S3_REGION: z.string().default('us-east-1'),
-  S3_BUCKET: z.string().default('pm-attachments'),
+  S3_BUCKET: z.string().default('kairo-attachments'),
   S3_ACCESS_KEY: z.string().default('minioadmin'),
   S3_SECRET_KEY: z.string().default('minioadmin'),
   S3_FORCE_PATH_STYLE: z
@@ -35,7 +35,7 @@ const envSchema = z.object({
   // Email. When SMTP_URL is empty we use a console transport (logs the message
   // instead of sending) so local dev needs no mail server.
   SMTP_URL: z.string().default(''),
-  MAIL_FROM: z.string().default('PM SaaS <no-reply@pm.local>'),
+  MAIL_FROM: z.string().default('Kairo <no-reply@kairo.local>'),
 });
 
 export type Env = z.infer<typeof envSchema>;

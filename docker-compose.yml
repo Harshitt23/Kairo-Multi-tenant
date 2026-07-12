@@ -1,20 +1,20 @@
-name: pm-saas
+name: kairo
 
 services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: pm
-      POSTGRES_PASSWORD: pm
-      POSTGRES_DB: pm
+      POSTGRES_USER: kairo
+      POSTGRES_PASSWORD: kairo
+      POSTGRES_DB: kairo
     ports:
       # Host 5433 (5432 is taken by another local project's container).
       - "5433:5432"
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pm"]
+      test: ["CMD-SHELL", "pg_isready -U kairo"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -60,7 +60,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       mc alias set local http://minio:9000 minioadmin minioadmin;
-      mc mb --ignore-existing local/pm-attachments;
-      mc anonymous set download local/pm-attachments;
+      mc mb --ignore-existing local/kairo-attachments;
+      mc anonymous set download local/kairo-attachments;
       exit 0;
       "
