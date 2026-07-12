@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   fadeInUp,
   hoverLift,
@@ -28,91 +29,44 @@ import { ErrorState } from '../components/ui/error-state';
 
 export default function HomePage() {
   const token = useAuthStore((s) => s.accessToken);
+  const router = useRouter();
   // Gate on the token: without it the /orgs query 401s and the api layer bounces
   // the visitor to /login, so the signed-out MarketingLanding below never shows.
   const orgs = useOrgs(!!token);
   const [creating, setCreating] = useState(false);
 
+  // No org picker step: land straight in the first workspace (the sidebar's
+  // org switcher covers picking a different one) so login goes straight to
+  // the real dashboard instead of an intermediate list.
+  useEffect(() => {
+    if (orgs.data && orgs.data.length > 0) {
+      router.replace(`/${orgs.data[0].slug}`);
+    }
+  }, [orgs.data, router]);
+
   if (!token) {
     return <MarketingLanding />;
+  }
+
+  if (orgs.isLoading || (orgs.data && orgs.data.length > 0)) {
+    return null;
   }
 
   return (
     <>
       <AppBar />
       <main className="mx-auto max-w-xl animate-fade-in px-4 py-12">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold tracking-tight">Your organizations</h1>
-            <p className="mt-1 text-[13px] text-zinc-500">Select a workspace to continue.</p>
-          </div>
-          <Button size="sm" onClick={() => setCreating(true)}>
-            + New organization
-          </Button>
-        </div>
-
-        <motion.ul
-          className="space-y-2.5"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
-        >
-          {orgs.data?.map((o) => (
-            <motion.li key={o.id} variants={staggerItem}>
-              <Link
-                href={`/${o.slug}`}
-                className="group flex items-center gap-4 rounded-xl border border-edge bg-panel px-4 py-3.5 shadow-card transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-card-hover"
-              >
-                <span className="transition-transform duration-200 ease-premium group-hover:scale-105">
-                  <Avatar name={o.name} seed={o.id} size={40} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className="truncate font-medium text-zinc-900">{o.name}</span>
-                    <span className="rounded-full bg-elevated px-2 py-0.5 text-[11px] uppercase tracking-wide text-zinc-600">
-                      {o.memberships[0]?.role}
-                    </span>
-                  </span>
-                  <span className="mt-0.5 block text-xs text-zinc-500">
-                    {o._count.projects} projects · {o._count.memberships} members
-                  </span>
-                </span>
-                <span className="text-zinc-400 transition-all duration-200 ease-premium group-hover:translate-x-0.5 group-hover:text-indigo-600">
-                  →
-                </span>
-              </Link>
-            </motion.li>
-          ))}
-          {orgs.isLoading && <SkeletonRows />}
-          {orgs.isError && (
-            <ErrorState title="Couldn’t load organizations" onRetry={() => orgs.refetch()} />
-          )}
-          {orgs.data?.length === 0 && (
-            <EmptyState
-              title="No organizations yet"
-              description="Create your first workspace to start managing projects and issues."
-              action={<Button onClick={() => setCreating(true)}>Create organization</Button>}
-            />
-          )}
-        </motion.ul>
+        {orgs.isError ? (
+          <ErrorState title="Couldn’t load organizations" onRetry={() => orgs.refetch()} />
+        ) : (
+          <EmptyState
+            title="No organizations yet"
+            description="Create your first workspace to start managing projects and issues."
+            action={<Button onClick={() => setCreating(true)}>Create organization</Button>}
+          />
+        )}
       </main>
       <CreateOrgDialog open={creating} onOpenChange={setCreating} />
-    </>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <>
-      {[0, 1, 2].map((i) => (
-        <li key={i} className="flex items-center gap-4 rounded-xl border border-edge bg-panel px-4 py-3.5">
-          <span className="h-10 w-10 animate-pulse rounded-full bg-elevated" />
-          <span className="flex-1 space-y-2">
-            <span className="block h-3.5 w-40 animate-pulse rounded bg-elevated" />
-            <span className="block h-3 w-24 animate-pulse rounded bg-elevated" />
-          </span>
-        </li>
-      ))}
     </>
   );
 }

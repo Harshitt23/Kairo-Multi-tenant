@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useIssues, useMembers, useProjects, type Issue } from '../../lib/hooks';
 import { type DashboardStyles } from '../../lib/dashboard-theme';
+import { dueBadge } from '../../lib/due';
 import { Avatar } from '../brand';
 import { PRIORITY_DOT } from '../issue-modal';
 import { Skeleton } from '../ui/skeleton';
@@ -88,21 +89,39 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
               <div className="flex flex-col gap-2">
                 {colIssues.slice(0, 3).map((issue) => {
                   const assignee = issue.assigneeId ? memberByUserId.get(issue.assigneeId) : undefined;
+                  const label = issue.labels?.[0]?.label;
+                  const due = dueBadge(issue);
                   return (
                     <Link
                       key={issue.id}
                       href={`/${orgSlug}/${project.key}/board?issue=${issue.number}`}
-                      className="block rounded-lg border border-edge bg-elevated/40 p-2.5 transition-colors hover:bg-elevated"
+                      style={{ backgroundColor: theme.surfaceTint, ...theme.nestedStyle }}
+                      className={`block rounded-lg p-2.5 transition-all hover:-translate-y-0.5 hover:brightness-95 ${theme.nestedBorderClass}`}
                     >
+                      {label && (
+                        <span
+                          className="mb-1.5 inline-block truncate rounded px-1.5 py-0.5 text-[10px] font-semibold"
+                          style={{ backgroundColor: `${label.color}20`, color: label.color }}
+                        >
+                          {label.name}
+                        </span>
+                      )}
                       <div className="line-clamp-2 text-[12.5px] font-medium text-zinc-800">
                         {issue.title}
                       </div>
-                      <div className="mt-2 flex items-center justify-between">
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-zinc-300'
-                          }`}
-                        />
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <span className="flex min-w-0 items-center gap-1.5">
+                          <span
+                            className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                              (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-zinc-300'
+                            }`}
+                          />
+                          {due && (
+                            <span className={`truncate rounded px-1 py-0.5 text-[10px] font-medium ${due.cls}`}>
+                              {due.text}
+                            </span>
+                          )}
+                        </span>
                         {assignee && (
                           <Avatar name={assignee.user.name} seed={assignee.user.id} size={18} />
                         )}

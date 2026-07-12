@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDashboardCalendar } from '../../lib/hooks';
 import { type DashboardStyles } from '../../lib/dashboard-theme';
 import { Skeleton } from '../ui/skeleton';
@@ -22,11 +22,19 @@ const PRIORITY_COLOR: Record<string, string> = {
 
 export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: DashboardStyles }) {
   const now = new Date();
-  const year = now.getFullYear();
-  const monthIndex = now.getMonth(); // 0-based
+  const [viewed, setViewed] = useState({ year: now.getFullYear(), monthIndex: now.getMonth() });
+  const { year, monthIndex } = viewed;
+  const isCurrentMonth = year === now.getFullYear() && monthIndex === now.getMonth();
   const todayDate = now.getDate();
   const month = `${year}-${String(monthIndex + 1).padStart(2, '0')}`;
   const { data, isLoading } = useDashboardCalendar(orgSlug, month);
+
+  function shiftMonth(delta: number) {
+    setViewed((v) => {
+      const d = new Date(v.year, v.monthIndex + delta, 1);
+      return { year: d.getFullYear(), monthIndex: d.getMonth() };
+    });
+  }
 
   const eventsByDate = useMemo(() => {
     const map = new Map<string, string>(); // date -> color of first event
@@ -46,13 +54,13 @@ export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: Das
       const date = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       out.push({
         label: String(d),
-        isToday: d === todayDate,
+        isToday: isCurrentMonth && d === todayDate,
         date,
         eventColor: eventsByDate.get(date),
       });
     }
     return out;
-  }, [year, monthIndex, todayDate, eventsByDate]);
+  }, [year, monthIndex, todayDate, isCurrentMonth, eventsByDate]);
 
   const upcoming = (data ?? []).slice(0, 3);
 
@@ -62,6 +70,22 @@ export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: Das
         <span className="text-[14.5px] font-semibold text-zinc-900">
           {MONTH_NAMES[monthIndex]} {year}
         </span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => shiftMonth(-1)}
+            aria-label="Previous month"
+            className="flex h-[22px] w-[22px] items-center justify-center rounded-md border border-edge text-zinc-500 transition-colors hover:bg-elevated"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+          <button
+            onClick={() => shiftMonth(1)}
+            aria-label="Next month"
+            className="flex h-[22px] w-[22px] items-center justify-center rounded-md border border-edge text-zinc-500 transition-colors hover:bg-elevated"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        </div>
       </div>
       {isLoading ? (
         <Skeleton className="h-64" />
