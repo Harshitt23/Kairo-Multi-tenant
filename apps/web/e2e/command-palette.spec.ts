@@ -22,7 +22,9 @@ test('command palette navigates via keyboard shortcut', async ({ page }) => {
 test('command palette opens from the sidebar search button', async ({ page }) => {
   await gotoOrg(page);
 
-  await page.getByRole('button', { name: /Search/ }).click();
+  // Scope to the sidebar landmark: the org home page also has its own
+  // "Search" quick-action button, so an unscoped name match is ambiguous.
+  await page.getByRole('complementary').getByRole('button', { name: /Search/ }).click();
   await expect(page.getByPlaceholder('Type a command or search…')).toBeVisible();
 
   // Escape dismisses it.

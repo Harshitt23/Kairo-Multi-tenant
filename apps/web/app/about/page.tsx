@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const STATS = [
   { value: '2,400+', label: 'Teams onboarded' },
-  { value: '40M+', label: 'Issues tracked' },
+  { value: '40M+', label: 'Issues tracked' },~
   { value: '99.9%', label: 'Uptime SLA' },
   { value: '28', label: 'People, fully remote' },
 ];
