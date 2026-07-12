@@ -3,7 +3,7 @@ import { login, SEED } from './helpers';
 
 test('signs in and lists the seeded organization', async ({ page }) => {
   await login(page);
-  await expect(page.getByText(SEED.orgName)).toBeVisible();
+  await expect(page.getByText(SEED.orgName, { exact: true })).toBeVisible();
 });
 
 test('rejects bad credentials', async ({ page }) => {
