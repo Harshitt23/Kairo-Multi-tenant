@@ -23,6 +23,7 @@ import { RealtimeModule } from './modules/realtime/realtime.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { HealthModule } from './modules/health/health.module';
+import { DemoActivityModule } from './modules/demo-activity/demo-activity.module';
 
 function parseRedis(url: string) {
   const u = new URL(url);
@@ -72,6 +73,7 @@ function parseRedis(url: string) {
     NotificationsModule,
     BillingModule,
     HealthModule,
+    DemoActivityModule,
   ],
   providers: [
     // Secure by default: every route requires a valid JWT unless @Public.

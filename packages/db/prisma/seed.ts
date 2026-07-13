@@ -10,6 +10,25 @@ function rankAt(i: number): string {
   return (i * 1000).toString(36).padStart(6, '0');
 }
 
+// Gives the dashboard calendar something to show right after seeding, without
+// a Sprint model: due dates relative to *today* (not fixed dates) so the demo
+// looks current no matter when `prisma db seed` runs. DONE issues skip a due
+// date — they're already excluded from the calendar query and a past-due
+// stamp on a closed issue would just read as "overdue".
+function dueDateFor(status: IssueStatus, i: number): Date | null {
+  if (status === IssueStatus.DONE) return null;
+  const baseOffsetDays: Partial<Record<IssueStatus, number>> = {
+    [IssueStatus.IN_REVIEW]: 2,
+    [IssueStatus.IN_PROGRESS]: 4,
+    [IssueStatus.TODO]: 8,
+    [IssueStatus.BACKLOG]: 15,
+  };
+  const d = new Date();
+  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() + (baseOffsetDays[status] ?? 7) + i);
+  return d;
+}
+
 // --- People -----------------------------------------------------------------
 // Harshit is a member of every org, so logging in as him shows the full
 // multi-tenant workspace switcher. Everyone shares the demo password.
@@ -20,6 +39,13 @@ const PEOPLE = {
   vivek: { email: 'vivek@sanofi.com', name: 'Vivek Kumar' },
   rupali: { email: 'rupali@cisco.com', name: 'Rupali Veddi' },
   sahil: { email: 'sahil@cisco.com', name: 'Sahil' },
+  harsh: { email: 'harsh@mdma.com', name: 'Harsh' },
+  rahul: { email: 'rahul@shellema.com', name: 'Rahul' },
+  shivam: { email: 'shivam@cc.co', name: 'Shivam' },
+  deepika: { email: 'deepika@bms.com', name: 'Deepika' },
+  akshita: { email: 'akshita@mi.com', name: 'Akshita' },
+  arpit: { email: 'arpit@jlr.com', name: 'Arpit' },
+  chikara: { email: 'chikara@novatris.com', name: 'Chikara' },
 } as const;
 
 type PersonKey = keyof typeof PEOPLE;
@@ -137,6 +163,215 @@ const ORGS: OrgSpec[] = [
       ],
     },
   },
+  {
+    slug: 'mdma',
+    name: 'MDMA',
+    members: [
+      { user: 'harsh', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'rahul', role: Role.MEMBER },
+    ],
+    team: { name: 'Creative', key: 'CRE' },
+    project: {
+      key: 'CAMP',
+      name: 'Campaign Ops',
+      description: 'Global ad campaign production pipeline.',
+      issues: [
+        { title: 'Q3 brand refresh storyboard', status: IN_PROGRESS, priority: HIGH, assignee: 'harsh' },
+        { title: 'Client sign-off — holiday campaign', status: IN_REVIEW, priority: URGENT, assignee: 'rahul' },
+        { title: 'Media buy reconciliation', status: TODO, priority: MEDIUM, assignee: 'harshit' },
+        { title: 'Influencer contract renewals', status: BACKLOG, priority: LOW, assignee: null },
+        { title: 'Post-campaign performance report', status: TODO, priority: MEDIUM, assignee: 'rahul' },
+        { title: 'Rebrand style guide v3', status: DONE, priority: MEDIUM, assignee: 'harsh' },
+      ],
+    },
+  },
+  {
+    slug: 'shellema',
+    name: 'ShellEma',
+    members: [
+      { user: 'rahul', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'shivam', role: Role.MEMBER },
+    ],
+    team: { name: 'Energy Ops', key: 'ENO' },
+    project: {
+      key: 'RET',
+      name: 'Retail Fuel Platform',
+      description: 'Forecourt systems and retail energy pricing.',
+      issues: [
+        { title: 'Dynamic fuel pricing engine', status: IN_PROGRESS, priority: URGENT, assignee: 'rahul' },
+        { title: 'EV charging bay rollout — phase 2', status: TODO, priority: HIGH, assignee: 'shivam' },
+        { title: 'POS terminal firmware update', status: IN_REVIEW, priority: MEDIUM, assignee: 'harshit' },
+        { title: 'Carbon offset reporting dashboard', status: BACKLOG, priority: MEDIUM, assignee: null },
+        { title: 'Loyalty card fraud detection', status: TODO, priority: HIGH, assignee: 'shivam' },
+        { title: 'Site safety audit — Q2', status: DONE, priority: LOW, assignee: 'rahul' },
+      ],
+    },
+  },
+  {
+    slug: 'cc',
+    name: 'CC',
+    members: [
+      { user: 'shivam', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'deepika', role: Role.MEMBER },
+    ],
+    team: { name: 'Supply Chain', key: 'SUP' },
+    project: {
+      key: 'BOT',
+      name: 'Bottling Ops',
+      description: 'Bottling line efficiency and distribution tracking.',
+      issues: [
+        { title: 'Line 4 downtime root-cause analysis', status: IN_PROGRESS, priority: URGENT, assignee: 'shivam' },
+        { title: 'Recyclable packaging pilot', status: TODO, priority: HIGH, assignee: 'deepika' },
+        { title: 'Distributor onboarding portal', status: IN_REVIEW, priority: MEDIUM, assignee: 'harshit' },
+        { title: 'Cold-chain sensor rollout', status: BACKLOG, priority: MEDIUM, assignee: null },
+        { title: 'Regional demand forecasting model', status: TODO, priority: HIGH, assignee: 'shivam' },
+        { title: 'Bottling plant safety certification', status: DONE, priority: MEDIUM, assignee: 'deepika' },
+      ],
+    },
+  },
+  {
+    slug: 'bms',
+    name: 'BMS',
+    members: [
+      { user: 'deepika', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'akshita', role: Role.MEMBER },
+    ],
+    team: { name: 'R&D', key: 'RND' },
+    project: {
+      key: 'ONC',
+      name: 'Oncology Pipeline',
+      description: 'Early-phase oncology drug trial tracking.',
+      issues: [
+        { title: 'Phase I dose escalation study', status: IN_PROGRESS, priority: URGENT, assignee: 'deepika' },
+        { title: 'Biomarker assay validation', status: TODO, priority: HIGH, assignee: 'akshita' },
+        { title: 'IRB protocol amendment', status: IN_REVIEW, priority: HIGH, assignee: 'harshit' },
+        { title: 'Lab equipment calibration schedule', status: BACKLOG, priority: LOW, assignee: null },
+        { title: 'Trial site recruitment tracker', status: TODO, priority: MEDIUM, assignee: 'akshita' },
+        { title: 'Preclinical toxicology report', status: DONE, priority: MEDIUM, assignee: 'deepika' },
+      ],
+    },
+  },
+  {
+    slug: 'mi',
+    name: 'MI',
+    members: [
+      { user: 'akshita', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'arpit', role: Role.MEMBER },
+    ],
+    team: { name: 'Hardware', key: 'HW' },
+    project: {
+      key: 'PHN',
+      name: 'Smartphone Line',
+      description: 'Next flagship device — design to manufacturing.',
+      issues: [
+        { title: 'Camera module thermal testing', status: IN_PROGRESS, priority: URGENT, assignee: 'akshita' },
+        { title: 'Battery fast-charge safety review', status: TODO, priority: HIGH, assignee: 'arpit' },
+        { title: 'Supply chain component sourcing', status: IN_REVIEW, priority: MEDIUM, assignee: 'harshit' },
+        { title: 'Retail packaging redesign', status: BACKLOG, priority: LOW, assignee: null },
+        { title: 'Firmware OTA rollout plan', status: TODO, priority: MEDIUM, assignee: 'arpit' },
+        { title: 'FCC certification submission', status: DONE, priority: HIGH, assignee: 'akshita' },
+      ],
+    },
+  },
+  {
+    slug: 'jlr',
+    name: 'JLR',
+    members: [
+      { user: 'arpit', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'chikara', role: Role.MEMBER },
+    ],
+    team: { name: 'Vehicle Eng', key: 'VEH' },
+    project: {
+      key: 'EVP',
+      name: 'EV Platform',
+      description: 'Next-gen electric drivetrain platform.',
+      issues: [
+        { title: 'Battery pack thermal runaway testing', status: IN_PROGRESS, priority: URGENT, assignee: 'arpit' },
+        { title: 'Infotainment OTA update pipeline', status: TODO, priority: HIGH, assignee: 'chikara' },
+        { title: 'Crash test compliance report', status: IN_REVIEW, priority: HIGH, assignee: 'harshit' },
+        { title: 'Supplier tooling qualification', status: BACKLOG, priority: MEDIUM, assignee: null },
+        { title: 'Range estimation algorithm tuning', status: TODO, priority: MEDIUM, assignee: 'chikara' },
+        { title: 'Cold-weather range validation', status: DONE, priority: MEDIUM, assignee: 'arpit' },
+      ],
+    },
+  },
+  {
+    slug: 'novatris',
+    name: 'Novatris',
+    members: [
+      { user: 'chikara', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'harsh', role: Role.MEMBER },
+    ],
+    team: { name: 'Clinical', key: 'CLN' },
+    project: {
+      key: 'GTX',
+      name: 'Gene Therapy Program',
+      description: 'AAV-vector gene therapy trial pipeline.',
+      issues: [
+        { title: 'Vector manufacturing scale-up', status: IN_PROGRESS, priority: URGENT, assignee: 'chikara' },
+        { title: 'Long-term follow-up protocol', status: TODO, priority: HIGH, assignee: 'harsh' },
+        { title: 'Regulatory pre-submission meeting', status: IN_REVIEW, priority: HIGH, assignee: 'harshit' },
+        { title: 'Patient registry data migration', status: BACKLOG, priority: MEDIUM, assignee: null },
+        { title: 'Immunogenicity assay development', status: TODO, priority: MEDIUM, assignee: 'harsh' },
+        { title: 'Orphan drug designation filing', status: DONE, priority: HIGH, assignee: 'chikara' },
+      ],
+    },
+  },
+  {
+    slug: 'clgfso',
+    name: 'ClgFso',
+    members: [
+      { user: 'shivam', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'deepika', role: Role.MEMBER },
+      { user: 'harsh', role: Role.MEMBER },
+    ],
+    team: { name: 'Academics', key: 'ACA' },
+    project: {
+      key: 'CUR',
+      name: 'Curriculum Platform',
+      description: 'Full-stack course content and student ops.',
+      issues: [
+        { title: 'New batch onboarding flow', status: IN_PROGRESS, priority: HIGH, assignee: 'shivam' },
+        { title: 'Assignment auto-grading service', status: TODO, priority: MEDIUM, assignee: 'deepika' },
+        { title: 'Placement drive tracker', status: IN_REVIEW, priority: MEDIUM, assignee: 'harshit' },
+        { title: 'Alumni mentorship portal', status: BACKLOG, priority: LOW, assignee: null },
+        { title: 'Live class recording pipeline', status: TODO, priority: MEDIUM, assignee: 'harsh' },
+        { title: 'Capstone project showcase page', status: DONE, priority: LOW, assignee: 'shivam' },
+      ],
+    },
+  },
+  {
+    slug: 'ey',
+    name: 'EY',
+    members: [
+      { user: 'akshita', role: Role.OWNER },
+      { user: 'harshit', role: Role.ADMIN },
+      { user: 'arpit', role: Role.MEMBER },
+      { user: 'chikara', role: Role.MEMBER },
+    ],
+    team: { name: 'Advisory', key: 'ADV' },
+    project: {
+      key: 'AUD',
+      name: 'Audit Modernization',
+      description: 'AI-assisted audit workflow tooling.',
+      issues: [
+        { title: 'Automated anomaly detection in ledgers', status: IN_PROGRESS, priority: URGENT, assignee: 'akshita' },
+        { title: 'Client data room security review', status: TODO, priority: HIGH, assignee: 'arpit' },
+        { title: 'Engagement letter e-signature flow', status: IN_REVIEW, priority: MEDIUM, assignee: 'harshit' },
+        { title: 'Cross-border tax compliance checklist', status: BACKLOG, priority: MEDIUM, assignee: null },
+        { title: 'Audit sampling model v2', status: TODO, priority: MEDIUM, assignee: 'chikara' },
+        { title: 'Partner sign-off dashboard', status: DONE, priority: MEDIUM, assignee: 'akshita' },
+      ],
+    },
+  },
 ];
 
 async function main() {
@@ -220,6 +455,7 @@ async function main() {
           rank: rankAt(idx),
           reporterId: users[ownerKey].id,
           assigneeId: s.assignee ? users[s.assignee].id : null,
+          dueDate: dueDateFor(s.status, i),
         },
       });
     }
@@ -231,9 +467,13 @@ async function main() {
   }
 
   console.log('Seed complete:');
-  console.log('  orgs:     rolls-royce · adura · sanofi · cisco');
-  console.log('  login:    harshit@rolls-royce.com  (member of all four orgs)');
-  console.log('  others:   shagun · shaikh · vivek · rupali · sahil  (@ their org domains)');
+  console.log(
+    '  orgs:     rolls-royce · adura · sanofi · cisco · mdma · shellema · cc · bms · mi · jlr · novatris · clgfso · ey',
+  );
+  console.log('  login:    harshit@rolls-royce.com  (member of all thirteen orgs)');
+  console.log(
+    '  others:   shagun · shaikh · vivek · rupali · sahil · harsh · rahul · shivam · deepika · akshita · arpit · chikara  (@ their org domains)',
+  );
   console.log('  password: password123');
 }
 
