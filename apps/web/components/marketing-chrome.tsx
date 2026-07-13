@@ -1,5 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { fadeInUp, reducedMotionProps } from '../lib/motion';
 import { Logo } from './brand';
 
 /* --------------------------------------------------------------------- */
@@ -24,7 +28,7 @@ export function MarketingNav() {
   return (
     <nav
       aria-label="Marketing"
-      className="flex items-center justify-between border-b border-edge bg-panel px-6 py-5 lg:px-14"
+      className="sticky top-0 z-50 flex items-center justify-between border-b border-edge bg-white/80 px-6 py-4 backdrop-blur-md lg:px-14"
     >
       <Link href="/" className="flex items-center gap-2.5">
         <Logo size={28} />
@@ -46,7 +50,7 @@ export function MarketingNav() {
         </Link>
         <Link
           href={SIGN_UP_HREF}
-          className="inline-flex h-8 items-center justify-center rounded-lg bg-brand px-3 text-[13px] font-medium text-white shadow-glow transition-opacity hover:opacity-90"
+          className="inline-flex h-9 items-center justify-center rounded-lg bg-brand-sheen bg-[length:220%_100%] bg-[position:0%_0%] px-4 text-[13px] font-semibold text-white shadow-glow transition-[background-position,box-shadow,transform] duration-500 hover:-translate-y-px hover:bg-[position:100%_0%] hover:shadow-glow-lg active:translate-y-0 active:scale-[0.97]"
         >
           Start free
         </Link>
@@ -83,25 +87,35 @@ const FOOTER_COLUMNS: { heading: string; items: { label: string; href: string }[
 ];
 
 export function MarketingFooter() {
+  const reduce = useReducedMotion();
   return (
-    <footer className="bg-zinc-900 px-6 py-14 lg:px-14">
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
-          <Link href="/" className="mb-3.5 flex items-center gap-2.5">
-            <Logo size={24} />
-            <span className="text-base font-bold text-white">Kairo</span>
-          </Link>
-          <p className="max-w-xs text-[13.5px] leading-relaxed text-zinc-400">
-            The calm, real-time project tracker for teams who ship.
-          </p>
+    <footer className="relative overflow-hidden bg-gradient-to-b from-[#12141f] to-[#0a0b12] px-6 py-16 lg:px-14">
+      <div className="absolute left-1/2 top-0 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent via-indigo-500/60 to-transparent" />
+      <motion.div
+        {...(reduce ? reducedMotionProps : { variants: fadeInUp })}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        className="relative mx-auto max-w-6xl"
+      >
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <Link href="/" className="mb-3.5 flex items-center gap-2.5">
+              <Logo size={24} />
+              <span className="text-base font-bold text-white">Kairo</span>
+            </Link>
+            <p className="max-w-xs text-[13.5px] leading-relaxed text-zinc-400">
+              The calm, real-time project tracker for teams who ship.
+            </p>
+          </div>
+          {FOOTER_COLUMNS.map((col) => (
+            <FooterColumn key={col.heading} heading={col.heading} items={col.items} />
+          ))}
         </div>
-        {FOOTER_COLUMNS.map((col) => (
-          <FooterColumn key={col.heading} heading={col.heading} items={col.items} />
-        ))}
-      </div>
-      <div className="mt-12 border-t border-zinc-800 pt-6 text-[13px] text-zinc-500">
-        © {new Date().getFullYear()} Kairo, Inc. All rights reserved.
-      </div>
+        <div className="mt-12 border-t border-zinc-800 pt-6 text-[13px] text-zinc-500">
+          © {new Date().getFullYear()} Kairo, Inc. All rights reserved.
+        </div>
+      </motion.div>
     </footer>
   );
 }

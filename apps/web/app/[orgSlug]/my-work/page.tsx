@@ -146,6 +146,19 @@ export default function MyWorkPage({ params }: { params: { orgSlug: string } }) 
             </div>
           ) : (
             <>
+              <div className="mt-4 flex items-center gap-3 rounded-lg border border-edge bg-panel px-4 py-3 shadow-card">
+                <span className="whitespace-nowrap text-[12.5px] font-medium text-zinc-700">Progress</span>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-elevated">
+                  <div
+                    className="h-full rounded-full bg-brand transition-all duration-300"
+                    style={{ width: `${issues.length ? Math.round((done.length / issues.length) * 100) : 0}%` }}
+                  />
+                </div>
+                <span className="whitespace-nowrap text-xs text-zinc-500">
+                  {done.length} of {issues.length} completed
+                </span>
+              </div>
+
               <Section title="Overdue" accent="bg-red-500" orgSlug={orgSlug} issues={overdue} />
               <Section title="Due soon" accent="bg-amber-500" orgSlug={orgSlug} issues={dueSoon} />
               <Section title="Open" accent="bg-indigo-500" orgSlug={orgSlug} issues={rest} />

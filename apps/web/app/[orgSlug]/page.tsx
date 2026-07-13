@@ -41,39 +41,41 @@ export default function HomePage({ params }: { params: { orgSlug: string } }) {
   });
 
   return (
-    <div className="animate-fade-in px-6 py-6" style={{ backgroundColor: theme.surfaceTint }}>
+    <div className="animate-fade-in px-6 py-6">
       <div className="mx-auto flex max-w-[1280px] flex-col gap-6">
         {/* header row */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
-            {greeting()}{firstName ? `, ${firstName}` : ''}
-          </h1>
-          <p className="mt-1.5 text-[13.5px] text-zinc-500">
-            {today} · Here’s what’s happening.
-          </p>
-        </div>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+              {greeting()}{firstName ? `, ${firstName}` : ''}
+            </h1>
+            <p className="mt-1.5 text-[13.5px] text-zinc-500">
+              {today} · Here’s what’s happening.
+            </p>
+          </div>
 
-        {/* quick actions */}
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setCreatingIssue(true)}
-            disabled={!firstProject}
-            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <span className="text-indigo-600">+</span> New issue
-          </button>
-          <button
-            onClick={() => setCreatingProject(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
-          >
-            <span className="text-indigo-600">+</span> New project
-          </button>
-          <button
-            onClick={() => router.push(`/${orgSlug}/settings`)}
-            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
-          >
-            <span className="text-indigo-600">+</span> Invite
-          </button>
+          {/* quick actions */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setCreatingIssue(true)}
+              disabled={!firstProject}
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <span className="text-indigo-600">+</span> New issue
+            </button>
+            <button
+              onClick={() => setCreatingProject(true)}
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+            >
+              <span className="text-indigo-600">+</span> New project
+            </button>
+            <button
+              onClick={() => router.push(`/${orgSlug}/settings`)}
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+            >
+              <span className="text-indigo-600">+</span> Invite
+            </button>
+          </div>
         </div>
 
         <DashboardStatCards orgSlug={orgSlug} theme={theme} />
