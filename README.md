@@ -15,52 +15,58 @@ An append-only audit trail. All on a $0/month infra stack.
 ## What's actually interesting here
 
 ### Tenant isolation, one choke point
-Every tenant-scoped table carries `organizationId`. A single `TenantGuard`
-resolves the org, checks membership, and stamps scope onto the request —
-every service downstream just trusts it. Defense in depth underneath:
-Postgres **row-level security**, `FORCE`d, keyed on `SET app.current_org_id`,
-under a least-privilege DB role — a missed `WHERE` clause still can't leak data.
+A single `TenantGuard` resolves the org, checks membership, and stamps scope
+onto every request. Postgres **row-level security** backs it up — a missed
+`WHERE` clause still can't leak a row across tenants.
 
 ### Auth that assumes tokens get stolen
-Short-lived access JWTs live in memory (never `localStorage`). Refresh
-tokens rotate on every use, stored only as a hash, grouped into a *family* —
-replaying an already-rotated token revokes the whole family. RBAC
-(`OWNER > ADMIN > MEMBER > GUEST`) is one shared permission matrix consumed
-by both server guards and client UI, so they can't drift.
+Access JWTs live in memory, never `localStorage`. Refresh tokens rotate per
+use and belong to a *family* — replaying a stolen one revokes the whole
+family. RBAC is one shared matrix, enforced identically server + client.
 
 ### An optimistic, real-time board
-Reordering computes a fractional rank between two neighbors (`rankBetween`),
-so a drag touches one row, not a whole column. React Query applies moves
-optimistically and rolls back on rejection. Socket.io fans changes out to
-`org:project` rooms, scaled across nodes via the Redis adapter.
+Drags compute a fractional rank between neighbors, so reordering touches
+one row, not a column. React Query applies it optimistically; Socket.io
+(Redis-backed) syncs every other tab instantly.
 
 ### Slow work happens off the request path
-Notifications/email run through **BullMQ on Redis** — enqueue and return,
-retries handled by the queue. Attachments go client → S3/R2 directly via
-presigned URLs; the API only ever sees a confirmation call.
+Notifications/email run through **BullMQ on Redis** — enqueue and return.
+Attachments upload client → S3/R2 directly via presigned URLs.
 
 ### Billing that degrades gracefully — currently building
-Stripe Checkout + a signature-verified webhook reconcile a local
-`Subscription` row. If Stripe isn't configured (local dev), the app doesn't
-break — it just runs everyone on FREE.
+Stripe Checkout + signed webhooks reconcile billing state. No Stripe keys?
+The app just runs everyone on FREE instead of breaking.
 
 ### Easy to skip, didn't
-Append-only audit log on every mutation · tighter rate limits on auth routes
-· per-user notification prefs · hashed invite tokens · Sentry error
-reporting · a shared `@kairo/types` package (Zod schemas, RBAC matrix,
-realtime contract) so the API and the client can never drift on validation.
+Append-only audit log · rate limits on auth routes · per-user notification
+prefs · hashed invite tokens · Sentry error tracking · one shared
+`@kairo/types` package so API and client can never drift.
 
 ### CI that actually proves it works
-Every push boots real Postgres + Redis containers, runs lint → typecheck →
-unit tests → a `prisma migrate deploy` check → build, then a second job
-seeds the DB, starts the API, and runs Playwright e2e against a live server
-— not mocks. Green means the login-to-drag-and-drop path actually works.
+Every push runs lint → typecheck → tests → build against real Postgres +
+Redis, then a second job runs Playwright e2e against a live server.
 
 ### A marketing site, not just an app
-Landing, pricing, blog, changelog, docs, careers, security, legal — built
-alongside the product with a custom Tailwind motion system (aurora
-backgrounds, card-glow, command-palette entrance) via Framer Motion, because
-a SaaS people can sign up for needs somewhere to land first.
+Landing, pricing, blog, docs, changelog, careers — built with a custom
+Framer Motion system, because a SaaS needs somewhere to land first.
+
+---
+
+## Features
+
+- Multi-tenant workspaces → teams → projects → issues, RBAC (4 roles)
+- Real-time Kanban board — drag/drop, optimistic UI, live presence
+- JWT auth with rotating refresh tokens + reuse/theft detection
+- Stripe billing (Checkout + webhooks), graceful FREE-plan fallback
+- Background jobs via BullMQ (notifications, email)
+- S3/R2 file attachments via presigned uploads
+- Comments, @mentions, labels, per-user notification prefs
+- Token-based org invites
+- Append-only audit trail on every mutation
+- Postgres RLS as a second layer of tenant isolation
+- Sentry error tracking + rate limiting on auth routes
+- Full marketing site (landing, pricing, blog, docs, changelog, careers)
+- CI: lint, typecheck, unit tests, Playwright e2e against live infra
 
 ---
 
