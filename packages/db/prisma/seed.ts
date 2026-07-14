@@ -1,4 +1,4 @@
-import { PrismaClient, IssueStatus, IssuePriority, Role } from '@prisma/client';
+import { PrismaClient, IssueStatus, IssuePriority, Role, NotificationType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -463,6 +463,130 @@ async function main() {
     await prisma.project.update({
       where: { id: project.id },
       data: { issueCounter: spec.project.issues.length },
+    });
+  }
+
+  // --- Fake inbox --------------------------------------------------------
+  // Notifications normally arrive via the queue as a side effect of real
+  // mutations, so a fresh checkout has an empty Inbox. Seed a realistic
+  // spread directly (payload shapes matching what issues/comments/orgs
+  // services enqueue) for harshit, the demo login, so the Inbox has
+  // something to show — mixed types, orgs, and read state.
+  const findIssue = (orgSlug: string, projectKey: string, number: number) =>
+    prisma.issue.findFirstOrThrow({
+      where: { number, project: { key: projectKey, organization: { slug: orgSlug } } },
+      select: { id: true, number: true, title: true },
+    });
+
+  const [easaDossier, telemetry, noiseFix, serumTrial] = await Promise.all([
+    findIssue('rolls-royce', 'ENG', 3), // EASA certification dossier submission
+    findIssue('rolls-royce', 'ENG', 2), // Digital-twin telemetry ingestion
+    findIssue('rolls-royce', 'ENG', 6), // Reduce test-cell noise emissions
+    findIssue('adura', 'SKN', 2), // Dermatologist trial sign-off
+  ]);
+
+  const notifOrgs = Object.fromEntries(
+    await Promise.all(
+      (['rolls-royce', 'adura', 'cisco', 'mdma'] as const).map(async (slug) => [
+        slug,
+        await prisma.organization.findUniqueOrThrow({ where: { slug }, select: { id: true, name: true } }),
+      ]),
+    ),
+  ) as Record<'rolls-royce' | 'adura' | 'cisco' | 'mdma', { id: string; name: string }>;
+
+  const hoursAgo = (h: number) => new Date(Date.now() - h * 3_600_000);
+  const daysAgo = (d: number) => hoursAgo(d * 24);
+
+  const notifSpecs: {
+    id: string;
+    orgSlug: keyof typeof notifOrgs;
+    type: NotificationType;
+    payload: Record<string, unknown>;
+    createdAt: Date;
+    read: boolean;
+  }[] = [
+    {
+      id: 'seed-notif-easa-assigned',
+      orgSlug: 'rolls-royce',
+      type: NotificationType.ISSUE_ASSIGNED,
+      payload: { issueId: easaDossier.id, number: easaDossier.number, title: easaDossier.title },
+      createdAt: hoursAgo(2),
+      read: false,
+    },
+    {
+      id: 'seed-notif-easa-mentioned',
+      orgSlug: 'rolls-royce',
+      type: NotificationType.MENTIONED,
+      payload: { issueId: easaDossier.id, number: easaDossier.number, title: easaDossier.title },
+      createdAt: hoursAgo(0.5),
+      read: false,
+    },
+    {
+      id: 'seed-notif-noise-status',
+      orgSlug: 'rolls-royce',
+      type: NotificationType.ISSUE_STATUS_CHANGED,
+      payload: {
+        issueId: noiseFix.id,
+        number: noiseFix.number,
+        title: noiseFix.title,
+        from: IssueStatus.IN_REVIEW,
+        to: IssueStatus.DONE,
+      },
+      createdAt: hoursAgo(20),
+      read: false,
+    },
+    {
+      id: 'seed-notif-telemetry-comment',
+      orgSlug: 'rolls-royce',
+      type: NotificationType.COMMENT_CREATED,
+      payload: { issueId: telemetry.id, number: telemetry.number, title: telemetry.title },
+      createdAt: daysAgo(3),
+      read: true,
+    },
+    {
+      id: 'seed-notif-serum-assigned',
+      orgSlug: 'adura',
+      type: NotificationType.ISSUE_ASSIGNED,
+      payload: { issueId: serumTrial.id, number: serumTrial.number, title: serumTrial.title },
+      createdAt: daysAgo(2),
+      read: true,
+    },
+    {
+      id: 'seed-notif-cisco-invite-accepted',
+      orgSlug: 'cisco',
+      type: NotificationType.INVITE_ACCEPTED,
+      payload: {
+        orgName: notifOrgs.cisco.name,
+        memberEmail: 'newhire@cisco.com',
+        title: notifOrgs.cisco.name,
+      },
+      createdAt: hoursAgo(1),
+      read: false,
+    },
+    {
+      id: 'seed-notif-mdma-invited',
+      orgSlug: 'mdma',
+      type: NotificationType.INVITED,
+      payload: { orgName: notifOrgs.mdma.name, role: Role.ADMIN, title: notifOrgs.mdma.name },
+      createdAt: daysAgo(5),
+      read: true,
+    },
+  ];
+
+  for (const n of notifSpecs) {
+    const readAt = n.read ? n.createdAt : null;
+    await prisma.notification.upsert({
+      where: { id: n.id },
+      update: { payload: n.payload, createdAt: n.createdAt, readAt },
+      create: {
+        id: n.id,
+        organizationId: notifOrgs[n.orgSlug].id,
+        userId: users.harshit.id,
+        type: n.type,
+        payload: n.payload,
+        createdAt: n.createdAt,
+        readAt,
+      },
     });
   }
 

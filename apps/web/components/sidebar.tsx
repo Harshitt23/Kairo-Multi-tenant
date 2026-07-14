@@ -59,6 +59,15 @@ const IconSearch = () => (
 const IconCollapse = () => (
   <svg {...ic} width={16} height={16}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16" /></svg>
 );
+const IconDocs = () => (
+  <svg {...ic} width={14} height={14}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" /><path d="M14 3v5h5" /><path d="M9 13h6M9 17h6" /></svg>
+);
+const IconChangelog = () => (
+  <svg {...ic} width={14} height={14}><path d="M12 20a8 8 0 1 0-8-8" /><path d="M4 4v6h6" /><path d="M12 8v4l3 3" /></svg>
+);
+const IconBlog = () => (
+  <svg {...ic} width={14} height={14}><path d="M4 11a9 9 0 0 1 9 9" /><path d="M4 4a16 16 0 0 1 16 16" /><circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none" /></svg>
+);
 
 // -- nav building blocks ------------------------------------------------------
 
@@ -295,6 +304,36 @@ function SidebarContent({
         </div>
       )}
       {collapsed && <div className="flex-1" />}
+
+      {/* resources — docs/changelog/blog, rendered at org-scoped routes that
+          reuse the same content as the public marketing pages but without the
+          marketing nav/footer (login/signup, pricing, etc.) — that chrome
+          doesn't make sense once you're already signed in and inside the app. */}
+      {!collapsed && (
+        <div className="space-y-0.5 border-t border-edge px-3 py-2">
+          <Link
+            href={`/${orgSlug}/docs`}
+            onClick={onNavigate}
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+          >
+            <IconDocs /> Docs
+          </Link>
+          <Link
+            href={`/${orgSlug}/changelog`}
+            onClick={onNavigate}
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+          >
+            <IconChangelog /> Changelog
+          </Link>
+          <Link
+            href={`/${orgSlug}/blog`}
+            onClick={onNavigate}
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+          >
+            <IconBlog /> Blog
+          </Link>
+        </div>
+      )}
 
       {/* user footer */}
       <div className="border-t border-edge p-3">
