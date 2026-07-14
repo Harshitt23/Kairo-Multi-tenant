@@ -11,5 +11,6 @@ test('opens the inbox from the sidebar', async ({ page }) => {
   // The subtitle resolves once the page loads: "N unread" when there are
   // notifications, "You're all caught up." when there aren't. Either proves it
   // rendered rather than hanging on the skeleton.
-  await expect(page.getByText(/unread|caught up/i)).toBeVisible();
+  await expect(page.getByTestId('inbox-subtitle')).toBeVisible();
+  await expect(page.getByTestId('inbox-subtitle')).toHaveText(/unread|caught up/i);
 });

@@ -161,7 +161,7 @@ export default function InboxPage() {
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight">Inbox</h1>
-          <p className="mt-0.5 text-[13px] text-zinc-500">
+          <p data-testid="inbox-subtitle" className="mt-0.5 text-[13px] text-zinc-500">
             {unread.length > 0 ? `${unread.length} unread notification${unread.length === 1 ? '' : 's'}` : 'You’re all caught up.'}
           </p>
         </div>

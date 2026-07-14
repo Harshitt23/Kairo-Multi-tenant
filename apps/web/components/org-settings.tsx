@@ -175,8 +175,8 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
               <p className="flex items-center gap-1.5 truncate text-[13px] font-medium text-zinc-900">
                 {m.user.name}
                 {me?.id === m.user.id && (
-                  <span className="shrink-0 rounded bg-elevated px-1.5 py-px text-[10px] font-semibold text-zinc-500">
-                    YOU
+                  <span className="shrink-0 rounded bg-elevated px-1.5 py-px text-[10px] font-semibold uppercase text-zinc-500">
+                    You
                   </span>
                 )}
               </p>
