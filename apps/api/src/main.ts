@@ -51,8 +51,25 @@ async function bootstrap() {
   // no extra body-parser middleware needed (a manual one shadows the global
   // JSON parser and leaves req.body empty on other routes).
 
+  // Allow the canonical web app plus any origin matching the optional preview
+  // regex (Vercel preview deployments get a fresh hostname per deploy, so a
+  // static allowlist can't cover them). `credentials: true` forbids the `*`
+  // wildcard, so we echo back the exact request origin only when it's allowed.
+  const webOrigin = config.get('WEB_ORIGIN', { infer: true });
+  const previewPattern = config.get('WEB_ORIGIN_PREVIEW_REGEX', { infer: true });
+  const previewRegex = previewPattern ? new RegExp(previewPattern) : null;
   app.enableCors({
-    origin: config.get('WEB_ORIGIN', { infer: true }),
+    origin: (origin, callback) => {
+      // No Origin header => non-browser client (curl, health checks,
+      // server-to-server) — nothing to protect against, allow it.
+      if (!origin || origin === webOrigin || previewRegex?.test(origin)) {
+        callback(null, true);
+        return;
+      }
+      // Deny by omitting CORS headers (no thrown error => no 500 on preflight);
+      // the browser blocks the response.
+      callback(null, false);
+    },
     credentials: true,
   });
 
