@@ -115,3 +115,26 @@ documented in [`DEPLOYMENT.md`](./DEPLOYMENT.md).
 
 Not presented as finished — `ARCHITECTURE.md` tracks what's shipped vs. a
 follow-up (making RLS always-on in prod, moving socket presence into Redis).
+
+
+FUTURE CHANGES --
+Every visitor waits for that /auth/refresh round-trip to resolve (a 401 for signed-out people) before anything renders. Combine that with your Render free tier spinning down when idle, and a recruiter clicking your GitHub link at 2am gets "Loading workspace…" for ~30–50 seconds while the API cold-starts — before they see a single pixel of marketing.
+
+Two fixes, both worth doing:
+- Don't gate public routes on the refresh. Render the landing page immediately and let the session restore happen in the background — only the authed routes need to wait.
+- Add a keep-warm cron (ping /health every ~14 min) so the API is rarely cold.
+
+SEO: Google currently sees an empty page
+
+app/page.tsx:1 is 'use client', so your served HTML is just the splash div — I saw this in the very first curl today. All that hero copy, pricing, and FAQ is invisible to crawlers and link previews. Making the marketing page a server component (or splitting marketing from app) would fix SEO and the blank-screen problem above in one move.
+
+Portfolio polish (cheap, high leverage)
+
+- README has no live demo link. The only link is in GitHub's About sidebar, which people miss. Put a demo URL + the demo credentials + a screenshot or GIF of the board in the first screen of the README.
+- DEPLOYMENT.md still has 9 XXXX placeholders (lines 78–131). Filling in your real URLs makes it read as a finished runbook instead of a template.
+
+Feature depth
+
+Your README says billing is "currently building" — finishing Stripe end-to-end (checkout → webhook → seat enforcement) is the kind of thing that separates a demo from a product. And the description promises "AI-powered" while the Assistant is fairly 
+
+                                                                                                                         
