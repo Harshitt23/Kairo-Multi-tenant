@@ -8,8 +8,8 @@ test('signs in and lists the seeded organization', async ({ page }) => {
 
 test('rejects bad credentials', async ({ page }) => {
   await page.goto('/login');
-  await page.getByLabel('Email').fill(SEED.email);
-  await page.getByLabel('Password').fill('wrong-password');
+  await page.getByTestId('login-email').fill(SEED.email);
+  await page.getByTestId('login-password').fill('wrong-password');
   await page.getByRole('button', { name: 'Sign in' }).click();
   // Stays on the login page and surfaces an error.
   await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();

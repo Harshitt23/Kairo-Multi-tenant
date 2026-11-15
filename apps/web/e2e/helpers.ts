@@ -16,8 +16,11 @@ export const SEED = {
  */
 export async function login(page: Page): Promise<void> {
   await page.goto('/login');
-  await page.getByLabel('Email').fill(SEED.email);
-  await page.getByLabel('Password').fill(SEED.password);
+  // data-testid rather than getByLabel: the password field's label element
+  // also wraps the "Show password" toggle (aria-label contains "password"),
+  // which getByLabel's substring matching would resolve to as well.
+  await page.getByTestId('login-email').fill(SEED.email);
+  await page.getByTestId('login-password').fill(SEED.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page).toHaveURL(new RegExp(`/${SEED.orgSlug}$`));
 }

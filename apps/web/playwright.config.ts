@@ -13,7 +13,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? 'github' : 'list',
+  // In CI emit the html report too — the workflow uploads
+  // apps/web/playwright-report as an artifact, which the bare `github`
+  // reporter never writes (upload-artifact then warns "no files found").
+  reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : [['list']],
   // A generous assertion timeout: under parallel load the login round-trip +
   // client navigation can exceed the 5s default, causing false failures.
   expect: { timeout: 10_000 },

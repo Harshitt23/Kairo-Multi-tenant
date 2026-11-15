@@ -120,6 +120,7 @@ function LoginForm() {
             <Field label="Email">
               <Input
                 type="email"
+                data-testid="login-email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
@@ -131,6 +132,7 @@ function LoginForm() {
               <div className="relative">
                 <Input
                   type={showPassword ? 'text' : 'password'}
+                  data-testid="login-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
