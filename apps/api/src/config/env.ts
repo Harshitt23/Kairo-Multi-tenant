@@ -17,7 +17,21 @@ const envSchema = z.object({
   WEB_ORIGIN_PREVIEW_REGEX: z.string().default(''),
 
   DATABASE_URL: z.string().min(1),
-  REDIS_URL: z.string().min(1).default('redis://localhost:6379'),
+  // Must be a parseable redis:// or rediss:// URL — app.module's parseRedis
+  // and the socket.io adapter both feed it to `new URL()`, so catch a bad
+  // value here with a readable message instead of a TypeError mid-boot.
+  REDIS_URL: z
+    .string()
+    .min(1)
+    .default('redis://localhost:6379')
+    .refine((v) => {
+      try {
+        const u = new URL(v);
+        return u.protocol === 'redis:' || u.protocol === 'rediss:';
+      } catch {
+        return false;
+      }
+    }, 'must be a redis:// or rediss:// URL, e.g. rediss://default:PASSWORD@host.upstash.io:6379'),
 
   JWT_ACCESS_SECRET: z.string().min(16),
   JWT_REFRESH_SECRET: z.string().min(16),

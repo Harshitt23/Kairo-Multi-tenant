@@ -16,8 +16,8 @@ export const SEED = {
  */
 export async function login(page: Page): Promise<void> {
   await page.goto('/login');
-  await page.getByPlaceholder('Email').fill(SEED.email);
-  await page.getByPlaceholder('Password').fill(SEED.password);
+  await page.getByLabel('Email').fill(SEED.email);
+  await page.getByLabel('Password').fill(SEED.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page).toHaveURL(new RegExp(`/${SEED.orgSlug}$`));
 }

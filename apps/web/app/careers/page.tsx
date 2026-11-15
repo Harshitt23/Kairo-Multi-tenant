@@ -35,12 +35,12 @@ export default function CareersPage() {
 
       <section className="border-b border-edge bg-panel px-6 py-14 lg:px-14">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-zinc-900">Why work here</h2>
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-ink">Why work here</h2>
           <div className="grid gap-8 sm:grid-cols-2">
             {PERKS.map((p) => (
               <div key={p.title}>
-                <h3 className="mb-1.5 text-base font-semibold text-zinc-900">{p.title}</h3>
-                <p className="text-sm leading-relaxed text-zinc-500">{p.body}</p>
+                <h3 className="mb-1.5 text-base font-semibold text-ink">{p.title}</h3>
+                <p className="text-sm leading-relaxed text-muted">{p.body}</p>
               </div>
             ))}
           </div>
@@ -49,33 +49,33 @@ export default function CareersPage() {
 
       <section className="px-6 py-16 lg:px-14 lg:py-20">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-6 text-2xl font-semibold tracking-tight text-zinc-900">Open roles</h2>
-          <div className="divide-y divide-edge overflow-hidden rounded-2xl border border-edge bg-panel">
+          <h2 className="mb-6 text-2xl font-semibold tracking-tight text-ink">Open roles</h2>
+          <div className="divide-y divide-edge overflow-hidden rounded-lg border border-edge bg-panel">
             {ROLES.map((r) => (
               <div
                 key={r.title}
                 className="flex flex-wrap items-center gap-3 px-5 py-4 transition-colors hover:bg-elevated"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-semibold text-zinc-900">{r.title}</div>
-                  <div className="mt-0.5 text-[13px] text-zinc-500">
+                  <div className="text-sm font-semibold text-ink">{r.title}</div>
+                  <div className="mt-0.5 text-[13px] text-muted">
                     {r.team} · {r.location}
                   </div>
                 </div>
                 <Link
                   href="mailto:careers@kairo.example?subject=Application"
-                  className="inline-flex h-9 items-center justify-center rounded-lg border border-edge px-4 text-[13px] font-medium text-zinc-700 transition-colors hover:border-indigo-400 hover:text-zinc-900"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-edge px-4 text-[13px] font-medium text-ink transition-colors hover:border-accent/50 hover:text-ink"
                 >
                   Apply
                 </Link>
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-zinc-500">
+          <p className="mt-6 text-sm text-muted">
             Don’t see your role?{' '}
             <Link
               href="mailto:careers@kairo.example?subject=Open%20application"
-              className="font-medium text-indigo-600 hover:text-indigo-700"
+              className="font-medium text-accent hover:text-accent"
             >
               Send us an open application
             </Link>

@@ -53,8 +53,8 @@ function SplashScreen() {
   return (
     <div className="grid min-h-screen place-items-center">
       <div className="flex flex-col items-center gap-3">
-        <span className="inline-flex h-10 w-10 animate-pulse items-center justify-center rounded-xl bg-brand shadow-glow" />
-        <span className="text-sm text-zinc-600">Loading workspace…</span>
+        <span className="inline-flex h-10 w-10 animate-pulse items-center justify-center rounded-lg bg-accent" />
+        <span className="text-sm text-muted">Loading workspace…</span>
       </div>
     </div>
   );

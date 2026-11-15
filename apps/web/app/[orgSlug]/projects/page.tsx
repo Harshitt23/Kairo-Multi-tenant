@@ -14,8 +14,8 @@ import { Skeleton } from '../../../components/ui/skeleton';
 function OverviewTile({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg border border-edge bg-panel px-4 py-3 shadow-card">
-      <div className="text-xl font-bold tracking-tight text-zinc-900">{value}</div>
-      <div className="mt-0.5 text-xs text-zinc-500">{label}</div>
+      <div className="text-xl font-bold tracking-tight text-ink">{value}</div>
+      <div className="mt-0.5 text-xs text-muted">{label}</div>
     </div>
   );
 }
@@ -43,7 +43,7 @@ export default function ProjectsPage({ params }: { params: { orgSlug: string } }
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight">Projects</h1>
-          <p className="mt-0.5 text-[13px] text-zinc-500">Open a project to view its board.</p>
+          <p className="mt-0.5 text-[13px] text-muted">Open a project to view its board.</p>
         </div>
         <Button size="sm" onClick={() => setCreating(true)}>
           + New project
@@ -67,7 +67,7 @@ export default function ProjectsPage({ params }: { params: { orgSlug: string } }
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search projects…"
-            className="min-w-0 flex-1 bg-transparent text-[13px] text-zinc-900 outline-none placeholder:text-zinc-400"
+            className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none placeholder:text-faint"
           />
         </div>
       )}
@@ -82,18 +82,18 @@ export default function ProjectsPage({ params }: { params: { orgSlug: string } }
           <motion.li key={p.id} variants={staggerItem}>
             <Link
               href={`/${orgSlug}/${p.key}/board`}
-              className="group block h-full rounded-xl border border-edge bg-panel p-4 shadow-card transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-card-hover"
+              className="group block h-full rounded-lg border border-edge bg-panel p-4 shadow-card transition-all duration-200 ease-premium hover:border-accent/40"
             >
               <div className="flex items-center gap-2">
-                <span className="rounded-md bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-indigo-700">
+                <span className="rounded-md bg-accent/10 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-accent">
                   {p.key}
                 </span>
-                <span className="truncate text-[15px] font-semibold text-zinc-900">{p.name}</span>
+                <span className="truncate text-[15px] font-semibold text-ink">{p.name}</span>
               </div>
-              <p className="mt-2.5 line-clamp-2 text-[13.5px] leading-relaxed text-zinc-500">
+              <p className="mt-2.5 line-clamp-2 text-[13.5px] leading-relaxed text-muted">
                 {p.description ?? 'No description'}
               </p>
-              <p className="mt-3 text-xs text-zinc-500">{p._count.issues} issues</p>
+              <p className="mt-3 text-xs text-muted">{p._count.issues} issues</p>
             </Link>
           </motion.li>
         ))}
@@ -129,12 +129,12 @@ export default function ProjectsPage({ params }: { params: { orgSlug: string } }
       </motion.ul>
 
       {projects.isSuccess && all.length > 0 && (
-        <div className="mt-5 flex items-center gap-2.5 rounded-lg bg-indigo-50 px-3.5 py-3">
+        <div className="mt-5 flex items-center gap-2.5 rounded-lg bg-accent/10 px-3.5 py-3">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
             <circle cx="12" cy="12" r="9" />
             <path d="M12 8v5M12 16h.01" />
           </svg>
-          <span className="text-[12.5px] text-indigo-700">
+          <span className="text-[12.5px] text-accent">
             Each project gets its own key (like {firstKey}) used to reference issues, e.g. {firstKey}-7.
           </span>
         </div>

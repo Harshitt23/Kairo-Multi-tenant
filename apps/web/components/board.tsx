@@ -165,7 +165,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
     : null;
 
   const selectClass =
-    'h-7 rounded-md border border-edge bg-elevated px-2 text-[13px] text-zinc-700 transition-colors focus:border-indigo-500';
+    'h-7 rounded-md border border-edge bg-elevated px-2 text-[13px] text-ink transition-colors focus:border-accent';
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -177,7 +177,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
           onChange={(e) => setQuery(e.target.value)}
           title="Press / to focus"
           placeholder="Search issues…"
-          className="h-7 w-48 rounded-md border border-edge bg-elevated px-2.5 text-[13px] text-zinc-800 placeholder:text-zinc-400 transition-colors focus:border-indigo-500"
+          className="h-7 w-48 rounded-md border border-edge bg-elevated px-2.5 text-[13px] text-ink placeholder:text-faint transition-colors focus:border-accent"
         />
         <select value={priority} onChange={(e) => setPriority(e.target.value)} className={selectClass}>
           <option value="ALL">All priorities</option>
@@ -214,7 +214,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
               setAssignee('ALL');
               setLabel('ALL');
             }}
-            className="h-7 rounded-md px-2 text-[13px] text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-800"
+            className="h-7 rounded-md px-2 text-[13px] text-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             Clear
           </button>
@@ -222,7 +222,7 @@ export function Board({ orgSlug, projectKey }: { orgSlug: string; projectKey: st
 
         <div className="ml-auto flex items-center gap-3">
           <Presence users={presence} />
-          <span className="text-xs text-zinc-600">
+          <span className="text-xs text-muted">
             {filtersActive ? `${filtered.length} of ${issues.length}` : `${issues.length} issues`}
           </span>
           <Button size="sm" title="Press C" onClick={() => setCreating(true)}>
@@ -318,8 +318,8 @@ function Column({
   return (
     <div className="flex h-full w-72 shrink-0 flex-col">
       <div className="mb-2 flex shrink-0 items-center gap-2 px-1">
-        <span className="text-xs font-medium uppercase tracking-wide text-zinc-600">{label}</span>
-        <span className="rounded-full bg-elevated px-1.5 py-px text-[11px] text-zinc-500">
+        <span className="text-xs font-medium uppercase tracking-wide text-muted">{label}</span>
+        <span className="rounded-full bg-elevated px-1.5 py-px text-[11px] text-muted">
           {issues.length}
         </span>
       </div>
@@ -327,7 +327,7 @@ function Column({
         ref={setNodeRef}
         className={cn(
           'min-h-0 flex-1 space-y-2 overflow-y-auto rounded-lg border p-2 transition-colors',
-          isOver ? 'border-indigo-400 bg-indigo-50/60' : 'border-edge bg-elevated/40',
+          isOver ? 'border-accent/50 bg-elevated/60' : 'border-edge bg-elevated/40',
         )}
       >
         <SortableContext items={issues.map((i) => i.id)} strategy={verticalListSortingStrategy}>
@@ -365,7 +365,7 @@ function Card({
     transition,
     opacity: isDragging && !overlay ? 0.4 : 1,
   };
-  const dot = (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-zinc-600';
+  const dot = (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-faint';
   return (
     <div
       ref={setNodeRef}
@@ -374,8 +374,8 @@ function Card({
       {...listeners}
       onClick={() => onOpen?.(issue.id)}
       className={cn(
-        'cursor-pointer rounded-md border border-edge bg-panel p-2.5 text-[13px] shadow-card transition-all duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-glow',
-        overlay && 'rotate-1 shadow-glow',
+        'cursor-pointer rounded-md border border-edge bg-panel p-2.5 text-[13px] shadow-card transition-all duration-150 hover:border-accent/40',
+        overlay && 'rotate-1',
       )}
     >
       {issue.labels && issue.labels.length > 0 && (
@@ -391,8 +391,8 @@ function Card({
           ))}
         </div>
       )}
-      <p className="font-medium leading-snug text-zinc-900">{issue.title}</p>
-      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-zinc-500">
+      <p className="font-medium leading-snug text-ink">{issue.title}</p>
+      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
         <span className={`inline-block h-2 w-2 rounded-full ${dot}`} />
         <span>{`#${issue.number} · ${issue.priority}`}</span>
         {due && (
@@ -441,7 +441,7 @@ function Presence({ users }: { users: { userId: string; name: string }[] }) {
         </span>
       ))}
       {users.length > 4 && (
-        <span className="z-10 inline-flex h-[22px] items-center rounded-full bg-elevated px-1.5 text-[10px] text-zinc-600 ring-2 ring-surface">
+        <span className="z-10 inline-flex h-[22px] items-center rounded-full bg-elevated px-1.5 text-[10px] text-muted ring-2 ring-surface">
           +{users.length - 4}
         </span>
       )}

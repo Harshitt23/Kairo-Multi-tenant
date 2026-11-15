@@ -1,18 +1,18 @@
 import { type ReactNode } from 'react';
 
-/** App logo: a gradient tile with a stacked-board glyph. */
+/** App logo: a flat ink tile with a stacked-board glyph. */
 export function Logo({ size = 32 }: { size?: number }) {
   return (
     <span
-      className="inline-flex items-center justify-center rounded-xl bg-brand text-white shadow-glow"
+      className="inline-flex items-center justify-center rounded-md bg-ink text-surface"
       style={{ width: size, height: size }}
       aria-hidden
     >
       <svg width={size * 0.56} height={size * 0.56} viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="3" width="7" height="10" rx="1.5" fill="white" fillOpacity="0.95" />
-        <rect x="3" y="15" width="7" height="6" rx="1.5" fill="white" fillOpacity="0.6" />
-        <rect x="14" y="3" width="7" height="6" rx="1.5" fill="white" fillOpacity="0.6" />
-        <rect x="14" y="11" width="7" height="10" rx="1.5" fill="white" fillOpacity="0.95" />
+        <rect x="3" y="3" width="7" height="10" rx="1.5" fill="currentColor" fillOpacity="0.95" />
+        <rect x="3" y="15" width="7" height="6" rx="1.5" fill="currentColor" fillOpacity="0.55" />
+        <rect x="14" y="3" width="7" height="6" rx="1.5" fill="currentColor" fillOpacity="0.55" />
+        <rect x="14" y="11" width="7" height="10" rx="1.5" fill="currentColor" fillOpacity="0.95" />
       </svg>
     </span>
   );
@@ -23,18 +23,20 @@ export function Wordmark({ size = 32 }: { size?: number }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <Logo size={size} />
-      <span className="text-[15px] font-semibold tracking-tight text-zinc-900">Kairo</span>
+      <span className="text-[15px] font-semibold tracking-tight text-ink">Kairo</span>
     </span>
   );
 }
 
-const AVATAR_GRADIENTS = [
-  'from-indigo-500 to-violet-500',
-  'from-sky-500 to-cyan-500',
-  'from-emerald-500 to-teal-500',
-  'from-amber-500 to-orange-500',
-  'from-rose-500 to-pink-500',
-  'from-fuchsia-500 to-purple-500',
+// Flat, slightly desaturated fills — enough to tell people apart, quiet
+// enough to not fight the UI.
+const AVATAR_COLORS = [
+  '#4f6bcd',
+  '#3f8f8a',
+  '#8a6ccd',
+  '#b06a3f',
+  '#a84f6e',
+  '#5f8f4f',
 ];
 
 function hashIndex(seed: string, mod: number) {
@@ -43,7 +45,7 @@ function hashIndex(seed: string, mod: number) {
   return h % mod;
 }
 
-/** Initials avatar with a deterministic gradient derived from the seed. */
+/** Initials avatar with a deterministic flat color derived from the seed. */
 export function Avatar({
   name,
   seed,
@@ -61,11 +63,11 @@ export function Avatar({
       .slice(0, 2)
       .join('')
       .toUpperCase() || '?';
-  const grad = AVATAR_GRADIENTS[hashIndex(seed ?? name, AVATAR_GRADIENTS.length)];
+  const color = AVATAR_COLORS[hashIndex(seed ?? name, AVATAR_COLORS.length)];
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${grad} font-medium text-white`}
-      style={{ width: size, height: size, fontSize: size * 0.38 }}
+      className="inline-flex shrink-0 items-center justify-center rounded-full font-medium text-white"
+      style={{ width: size, height: size, fontSize: size * 0.38, background: color }}
       title={name}
     >
       {initials}
@@ -73,12 +75,10 @@ export function Avatar({
   );
 }
 
-/** A subtle card wrapper used across list/detail surfaces. */
+/** A flat bordered card wrapper used across list/detail surfaces. */
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div
-      className={`rounded-xl border border-edge bg-panel shadow-card transition-colors ${className}`}
-    >
+    <div className={`rounded-lg border border-edge bg-panel transition-colors ${className}`}>
       {children}
     </div>
   );

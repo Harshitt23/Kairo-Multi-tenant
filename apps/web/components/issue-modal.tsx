@@ -38,7 +38,7 @@ function labelize(v: string): string {
 }
 
 const PRIORITY_DOT: Record<IssuePriorityValue, string> = {
-  NONE: 'bg-zinc-600',
+  NONE: 'bg-faint',
   LOW: 'bg-sky-500',
   MEDIUM: 'bg-amber-500',
   HIGH: 'bg-orange-500',
@@ -56,11 +56,11 @@ function ModalShell({ onClose, children }: { onClose: () => void; children: Reac
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-zinc-900/30 p-4 backdrop-blur-sm sm:p-10"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm sm:p-10"
       onClick={onClose}
     >
       <div
-        className="mt-4 w-full max-w-2xl rounded-xl border border-edge bg-panel shadow-2xl"
+        className="mt-4 w-full max-w-2xl rounded-lg border border-edge bg-panel shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
@@ -72,7 +72,7 @@ function ModalShell({ onClose, children }: { onClose: () => void; children: Reac
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+      <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted">
         {label}
       </span>
       {children}
@@ -81,7 +81,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const inputCls =
-  'w-full rounded-md border border-edge bg-surface px-3 py-2 text-sm text-zinc-900 outline-none focus:border-indigo-500';
+  'w-full rounded-md border border-edge bg-surface px-3 py-2 text-sm text-ink outline-none focus:border-accent';
 const selectCls = inputCls + ' cursor-pointer';
 
 function AssigneeOptions({ members }: { members: Member[] }) {
@@ -137,7 +137,7 @@ function AttachmentsSection({ orgSlug, issueId }: { orgSlug: string; issueId: st
 
   return (
     <div>
-      <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+      <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted">
         Attachments
       </span>
       <ul className="space-y-1">
@@ -150,15 +150,15 @@ function AttachmentsSection({ orgSlug, issueId }: { orgSlug: string; issueId: st
               href={f.downloadUrl}
               target="_blank"
               rel="noreferrer"
-              className="min-w-0 truncate text-indigo-700 hover:underline"
+              className="min-w-0 truncate text-accent hover:underline"
             >
               {f.fileName}
             </a>
-            <span className="ml-3 flex items-center gap-3 text-xs text-zinc-500">
+            <span className="ml-3 flex items-center gap-3 text-xs text-muted">
               <span>{formatSize(f.size)}</span>
               <button
                 onClick={() => del.mutate(f.id)}
-                className="text-zinc-500 hover:text-red-600"
+                className="text-muted hover:text-red-600"
                 aria-label="Delete attachment"
               >
                 ✕
@@ -166,9 +166,9 @@ function AttachmentsSection({ orgSlug, issueId }: { orgSlug: string; issueId: st
             </span>
           </li>
         ))}
-        {files.length === 0 && <li className="text-xs text-zinc-600">No files attached.</li>}
+        {files.length === 0 && <li className="text-xs text-muted">No files attached.</li>}
       </ul>
-      <label className="mt-2 inline-block cursor-pointer text-xs text-indigo-600 hover:text-indigo-700">
+      <label className="mt-2 inline-block cursor-pointer text-xs text-accent hover:text-accent">
         {upload.isPending ? 'Uploading…' : '+ Attach a file'}
         <input type="file" className="hidden" onChange={onFile} disabled={upload.isPending} />
       </label>
@@ -225,7 +225,7 @@ function EventDot({ type }: { type: ActivityItem['type'] }) {
     updated: 'M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z',
   };
   return (
-    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-elevated text-zinc-500">
+    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-elevated text-muted">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d={paths[type] ?? paths.updated} />
       </svg>
@@ -248,7 +248,7 @@ function renderCommentBody(body: string, memberNames: string[]): React.ReactNode
   while ((m = re.exec(body)) !== null) {
     if (m.index > last) nodes.push(body.slice(last, m.index));
     nodes.push(
-      <span key={m.index} className="rounded bg-indigo-50 px-1 font-medium text-indigo-700">
+      <span key={m.index} className="rounded bg-accent/10 px-1 font-medium text-accent">
         {m[0]}
       </span>,
     );
@@ -266,10 +266,10 @@ function ActivityRow({ item, memberNames }: { item: ActivityItem; memberNames: s
         <Avatar name={who} seed={item.actor?.id} size={28} />
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <span className="text-sm font-medium text-zinc-900">{who}</span>
-            <span className="text-xs text-zinc-500">{timeAgo(item.at)}</span>
+            <span className="text-sm font-medium text-ink">{who}</span>
+            <span className="text-xs text-muted">{timeAgo(item.at)}</span>
           </div>
-          <p className="mt-1 whitespace-pre-wrap break-words rounded-lg bg-surface px-3 py-2 text-sm text-zinc-700">
+          <p className="mt-1 whitespace-pre-wrap break-words rounded-lg bg-surface px-3 py-2 text-sm text-ink">
             {renderCommentBody(item.body, memberNames)}
           </p>
         </div>
@@ -279,9 +279,9 @@ function ActivityRow({ item, memberNames }: { item: ActivityItem; memberNames: s
   return (
     <li className="flex items-center gap-2.5">
       <EventDot type={item.type} />
-      <span className="min-w-0 text-[13px] text-zinc-500">
-        <span className="font-medium text-zinc-700">{who}</span> {describeEvent(item)}
-        <span className="text-zinc-400"> · {timeAgo(item.at)}</span>
+      <span className="min-w-0 text-[13px] text-muted">
+        <span className="font-medium text-ink">{who}</span> {describeEvent(item)}
+        <span className="text-faint"> · {timeAgo(item.at)}</span>
       </span>
     </li>
   );
@@ -401,7 +401,7 @@ function MentionComposer({
               onClick={() => pick(m)}
               className={cn(
                 'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors',
-                i === active ? 'bg-elevated text-zinc-900' : 'text-zinc-600',
+                i === active ? 'bg-elevated text-ink' : 'text-muted',
               )}
             >
               <Avatar name={m.user.name} seed={m.user.id} size={20} />
@@ -414,7 +414,7 @@ function MentionComposer({
         <button
           onClick={submit}
           disabled={!body.trim() || pending}
-          className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending ? 'Posting…' : 'Comment'}
         </button>
@@ -438,14 +438,14 @@ function ActivitySection({
 
   return (
     <div>
-      <span className="mb-2 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+      <span className="mb-2 block text-xs font-medium uppercase tracking-wide text-muted">
         Activity
       </span>
 
       <ul className="space-y-3">
-        {isLoading && <li className="text-xs text-zinc-600">Loading…</li>}
+        {isLoading && <li className="text-xs text-muted">Loading…</li>}
         {!isLoading && items.length === 0 && (
-          <li className="text-xs text-zinc-600">No activity yet.</li>
+          <li className="text-xs text-muted">No activity yet.</li>
         )}
         {items.map((item) => (
           <ActivityRow key={item.id} item={item} memberNames={memberNames} />
@@ -488,12 +488,12 @@ export function IssueDetailModal({
   return (
     <ModalShell onClose={onClose}>
       <div className="flex items-center justify-between border-b border-edge px-5 py-3">
-        <span className="font-mono text-xs text-zinc-500">
+        <span className="font-mono text-xs text-muted">
           {projectKey}-{issue.number}
         </span>
         <button
           onClick={onClose}
-          className="rounded p-1 text-zinc-500 hover:bg-surface hover:text-zinc-800"
+          className="rounded p-1 text-muted hover:bg-surface hover:text-ink"
           aria-label="Close"
         >
           ✕
@@ -507,7 +507,7 @@ export function IssueDetailModal({
             const v = e.target.value.trim();
             if (v && v !== issue.title) save({ title: v });
           }}
-          className="w-full rounded-md bg-transparent px-1 text-lg font-semibold text-zinc-900 outline-none focus:bg-surface"
+          className="w-full rounded-md bg-transparent px-1 text-lg font-semibold text-ink outline-none focus:bg-surface"
           placeholder="Issue title"
         />
 
@@ -589,7 +589,7 @@ export function IssueDetailModal({
       <div className="flex items-center justify-between border-t border-edge px-5 py-3">
         {confirmDelete ? (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-zinc-600">Delete this issue?</span>
+            <span className="text-muted">Delete this issue?</span>
             <button
               onClick={() => {
                 del.mutate(issue.id);
@@ -601,7 +601,7 @@ export function IssueDetailModal({
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
-              className="rounded-md px-3 py-1.5 text-sm text-zinc-600 hover:text-zinc-800"
+              className="rounded-md px-3 py-1.5 text-sm text-muted hover:text-ink"
             >
               Cancel
             </button>
@@ -609,12 +609,12 @@ export function IssueDetailModal({
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="rounded-md px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
+            className="rounded-md px-3 py-1.5 text-sm text-red-600 hover:bg-red-500/10"
           >
             Delete
           </button>
         )}
-        <span className="text-xs text-zinc-600">
+        <span className="text-xs text-muted">
           {update.isPending ? 'Saving…' : 'Changes save automatically'}
         </span>
       </div>
@@ -664,10 +664,10 @@ export function NewIssueModal({
   return (
     <ModalShell onClose={onClose}>
       <div className="flex items-center justify-between border-b border-edge px-5 py-3">
-        <h2 className="text-sm font-medium text-zinc-800">New issue</h2>
+        <h2 className="text-sm font-medium text-ink">New issue</h2>
         <button
           onClick={onClose}
-          className="rounded p-1 text-zinc-500 hover:bg-surface hover:text-zinc-800"
+          className="rounded p-1 text-muted hover:bg-surface hover:text-ink"
           aria-label="Close"
         >
           ✕
@@ -746,14 +746,14 @@ export function NewIssueModal({
       <div className="flex items-center justify-end gap-2 border-t border-edge px-5 py-3">
         <button
           onClick={onClose}
-          className="rounded-md px-3 py-1.5 text-sm text-zinc-600 hover:text-zinc-800"
+          className="rounded-md px-3 py-1.5 text-sm text-muted hover:text-ink"
         >
           Cancel
         </button>
         <button
           onClick={submit}
           disabled={!title.trim() || create.isPending}
-          className="rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
         >
           {create.isPending ? 'Creating…' : 'Create issue'}
         </button>

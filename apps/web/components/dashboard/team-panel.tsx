@@ -15,8 +15,8 @@ function mockStatus(seed: string): { label: string; dot: string; bg: string; tex
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   const away = h % 5 === 0;
   return away
-    ? { label: 'Away', dot: 'bg-amber-500', bg: 'bg-amber-50', text: 'text-amber-700' }
-    : { label: 'Active', dot: 'bg-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700' };
+    ? { label: 'Away', dot: 'bg-amber-500', bg: 'bg-amber-500/10', text: 'text-amber-700 dark:text-amber-400' }
+    : { label: 'Active', dot: 'bg-emerald-500', bg: 'bg-emerald-500/10', text: 'text-emerald-700 dark:text-emerald-400' };
 }
 
 export function TeamPanel({ orgSlug, theme }: { orgSlug: string; theme: DashboardStyles }) {
@@ -27,7 +27,7 @@ export function TeamPanel({ orgSlug, theme }: { orgSlug: string; theme: Dashboar
   return (
     <DashboardCard theme={theme}>
       <div className="mb-3.5 flex items-center justify-between">
-        <span className="text-[14.5px] font-semibold text-zinc-900">Team</span>
+        <span className="text-[14.5px] font-semibold text-ink">Team</span>
         {!isLoading && <span className="text-[11.5px] font-medium text-emerald-600">{activeCount} online</span>}
       </div>
       {isLoading && (
@@ -50,8 +50,8 @@ export function TeamPanel({ orgSlug, theme }: { orgSlug: string; theme: Dashboar
                   />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[12.5px] font-medium text-zinc-700">{m.user.name}</span>
-                  <span className="block text-[11px] capitalize text-zinc-400">{m.role.toLowerCase()}</span>
+                  <span className="block truncate text-[12.5px] font-medium text-ink">{m.user.name}</span>
+                  <span className="block text-[11px] capitalize text-faint">{m.role.toLowerCase()}</span>
                 </span>
                 <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-semibold ${status.bg} ${status.text}`}>
                   {status.label}

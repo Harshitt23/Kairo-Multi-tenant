@@ -11,8 +11,8 @@ import { Skeleton } from '../ui/skeleton';
 import { DashboardCard } from './dashboard-card';
 
 const COLUMNS: { status: string; label: string; dot: string }[] = [
-  { status: 'TODO', label: 'To do', dot: 'bg-zinc-400' },
-  { status: 'IN_PROGRESS', label: 'In Progress', dot: 'bg-indigo-500' },
+  { status: 'TODO', label: 'To do', dot: 'bg-faint' },
+  { status: 'IN_PROGRESS', label: 'In Progress', dot: 'bg-accent' },
   { status: 'IN_REVIEW', label: 'In Review', dot: 'bg-amber-500' },
   { status: 'DONE', label: 'Done', dot: 'bg-emerald-500' },
 ];
@@ -55,8 +55,8 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
   if (!project) {
     return (
       <DashboardCard theme={theme}>
-        <div className="text-[14.5px] font-semibold text-zinc-900">Board preview</div>
-        <p className="mt-3 text-sm text-zinc-500">
+        <div className="text-[14.5px] font-semibold text-ink">Board preview</div>
+        <p className="mt-3 text-sm text-muted">
           Create a project to see its board here.
         </p>
       </DashboardCard>
@@ -66,10 +66,10 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
   return (
     <DashboardCard theme={theme}>
       <div className="mb-4 flex items-center justify-between">
-        <span className="text-[14.5px] font-semibold text-zinc-900">Board preview</span>
+        <span className="text-[14.5px] font-semibold text-ink">Board preview</span>
         <Link
           href={`/${orgSlug}/${project.key}/board`}
-          className="text-[12px] font-medium text-indigo-600 hover:text-indigo-700"
+          className="text-[12px] font-medium text-accent hover:text-accent"
         >
           {project.name} →
         </Link>
@@ -81,10 +81,10 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
             <div key={col.status} className="min-w-0">
               <div className="mb-2.5 flex items-center gap-1.5 px-0.5">
                 <span className={`h-1.5 w-1.5 rounded-full ${col.dot}`} />
-                <span className="text-[11.5px] font-bold uppercase tracking-wide text-zinc-600">
+                <span className="text-[11.5px] font-bold uppercase tracking-wide text-muted">
                   {col.label}
                 </span>
-                <span className="text-[11px] text-zinc-400">{colIssues.length}</span>
+                <span className="text-[11px] text-faint">{colIssues.length}</span>
               </div>
               <div className="flex flex-col gap-2">
                 {colIssues.slice(0, 3).map((issue) => {
@@ -96,7 +96,7 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
                       key={issue.id}
                       href={`/${orgSlug}/${project.key}/board?issue=${issue.number}`}
                       style={{ backgroundColor: theme.surfaceTint, ...theme.nestedStyle }}
-                      className={`block rounded-lg p-2.5 transition-all hover:-translate-y-0.5 hover:brightness-95 ${theme.nestedBorderClass}`}
+                      className={`block rounded-lg p-2.5 transition-all hover:brightness-95 ${theme.nestedBorderClass}`}
                     >
                       {label && (
                         <span
@@ -106,14 +106,14 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
                           {label.name}
                         </span>
                       )}
-                      <div className="line-clamp-2 text-[12.5px] font-medium text-zinc-800">
+                      <div className="line-clamp-2 text-[12.5px] font-medium text-ink">
                         {issue.title}
                       </div>
                       <div className="mt-2 flex items-center justify-between gap-2">
                         <span className="flex min-w-0 items-center gap-1.5">
                           <span
                             className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                              (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-zinc-300'
+                              (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-faint/60'
                             }`}
                           />
                           {due && (
@@ -130,7 +130,7 @@ export function BoardPreview({ orgSlug, theme }: { orgSlug: string; theme: Dashb
                   );
                 })}
                 {colIssues.length === 0 && (
-                  <div className="rounded-lg border border-dashed border-edge px-2 py-4 text-center text-[11px] text-zinc-400">
+                  <div className="rounded-lg border border-dashed border-edge px-2 py-4 text-center text-[11px] text-faint">
                     Nothing here
                   </div>
                 )}

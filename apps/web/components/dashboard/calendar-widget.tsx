@@ -67,21 +67,21 @@ export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: Das
   return (
     <DashboardCard theme={theme}>
       <div className="mb-3.5 flex items-center justify-between">
-        <span className="text-[14.5px] font-semibold text-zinc-900">
+        <span className="text-[14.5px] font-semibold text-ink">
           {MONTH_NAMES[monthIndex]} {year}
         </span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => shiftMonth(-1)}
             aria-label="Previous month"
-            className="flex h-[22px] w-[22px] items-center justify-center rounded-md border border-edge text-zinc-500 transition-colors hover:bg-elevated"
+            className="flex h-[22px] w-[22px] items-center justify-center rounded-md border border-edge text-muted transition-colors hover:bg-elevated"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
           </button>
           <button
             onClick={() => shiftMonth(1)}
             aria-label="Next month"
-            className="flex h-[22px] w-[22px] items-center justify-center rounded-md border border-edge text-zinc-500 transition-colors hover:bg-elevated"
+            className="flex h-[22px] w-[22px] items-center justify-center rounded-md border border-edge text-muted transition-colors hover:bg-elevated"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
           </button>
@@ -93,7 +93,7 @@ export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: Das
         <>
           <div className="mb-1.5 grid grid-cols-7 gap-1">
             {WEEKDAY_LABELS.map((wd, i) => (
-              <span key={i} className="text-center text-[10px] font-semibold text-zinc-400">
+              <span key={i} className="text-center text-[10px] font-semibold text-faint">
                 {wd}
               </span>
             ))}
@@ -104,9 +104,9 @@ export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: Das
                 key={i}
                 className={`relative flex aspect-square flex-col items-center justify-center rounded-lg text-[11px] transition-colors ${
                   c.isToday
-                    ? 'bg-brand font-bold text-white'
+                    ? 'bg-accent font-bold text-white'
                     : c.date
-                      ? 'font-normal text-zinc-700 hover:bg-elevated'
+                      ? 'font-normal text-ink hover:bg-elevated'
                       : ''
                 }`}
               >
@@ -129,8 +129,8 @@ export function CalendarWidget({ orgSlug, theme }: { orgSlug: string; theme: Das
                     style={{ background: PRIORITY_COLOR[ev.priority] ?? '#6366f1' }}
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[12px] font-medium text-zinc-800">{ev.title}</span>
-                    <span className="block text-[11px] text-zinc-400">
+                    <span className="block truncate text-[12px] font-medium text-ink">{ev.title}</span>
+                    <span className="block text-[11px] text-faint">
                       {ev.projectKey}-{ev.issueNumber} · due {ev.date.slice(5)}
                     </span>
                   </span>

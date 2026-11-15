@@ -1,9 +1,9 @@
 import { MarketingPageHeader } from '../marketing-chrome';
 
 const TAG_STYLES: Record<string, string> = {
-  New: 'bg-emerald-50 text-emerald-700',
-  Improved: 'bg-indigo-50 text-indigo-700',
-  Fixed: 'bg-amber-50 text-amber-700',
+  New: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400',
+  Improved: 'bg-accent/10 text-accent',
+  Fixed: 'bg-amber-500/10 text-amber-700 dark:text-amber-400',
 };
 
 const RELEASES = [
@@ -63,10 +63,10 @@ export function ChangelogContent() {
         <div className="mx-auto flex max-w-3xl flex-col gap-12">
           {RELEASES.map((r) => (
             <article key={r.version} className="relative border-l border-edge pl-6">
-              <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-brand" />
+              <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-accent" />
               <div className="flex flex-wrap items-center gap-3">
-                <span className="text-sm font-bold text-zinc-900">{r.version}</span>
-                <span className="text-[13px] text-zinc-400">{r.date}</span>
+                <span className="text-sm font-bold text-ink">{r.version}</span>
+                <span className="text-[13px] text-faint">{r.date}</span>
                 <div className="flex gap-1.5">
                   {r.tags.map((t) => (
                     <span
@@ -78,11 +78,11 @@ export function ChangelogContent() {
                   ))}
                 </div>
               </div>
-              <h2 className="mt-2 text-lg font-semibold text-zinc-900">{r.title}</h2>
+              <h2 className="mt-2 text-lg font-semibold text-ink">{r.title}</h2>
               <ul className="mt-3 flex flex-col gap-2">
                 {r.items.map((item) => (
-                  <li key={item} className="flex gap-2 text-sm leading-relaxed text-zinc-600">
-                    <span className="text-indigo-400">•</span>
+                  <li key={item} className="flex gap-2 text-sm leading-relaxed text-muted">
+                    <span className="text-accent">•</span>
                     {item}
                   </li>
                 ))}

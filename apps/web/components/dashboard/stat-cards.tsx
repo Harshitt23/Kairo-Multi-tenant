@@ -75,15 +75,15 @@ function StatCard({
           {delta && (
             <span
               className={`rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${
-                delta.up ? 'bg-emerald-50 text-emerald-700' : 'bg-orange-50 text-orange-700'
+                delta.up ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400' : 'bg-orange-50 text-orange-700'
               }`}
             >
               {delta.text}
             </span>
           )}
         </div>
-        <div className="mt-3 text-[12.5px] font-medium text-zinc-500">{label}</div>
-        <div className="mt-1 text-[27px] font-bold tracking-tight text-zinc-900">{value}</div>
+        <div className="mt-3 text-[12.5px] font-medium text-muted">{label}</div>
+        <div className="mt-1 text-[27px] font-bold tracking-tight text-ink">{value}</div>
         {path && (
           <svg width="100%" height="28" viewBox="0 0 100 28" preserveAspectRatio="none" className="mt-3 block">
             <path
@@ -111,7 +111,7 @@ function StatCard({
             >
               <path d={delta.up ? 'M4 14l5-5 4 4 7-7' : 'M4 8l5 5 4-4 7 7'} />
             </svg>
-            <span className="text-[11px] text-zinc-400">vs last week</span>
+            <span className="text-[11px] text-faint">vs last week</span>
           </div>
         )}
       </DashboardCard>
@@ -153,8 +153,8 @@ export function DashboardStatCards({ orgSlug, theme }: { orgSlug: string; theme:
         label="Open issues"
         value={String(data.openIssues)}
         trend={SPARK_SHAPES.openIssues}
-        iconBg="bg-indigo-50"
-        iconColor="text-indigo-600"
+        iconBg="bg-accent/10"
+        iconColor="text-accent"
         icon={
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M8 6h11M8 12h11M8 18h11" strokeLinecap="round" />
@@ -170,7 +170,7 @@ export function DashboardStatCards({ orgSlug, theme }: { orgSlug: string; theme:
         value={String(data.closedThisWeek)}
         delta={pctDelta(data.closedThisWeek, data.closedPriorWeek)}
         trend={SPARK_SHAPES.closed}
-        iconBg="bg-emerald-50"
+        iconBg="bg-emerald-500/10"
         iconColor="text-emerald-600"
         icon={
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -185,8 +185,8 @@ export function DashboardStatCards({ orgSlug, theme }: { orgSlug: string; theme:
         value={String(data.overdueIssues)}
         trend={SPARK_SHAPES.overdue}
         trendUp={false}
-        iconBg="bg-red-50"
-        iconColor="text-red-700"
+        iconBg="bg-red-500/10"
+        iconColor="text-red-700 dark:text-red-400"
         icon={
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <circle cx="12" cy="12" r="9" />

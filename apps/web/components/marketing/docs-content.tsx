@@ -48,14 +48,14 @@ export function DocsContent() {
           {SECTIONS.map((s) => (
             <div
               key={s.title}
-              className="rounded-2xl border border-edge bg-panel p-6 shadow-card"
+              className="rounded-lg border border-edge bg-panel p-6 shadow-card"
             >
-              <h3 className="text-base font-semibold text-zinc-900">{s.title}</h3>
-              <p className="mt-1.5 text-[13.5px] leading-relaxed text-zinc-500">{s.blurb}</p>
+              <h3 className="text-base font-semibold text-ink">{s.title}</h3>
+              <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">{s.blurb}</p>
               <ul className="mt-4 flex flex-col gap-2 border-t border-edge pt-4">
                 {s.articles.map((a) => (
-                  <li key={a} className="flex items-center gap-2 text-sm text-zinc-600">
-                    <span className="text-indigo-400">→</span>
+                  <li key={a} className="flex items-center gap-2 text-sm text-muted">
+                    <span className="text-accent">→</span>
                     {a}
                   </li>
                 ))}
@@ -63,14 +63,14 @@ export function DocsContent() {
             </div>
           ))}
         </div>
-        <div className="mx-auto mt-14 max-w-5xl rounded-2xl bg-zinc-900 px-8 py-10 text-center">
-          <h2 className="text-xl font-semibold text-white">Ready to try it yourself?</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-zinc-400">
+        <div className="mx-auto mt-14 max-w-5xl rounded-lg bg-ink px-8 py-10 text-center">
+          <h2 className="text-xl font-semibold text-surface">Ready to try it yourself?</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-surface/70">
             Spin up a workspace and follow the quickstart — free for teams up to 10.
           </p>
           <Link
             href={SIGN_UP_HREF}
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-brand px-5 text-sm font-medium text-white shadow-glow transition-opacity hover:opacity-90"
+            className="mt-6 inline-flex h-9 items-center justify-center rounded-md bg-surface px-4 text-[13px] font-medium text-ink transition-opacity hover:opacity-90"
           >
             Start free
           </Link>

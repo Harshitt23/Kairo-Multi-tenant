@@ -141,10 +141,10 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
     <>
       <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
         <DialogPrimitive.Portal>
-          <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-zinc-900/30 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+          <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm data-[state=open]:animate-fade-in" />
           <DialogPrimitive.Content
             aria-describedby={undefined}
-            className="fixed left-1/2 top-[18vh] z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-xl border border-edge bg-panel shadow-card-hover focus:outline-none data-[state=open]:animate-command-in"
+            className="fixed left-1/2 top-[18vh] z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 overflow-hidden rounded-lg border border-edge bg-panel shadow-card-hover focus:outline-none data-[state=open]:animate-command-in"
           >
             <DialogPrimitive.Title className="sr-only">Command palette</DialogPrimitive.Title>
             <input
@@ -153,18 +153,18 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onInputKeyDown}
               placeholder="Type a command or search…"
-              className="w-full border-b border-edge bg-transparent px-4 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
+              className="w-full border-b border-edge bg-transparent px-4 py-3.5 text-sm text-ink placeholder:text-faint focus:outline-none"
             />
             <div className="max-h-[50vh] overflow-y-auto p-1.5">
               {filtered.length === 0 && (
-                <p className="px-3 py-6 text-center text-sm text-zinc-600">No results</p>
+                <p className="px-3 py-6 text-center text-sm text-muted">No results</p>
               )}
               {GROUPS.map((g) => {
                 const items = filtered.filter((c) => c.group === g);
                 if (items.length === 0) return null;
                 return (
                   <div key={g} className="mb-1">
-                    <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-600">
+                    <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted">
                       {g}
                     </p>
                     {items.map((c) => {
@@ -176,12 +176,12 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
                           onMouseEnter={() => setActiveIdx(idx)}
                           className={cn(
                             'flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm transition-colors',
-                            idx === activeIdx ? 'bg-elevated text-zinc-900' : 'text-zinc-600',
+                            idx === activeIdx ? 'bg-elevated text-ink' : 'text-muted',
                           )}
                         >
                           <span className="min-w-0 flex-1 truncate">{c.label}</span>
                           {c.hint && (
-                            <span className="shrink-0 rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-indigo-700">
+                            <span className="shrink-0 rounded bg-accent/10 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-accent">
                               {c.hint}
                             </span>
                           )}
@@ -192,7 +192,7 @@ export function CommandPalette({ orgSlug }: { orgSlug: string }) {
                 );
               })}
             </div>
-            <div className="flex items-center gap-3 border-t border-edge px-4 py-2 text-[11px] text-zinc-600">
+            <div className="flex items-center gap-3 border-t border-edge px-4 py-2 text-[11px] text-muted">
               <span>↑↓ navigate</span>
               <span>↵ select</span>
               <span>esc close</span>

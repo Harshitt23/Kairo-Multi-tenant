@@ -2,8 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme tokens. Raw RGB triplets so Tailwind's <alpha-value> works. */
 :root {
   color-scheme: light;
+  --surface: 250 250 250; /* page background */
+  --panel: 255 255 255; /* cards, dialogs, menus */
+  --elevated: 244 244 245; /* inputs, hovers, secondary fills */
+  --edge: 228 228 231; /* borders / hairlines */
+  --ink: 24 24 27; /* primary text */
+  --muted: 107 107 116; /* secondary text */
+  --faint: 161 161 170; /* tertiary text / placeholders */
+  --accent: 59 91 219; /* the one brand color */
+}
+
+.dark {
+  color-scheme: dark;
+  --surface: 15 15 17;
+  --panel: 22 22 24;
+  --elevated: 31 31 35;
+  --edge: 39 39 43;
+  --ink: 236 236 238;
+  --muted: 157 157 167;
+  --faint: 98 98 107;
+  --accent: 116 143 252;
 }
 
 /* Smooth in-page anchor scrolling (e.g. nav → #features/#pricing). */
@@ -17,7 +38,7 @@ html {
 }
 
 body {
-  @apply bg-surface text-zinc-900 antialiased;
+  @apply bg-surface text-ink antialiased;
   min-height: 100vh;
 }
 
@@ -25,14 +46,14 @@ body {
 @layer base {
   *:focus-visible {
     outline: none;
-    @apply ring-2 ring-indigo-500/50 ring-offset-0;
+    @apply ring-2 ring-accent/50 ring-offset-0;
   }
   ::selection {
-    background: rgba(99, 102, 241, 0.18);
+    background: rgb(var(--accent) / 0.18);
   }
 }
 
-/* Slim, unobtrusive light scrollbars. */
+/* Slim, theme-aware scrollbars. */
 @layer utilities {
   ::-webkit-scrollbar {
     width: 10px;
@@ -42,13 +63,13 @@ body {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd0d8;
+    background: rgb(var(--faint) / 0.5);
     border-radius: 9999px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #aab2bf;
+    background: rgb(var(--faint) / 0.8);
     background-clip: content-box;
   }
 }

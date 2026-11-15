@@ -1,9 +1,7 @@
 /**
- * Tweakable "depth & elevation" props for the Home dashboard, carried over
- * from the Dashboard.dc.html design component's `data-props` (elevation,
- * surfaceTint, cardBorders). Kept as a single config object — not baked
- * directly into markup — so it's easy to expose as a real user/workspace
- * preference later without re-deriving these values.
+ * Elevation config for the Home dashboard. The dense redesign is flat and
+ * bordered — depth comes from hairlines, not shadows or tints. Kept as a
+ * config object so it could still become a user preference later.
  */
 
 export type DashboardElevation = 'flat' | 'subtle' | 'layered';
@@ -14,31 +12,10 @@ export interface DashboardThemeProps {
   cardBorders: boolean;
 }
 
-// Matches the design component's declared defaults.
 export const DEFAULT_DASHBOARD_THEME: DashboardThemeProps = {
-  elevation: 'subtle',
-  surfaceTint: '#f2f0fb',
-  cardBorders: false,
-};
-
-interface ShadowSet {
-  panel: string;
-  panelHover: string;
-  nested: string;
-}
-
-const SHADOW_SETS: Record<DashboardElevation, ShadowSet> = {
-  flat: { panel: 'none', panelHover: 'none', nested: 'none' },
-  subtle: {
-    panel: '0 1px 2px rgba(16,24,40,0.04), 0 2px 8px -6px rgba(16,24,40,0.12)',
-    panelHover: '0 2px 4px rgba(16,24,40,0.05), 0 8px 18px -10px rgba(16,24,40,0.16)',
-    nested: '0 1px 2px rgba(16,24,40,0.04)',
-  },
-  layered: {
-    panel: '0 1px 2px rgba(16,24,40,0.05), 0 4px 16px -8px rgba(16,24,40,0.18)',
-    panelHover: '0 2px 4px rgba(16,24,40,0.06), 0 12px 28px -10px rgba(16,24,40,0.22)',
-    nested: '0 1px 2px rgba(16,24,40,0.05), 0 3px 10px -6px rgba(16,24,40,0.16)',
-  },
+  elevation: 'flat',
+  surfaceTint: 'rgb(var(--elevated) / 0.5)',
+  cardBorders: true,
 };
 
 export interface DashboardStyles {
@@ -51,18 +28,15 @@ export interface DashboardStyles {
 }
 
 /** Resolve the tweakable props into concrete inline styles + border classes. */
-export function resolveDashboardTheme(props: DashboardThemeProps = DEFAULT_DASHBOARD_THEME): DashboardStyles {
-  const sh = SHADOW_SETS[props.elevation];
+export function resolveDashboardTheme(
+  props: DashboardThemeProps = DEFAULT_DASHBOARD_THEME,
+): DashboardStyles {
   return {
-    panelStyle: { boxShadow: sh.panel },
-    panelHoverShadow: sh.panelHover,
-    nestedStyle: { boxShadow: sh.nested },
+    panelStyle: {},
+    panelHoverShadow: 'none',
+    nestedStyle: {},
     panelBorderClass: props.cardBorders ? 'border border-edge' : 'border border-transparent',
-    nestedBorderClass: props.cardBorders
-      ? 'border border-edge'
-      : props.elevation === 'flat'
-        ? 'border border-[#eef0f3]'
-        : 'border border-transparent',
+    nestedBorderClass: 'border border-edge',
     surfaceTint: props.surfaceTint,
   };
 }

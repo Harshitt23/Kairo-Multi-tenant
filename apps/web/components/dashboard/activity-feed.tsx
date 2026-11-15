@@ -36,14 +36,14 @@ function dayGroup(iso: string): string {
 // Badge glyph + color derived from the audit label the API already computes
 // (see dashboard.service.ts#labelFor) — not a separate guess at intent.
 const ACTION_BADGE: Record<string, { path: string; bg: string; color: string }> = {
-  created: { path: 'M12 5v14M5 12h14', bg: 'bg-violet-100', color: 'text-violet-600' },
+  created: { path: 'M12 5v14M5 12h14', bg: 'bg-accent/15', color: 'text-accent' },
   completed: { path: 'M5 13l4 4L19 7', bg: 'bg-emerald-100', color: 'text-emerald-600' },
   deleted: {
     path: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
     bg: 'bg-red-100',
     color: 'text-red-600',
   },
-  moved: { path: 'M7 8l5-5 5 5M7 16l5 5 5-5M12 3v18', bg: 'bg-indigo-100', color: 'text-indigo-600' },
+  moved: { path: 'M7 8l5-5 5 5M7 16l5 5 5-5M12 3v18', bg: 'bg-accent/15', color: 'text-accent' },
   reassigned: {
     path: 'M9 8a3 3 0 100-6 3 3 0 000 6zM3 21c0-3.9 2.7-7 6-7s6 3.1 6 7',
     bg: 'bg-sky-100',
@@ -54,7 +54,7 @@ const ACTION_BADGE: Record<string, { path: string; bg: string; color: string }> 
     bg: 'bg-amber-100',
     color: 'text-amber-600',
   },
-  updated: { path: 'M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z', bg: 'bg-zinc-100', color: 'text-zinc-500' },
+  updated: { path: 'M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z', bg: 'bg-elevated', color: 'text-muted' },
 };
 
 function badgeFor(item: DashboardActivityItem) {
@@ -81,9 +81,9 @@ export function ActivityFeed({ orgSlug, theme }: { orgSlug: string; theme: Dashb
   return (
     <DashboardCard theme={theme}>
       <div className="mb-3.5 flex items-center justify-between">
-        <span className="text-[14.5px] font-semibold text-zinc-900">Recent activity</span>
+        <span className="text-[14.5px] font-semibold text-ink">Recent activity</span>
         {!isLoading && !!data?.length && (
-          <span className="text-[11.5px] text-zinc-400">{data.length} events</span>
+          <span className="text-[11.5px] text-faint">{data.length} events</span>
         )}
       </div>
       {isLoading && (
@@ -100,7 +100,7 @@ export function ActivityFeed({ orgSlug, theme }: { orgSlug: string; theme: Dashb
         </div>
       )}
       {!isLoading && (!data || data.length === 0) && (
-        <p className="py-6 text-center text-sm text-zinc-500">No activity yet.</p>
+        <p className="py-6 text-center text-sm text-muted">No activity yet.</p>
       )}
       {!isLoading && data && data.length > 0 && (
         <div className="flex flex-col">
@@ -110,7 +110,7 @@ export function ActivityFeed({ orgSlug, theme }: { orgSlug: string; theme: Dashb
             return (
               <div key={item.id}>
                 {showHeader && (
-                  <div className="px-1 pb-1.5 pt-2.5 text-[10.5px] font-semibold uppercase tracking-wide text-zinc-400 first:pt-0">
+                  <div className="px-1 pb-1.5 pt-2.5 text-[10.5px] font-semibold uppercase tracking-wide text-faint first:pt-0">
                     {group}
                   </div>
                 )}
@@ -129,18 +129,18 @@ export function ActivityFeed({ orgSlug, theme }: { orgSlug: string; theme: Dashb
                     {!isLast && <span className="mt-1 w-px flex-1 bg-elevated" />}
                   </div>
                   <div className="min-w-0 flex-1 pb-3">
-                    <p className="text-[12.5px] leading-relaxed text-zinc-700">
-                      <strong className="font-semibold text-zinc-900">
+                    <p className="text-[12.5px] leading-relaxed text-ink">
+                      <strong className="font-semibold text-ink">
                         {item.actor?.name ?? 'Someone'}
                       </strong>{' '}
                       {item.label}{' '}
                       {item.issueTitle && (
-                        <strong className="font-semibold text-zinc-900">
+                        <strong className="font-semibold text-ink">
                           {item.projectKey ? `${item.projectKey}-${item.issueNumber}` : ''} {item.issueTitle}
                         </strong>
                       )}
                     </p>
-                    <div className="mt-0.5 text-[11px] text-zinc-400">{timeAgo(item.at)}</div>
+                    <div className="mt-0.5 text-[11px] text-faint">{timeAgo(item.at)}</div>
                   </div>
                 </div>
               </div>

@@ -54,7 +54,7 @@ export function NotificationsMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="relative rounded-full p-2 text-zinc-600 transition-colors hover:bg-elevated hover:text-zinc-800"
+        className="relative rounded-full p-2 text-muted transition-colors hover:bg-elevated hover:text-ink"
         aria-label="Notifications"
       >
         <BellIcon />
@@ -66,14 +66,14 @@ export function NotificationsMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between px-3.5 py-2.5">
-          <DropdownMenuLabel className="p-0 text-xs font-medium uppercase tracking-wide text-zinc-500">
+          <DropdownMenuLabel className="p-0 text-xs font-medium uppercase tracking-wide text-muted">
             Notifications
           </DropdownMenuLabel>
           {unreadCount > 0 && (
             <button
               onClick={() => markAllRead.mutate()}
               disabled={markAllRead.isPending}
-              className="text-xs text-indigo-600 hover:text-indigo-700 disabled:opacity-50"
+              className="text-xs text-accent hover:text-accent disabled:opacity-50"
             >
               Mark all read
             </button>
@@ -89,21 +89,21 @@ export function NotificationsMenu() {
               >
                 <span
                   className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
-                    n.readAt ? 'bg-transparent' : 'bg-indigo-500'
+                    n.readAt ? 'bg-transparent' : 'bg-accent'
                   }`}
                   aria-hidden
                 />
                 <span className="min-w-0 flex-1">
-                  <span className={n.readAt ? 'text-zinc-600' : 'text-zinc-900'}>
+                  <span className={n.readAt ? 'text-muted' : 'text-ink'}>
                     {describe(n)}
                   </span>
-                  <span className="mt-0.5 block text-xs text-zinc-600">{timeAgo(n.createdAt)}</span>
+                  <span className="mt-0.5 block text-xs text-muted">{timeAgo(n.createdAt)}</span>
                 </span>
               </button>
             </li>
           ))}
           {notifications.length === 0 && (
-            <li className="px-3.5 py-6 text-center text-xs text-zinc-600">
+            <li className="px-3.5 py-6 text-center text-xs text-muted">
               You&apos;re all caught up.
             </li>
           )}

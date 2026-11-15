@@ -46,10 +46,10 @@ export default function HomePage({ params }: { params: { orgSlug: string } }) {
         {/* header row */}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+            <h1 className="text-2xl font-bold tracking-tight text-ink">
               {greeting()}{firstName ? `, ${firstName}` : ''}
             </h1>
-            <p className="mt-1.5 text-[13.5px] text-zinc-500">
+            <p className="mt-1.5 text-[13.5px] text-muted">
               {today} · Here’s what’s happening.
             </p>
           </div>
@@ -59,21 +59,26 @@ export default function HomePage({ params }: { params: { orgSlug: string } }) {
             <button
               onClick={() => setCreatingIssue(true)}
               disabled={!firstProject}
-              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-ink shadow-card transition-all hover:bg-elevated disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-indigo-600">+</span> New issue
+              <span className="text-accent">+</span> New issue
             </button>
             <button
               onClick={() => setCreatingProject(true)}
-              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-ink shadow-card transition-all hover:bg-elevated"
             >
-              <span className="text-indigo-600">+</span> New project
+              <span className="text-accent">+</span> New project
             </button>
             <button
               onClick={() => router.push(`/${orgSlug}/settings`)}
-              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-zinc-700 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
+              className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3.5 py-2 text-[12.5px] font-medium text-ink shadow-card transition-all hover:bg-elevated"
             >
-              <span className="text-indigo-600">+</span> Invite
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M19 8v6M22 11h-6" />
+              </svg>
+              Invite member
             </button>
           </div>
         </div>

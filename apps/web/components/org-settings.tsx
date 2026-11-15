@@ -23,10 +23,10 @@ import { Dialog, DialogContent } from './ui/dialog';
 const ROLES = ['MEMBER', 'ADMIN', 'GUEST'];
 
 const ROLE_BADGE: Record<string, string> = {
-  OWNER: 'bg-indigo-50 text-indigo-700',
-  ADMIN: 'bg-emerald-50 text-emerald-700',
-  MEMBER: 'bg-zinc-100 text-zinc-700',
-  GUEST: 'bg-zinc-100 text-zinc-500',
+  OWNER: 'bg-accent/10 text-accent',
+  ADMIN: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400',
+  MEMBER: 'bg-elevated text-ink',
+  GUEST: 'bg-elevated text-muted',
 };
 
 function Panel({
@@ -41,12 +41,12 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-edge bg-panel p-6 shadow-card-hover">
+    <section className="rounded-lg border border-edge bg-panel p-6 shadow-card-hover">
       <div className="mb-0.5 flex items-center gap-2">
-        <h2 className="text-sm font-semibold text-zinc-900">{title}</h2>
+        <h2 className="text-sm font-semibold text-ink">{title}</h2>
         {badge}
       </div>
-      {description && <p className="mb-4 text-[13px] text-zinc-500">{description}</p>}
+      {description && <p className="mb-4 text-[13px] text-muted">{description}</p>}
       {children}
     </section>
   );
@@ -124,7 +124,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
     <Panel
       title="Members"
       badge={
-        <span className="rounded-full bg-elevated px-2 py-px text-[11px] font-semibold text-zinc-500">
+        <span className="rounded-full bg-elevated px-2 py-px text-[11px] font-semibold text-muted">
           {members.length}
         </span>
       }
@@ -136,12 +136,12 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="teammate@company.com"
-          className="h-[34px] min-w-0 flex-1 rounded-md border border-edge bg-panel px-2.5 text-[13px] text-zinc-900 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10"
+          className="h-[34px] min-w-0 flex-1 rounded-md border border-edge bg-panel px-2.5 text-[13px] text-ink outline-none focus:border-accent/50 focus:ring-4 focus:ring-accent/10"
         />
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="h-[34px] shrink-0 rounded-md border border-edge bg-panel px-2 text-[12.5px] font-medium text-zinc-700 outline-none focus:border-indigo-400"
+          className="h-[34px] shrink-0 rounded-md border border-edge bg-panel px-2 text-[12.5px] font-medium text-ink outline-none focus:border-accent/50"
         >
           {ROLES.map((r) => (
             <option key={r} value={r}>
@@ -152,13 +152,13 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
         <button
           type="submit"
           disabled={!email.trim() || invite.isPending}
-          className="h-[34px] shrink-0 whitespace-nowrap rounded-md bg-brand px-3.5 text-[13px] font-medium text-white shadow-glow transition-all duration-150 ease-premium hover:opacity-95 hover:-translate-y-px disabled:opacity-50 disabled:translate-y-0"
+          className="h-[34px] shrink-0 whitespace-nowrap rounded-md bg-accent px-3.5 text-[13px] font-medium text-white transition-all duration-150 ease-premium hover:opacity-95 disabled:opacity-50 disabled:translate-y-0"
         >
           {invite.isPending ? 'Inviting…' : 'Invite'}
         </button>
       </form>
       {notice && (
-        <div className="mb-3 flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 animate-fade-in">
+        <div className="mb-3 flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-700 dark:text-emerald-400 animate-fade-in">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 13l4 4L19 7" />
           </svg>
@@ -172,15 +172,15 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
           <li key={m.id} className="-mx-2 flex items-center gap-2.5 rounded-lg px-2 py-2.5 transition-colors hover:bg-surface">
             <Avatar name={m.user.name} seed={m.user.id} size={32} />
             <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-1.5 truncate text-[13px] font-medium text-zinc-900">
+              <p className="flex items-center gap-1.5 truncate text-[13px] font-medium text-ink">
                 {m.user.name}
                 {me?.id === m.user.id && (
-                  <span className="shrink-0 rounded bg-elevated px-1.5 py-px text-[10px] font-semibold uppercase text-zinc-500">
+                  <span className="shrink-0 rounded bg-elevated px-1.5 py-px text-[10px] font-semibold uppercase text-muted">
                     You
                   </span>
                 )}
               </p>
-              <p className="truncate text-xs text-zinc-500">{m.user.email}</p>
+              <p className="truncate text-xs text-muted">{m.user.email}</p>
             </div>
             {canManage && m.role !== 'OWNER' && m.user.id !== me?.id ? (
               <div className="flex shrink-0 items-center gap-1.5">
@@ -188,7 +188,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
                   value={m.role}
                   disabled={updateRole.isPending}
                   onChange={(e) => changeRole(m, e.target.value)}
-                  className="h-[30px] rounded-md border border-edge bg-panel px-2 text-xs font-medium text-zinc-700 outline-none focus:border-indigo-400 disabled:opacity-50"
+                  className="h-[30px] rounded-md border border-edge bg-panel px-2 text-xs font-medium text-ink outline-none focus:border-accent/50 disabled:opacity-50"
                 >
                   {ROLES.map((r) => (
                     <option key={r} value={r}>
@@ -200,7 +200,7 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
                   onClick={() => setRemoveTarget(m)}
                   aria-label={`Remove ${m.user.name}`}
                   title="Remove member"
-                  className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                  className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-faint transition-colors hover:bg-red-500/10 hover:text-red-600"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
@@ -216,20 +216,20 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
             )}
           </li>
         ))}
-        {isLoading && <li className="py-2 text-sm text-zinc-500">Loading…</li>}
+        {isLoading && <li className="py-2 text-sm text-muted">Loading…</li>}
       </ul>
 
       {canManage && (invites.data?.length ?? 0) > 0 && (
         <div className="mt-3 border-t border-edge pt-3">
-          <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+          <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-muted">
             Pending invites
           </h3>
           <ul className="divide-y divide-edge">
             {invites.data!.map((inv) => (
               <li key={inv.id} className="flex items-center justify-between gap-3 py-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm text-zinc-700">{inv.email}</p>
-                  <p className="text-xs text-zinc-500">{expiresIn(inv.expiresAt)}</p>
+                  <p className="truncate text-sm text-ink">{inv.email}</p>
+                  <p className="text-xs text-muted">{expiresIn(inv.expiresAt)}</p>
                 </div>
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${ROLE_BADGE[inv.role] ?? ROLE_BADGE.MEMBER}`}
@@ -243,22 +243,22 @@ export function MembersPanel({ orgSlug }: { orgSlug: string }) {
       )}
 
       <div className="my-4 h-px bg-edge" />
-      <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">How roles work</h3>
-      <div className="flex flex-col gap-1.5 text-[12.5px] text-zinc-500">
+      <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-muted">How roles work</h3>
+      <div className="flex flex-col gap-1.5 text-[12.5px] text-muted">
         <p className="flex gap-2">
-          <span className="w-14 shrink-0 font-semibold text-zinc-700">Owner</span>
+          <span className="w-14 shrink-0 font-semibold text-ink">Owner</span>
           Full control, including billing and deleting the workspace.
         </p>
         <p className="flex gap-2">
-          <span className="w-14 shrink-0 font-semibold text-zinc-700">Admin</span>
+          <span className="w-14 shrink-0 font-semibold text-ink">Admin</span>
           Manage members, projects, and workspace settings.
         </p>
         <p className="flex gap-2">
-          <span className="w-14 shrink-0 font-semibold text-zinc-700">Member</span>
+          <span className="w-14 shrink-0 font-semibold text-ink">Member</span>
           Create and edit issues in projects they&apos;re added to.
         </p>
         <p className="flex gap-2">
-          <span className="w-14 shrink-0 font-semibold text-zinc-700">Guest</span>
+          <span className="w-14 shrink-0 font-semibold text-ink">Guest</span>
           Limited, read-mostly access to shared projects.
         </p>
       </div>
@@ -306,19 +306,19 @@ function Toggle({
   return (
     <div className="flex items-center justify-between gap-3 py-2.5">
       <div>
-        <p className="text-[13px] font-medium text-zinc-900">{label}</p>
-        <p className="mt-0.5 text-xs text-zinc-500">{hint}</p>
+        <p className="text-[13px] font-medium text-ink">{label}</p>
+        <p className="mt-0.5 text-xs text-muted">{hint}</p>
       </div>
       <button
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-          checked ? 'bg-brand' : 'bg-elevated'
+          checked ? 'bg-accent' : 'bg-elevated'
         }`}
       >
         <span
-          className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
+          className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-panel shadow-sm transition-transform ${
             checked ? 'translate-x-4' : 'translate-x-0'
           }`}
         />
@@ -329,7 +329,7 @@ function Toggle({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mb-1.5 mt-4 text-[11px] font-semibold uppercase tracking-wide text-zinc-500 first:mt-0">
+    <h3 className="mb-1.5 mt-4 text-[11px] font-semibold uppercase tracking-wide text-muted first:mt-0">
       {children}
     </h3>
   );
@@ -369,19 +369,19 @@ export function NotificationPrefsPanel() {
           <SectionLabel>In-app</SectionLabel>
           <div className="flex items-center justify-between gap-3 py-2.5 opacity-55">
             <div>
-              <p className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-900">
+              <p className="flex items-center gap-1.5 text-[13px] font-medium text-ink">
                 Desktop push
-                <span className="rounded bg-elevated px-1.5 py-px text-[10px] font-semibold text-zinc-500">SOON</span>
+                <span className="rounded bg-elevated px-1.5 py-px text-[10px] font-semibold text-muted">SOON</span>
               </p>
-              <p className="mt-0.5 text-xs text-zinc-500">Get notified even when Kairo isn&apos;t open.</p>
+              <p className="mt-0.5 text-xs text-muted">Get notified even when Kairo isn&apos;t open.</p>
             </div>
             <span className="relative h-5 w-9 shrink-0 rounded-full bg-elevated">
-              <span className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white" />
+              <span className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-panel" />
             </span>
           </div>
         </>
       ) : (
-        <p className="text-sm text-zinc-500">Loading…</p>
+        <p className="text-sm text-muted">Loading…</p>
       )}
     </Panel>
   );

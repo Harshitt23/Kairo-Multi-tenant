@@ -4,6 +4,28 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import { Redis } from 'ioredis';
 import type { ServerOptions, Server } from 'socket.io';
 
+const CONNECT_TIMEOUT_MS = 5_000;
+
+/** Reject after `ms`, running `onTimeout` so abandoned clients stop retrying. */
+function withTimeout<T>(promise: Promise<T>, ms: number, onTimeout: () => void): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      onTimeout();
+      reject(new Error(`connect timed out after ${ms}ms`));
+    }, ms);
+    promise.then(
+      (v) => {
+        clearTimeout(timer);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(timer);
+        reject(e);
+      },
+    );
+  });
+}
+
 /**
  * socket.io adapter backed by Redis pub/sub, so room broadcasts (the board's
  * `emitToProject`) fan out across every API instance instead of only reaching
@@ -32,7 +54,18 @@ export class RedisIoAdapter extends IoAdapter {
       const sub = pub.duplicate();
       pub.on('error', (e) => this.logger.warn(`Redis pub error: ${e.message}`));
       sub.on('error', (e) => this.logger.warn(`Redis sub error: ${e.message}`));
-      await Promise.all([pub.connect(), sub.connect()]);
+      // ioredis retries a failed connect forever by default, which leaves this
+      // promise pending and blocks bootstrap (the app never listens, so the
+      // platform's port check fails the whole deploy). Cap the wait: if Redis
+      // isn't reachable quickly, fall back to the in-memory adapter.
+      await withTimeout(
+        Promise.all([pub.connect(), sub.connect()]),
+        CONNECT_TIMEOUT_MS,
+        () => {
+          pub.disconnect();
+          sub.disconnect();
+        },
+      );
       this.clients = [pub, sub];
       this.adapterConstructor = createAdapter(pub, sub);
       this.logger.log('socket.io Redis adapter ready');

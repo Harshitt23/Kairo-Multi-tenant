@@ -4,21 +4,21 @@ import { cn } from '../../lib/cn';
 import { Spinner } from './spinner';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-all duration-150 ease-premium active:scale-[0.97] focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors duration-100 focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        primary: 'bg-brand text-white shadow-glow hover:opacity-95 hover:shadow-card-hover',
-        secondary: 'border border-edge bg-panel text-zinc-700 hover:bg-elevated hover:text-zinc-900',
-        ghost: 'text-zinc-600 hover:bg-elevated hover:text-zinc-900',
-        outline: 'border border-edge text-zinc-700 hover:border-indigo-400 hover:text-zinc-900',
-        danger: 'bg-red-600 text-white hover:bg-red-700 hover:shadow-card-hover',
+        primary: 'bg-ink text-surface hover:bg-ink/85',
+        secondary: 'border border-edge bg-panel text-ink hover:bg-elevated',
+        ghost: 'text-muted hover:bg-elevated hover:text-ink',
+        outline: 'border border-edge text-ink hover:bg-elevated',
+        danger: 'bg-red-600 text-white hover:bg-red-700',
       },
       size: {
-        sm: 'h-8 px-3 text-[13px]',
-        md: 'h-9 px-4 text-sm',
-        lg: 'h-11 px-5 text-sm',
-        icon: 'h-8 w-8',
+        sm: 'h-7 px-2.5 text-[13px]',
+        md: 'h-8 px-3.5 text-[13px]',
+        lg: 'h-10 px-4 text-sm',
+        icon: 'h-7 w-7',
       },
     },
     defaultVariants: { variant: 'primary', size: 'md' },

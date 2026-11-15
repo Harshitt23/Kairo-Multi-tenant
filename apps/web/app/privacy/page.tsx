@@ -46,12 +46,12 @@ export default function PrivacyPage() {
       <MarketingPageHeader eyebrow="Legal" title="Privacy Policy" />
       <section className="px-6 py-14 lg:px-14 lg:py-16">
         <div className="mx-auto max-w-3xl">
-          <p className="mb-10 text-[13px] text-zinc-400">Last updated: July 1, 2026</p>
+          <p className="mb-10 text-[13px] text-faint">Last updated: July 1, 2026</p>
           <div className="flex flex-col gap-9">
             {SECTIONS.map((s) => (
               <div key={s.heading}>
-                <h2 className="mb-2 text-lg font-semibold text-zinc-900">{s.heading}</h2>
-                <p className="text-[15px] leading-relaxed text-zinc-600">{s.body}</p>
+                <h2 className="mb-2 text-lg font-semibold text-ink">{s.heading}</h2>
+                <p className="text-[15px] leading-relaxed text-muted">{s.body}</p>
               </div>
             ))}
           </div>

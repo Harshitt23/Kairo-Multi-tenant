@@ -45,12 +45,12 @@ function SearchView({ orgSlug }: { orgSlug: string }) {
   return (
     <div className="mx-auto max-w-2xl animate-fade-in px-6 py-6">
       <h1 className="text-lg font-semibold tracking-tight">Search</h1>
-      <p className="mt-0.5 text-[13px] text-zinc-500">
+      <p className="mt-0.5 text-[13px] text-muted">
         Find issues and projects across the workspace.
       </p>
 
       <div className="relative mt-4">
-        <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400">
+        <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-faint">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="m21 21-4.3-4.3" />
@@ -61,12 +61,12 @@ function SearchView({ orgSlug }: { orgSlug: string }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search issues and projects…"
-          className="w-full rounded-lg border border-edge bg-panel py-2.5 pl-10 pr-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 shadow-card transition-colors focus:border-indigo-500"
+          className="w-full rounded-lg border border-edge bg-panel py-2.5 pl-10 pr-3.5 text-sm text-ink placeholder:text-faint shadow-card transition-colors focus:border-accent"
         />
       </div>
 
       {!hasQuery && (
-        <p className="mt-8 text-center text-sm text-zinc-500">
+        <p className="mt-8 text-center text-sm text-muted">
           Type at least 2 characters to search.
         </p>
       )}
@@ -96,7 +96,7 @@ function SearchView({ orgSlug }: { orgSlug: string }) {
 
       {hasQuery && results && results.projects.length > 0 && (
         <section className="mt-6">
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted">
             Projects
           </h2>
           <motion.ul className="space-y-1.5" variants={staggerContainer} initial="hidden" animate="show">
@@ -104,15 +104,15 @@ function SearchView({ orgSlug }: { orgSlug: string }) {
               <motion.li key={p.id} variants={staggerItem}>
                 <Link
                   href={`/${orgSlug}/${p.key}/board`}
-                  className="flex items-center gap-3 rounded-lg border border-edge bg-panel px-3.5 py-3 shadow-card transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-glow"
+                  className="flex items-center gap-3 rounded-lg border border-edge bg-panel px-3.5 py-3 shadow-card transition-all hover:border-accent/40"
                 >
-                  <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-indigo-700">
+                  <span className="rounded bg-accent/10 px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-accent">
                     {p.key}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium text-zinc-900">{p.name}</span>
+                    <span className="block truncate text-sm font-medium text-ink">{p.name}</span>
                     {p.description && (
-                      <span className="block truncate text-xs text-zinc-500">{p.description}</span>
+                      <span className="block truncate text-xs text-muted">{p.description}</span>
                     )}
                   </span>
                 </Link>
@@ -124,7 +124,7 @@ function SearchView({ orgSlug }: { orgSlug: string }) {
 
       {hasQuery && results && results.issues.length > 0 && (
         <section className="mt-6">
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted">
             Issues
           </h2>
           <motion.ul className="space-y-1.5" variants={staggerContainer} initial="hidden" animate="show">
@@ -132,13 +132,13 @@ function SearchView({ orgSlug }: { orgSlug: string }) {
               <motion.li key={i.id} variants={staggerItem}>
                 <Link
                   href={`/${orgSlug}/${i.projectKey}/board?issue=${i.number}`}
-                  className="flex items-center gap-3 rounded-lg border border-edge bg-panel px-3.5 py-3 shadow-card transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-glow"
+                  className="flex items-center gap-3 rounded-lg border border-edge bg-panel px-3.5 py-3 shadow-card transition-all hover:border-accent/40"
                 >
-                  <span className="shrink-0 font-mono text-[11px] text-zinc-500">
+                  <span className="shrink-0 font-mono text-[11px] text-muted">
                     {i.projectKey}-{i.number}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-sm text-zinc-900">{i.title}</span>
-                  <span className="shrink-0 rounded-full bg-elevated px-2 py-0.5 text-[10px] uppercase tracking-wide text-zinc-600">
+                  <span className="min-w-0 flex-1 truncate text-sm text-ink">{i.title}</span>
+                  <span className="shrink-0 rounded-full bg-elevated px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
                     {i.status.replace(/_/g, ' ').toLowerCase()}
                   </span>
                 </Link>

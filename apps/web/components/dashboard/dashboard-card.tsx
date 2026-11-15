@@ -15,7 +15,7 @@ export function DashboardCard({
   return (
     <div
       style={theme.panelStyle}
-      className={cn('rounded-2xl bg-panel p-5', theme.panelBorderClass, className)}
+      className={cn('rounded-lg bg-panel p-5', theme.panelBorderClass, className)}
     >
       {children}
     </div>

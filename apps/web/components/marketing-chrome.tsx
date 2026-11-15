@@ -2,15 +2,12 @@
 
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { fadeInUp, reducedMotionProps } from '../lib/motion';
 import { Logo } from './brand';
+import { ThemeToggle } from './theme-toggle';
 
 /* --------------------------------------------------------------------- */
 /*  Shared marketing chrome — nav + footer used by the landing page and   */
 /*  every standalone marketing page (docs, changelog, about, …).          */
-/*  Kept free of client hooks so it renders in both server and client     */
-/*  ('use client') pages.                                                  */
 /* --------------------------------------------------------------------- */
 
 /** Primary/secondary link targets shared across the marketing surface. */
@@ -28,32 +25,35 @@ export function MarketingNav() {
   return (
     <nav
       aria-label="Marketing"
-      className="sticky top-0 z-50 flex items-center justify-between border-b border-edge bg-white/80 px-6 py-4 backdrop-blur-md lg:px-14"
+      className="sticky top-0 z-50 border-b border-edge bg-surface/90 backdrop-blur"
     >
-      <Link href="/" className="flex items-center gap-2.5">
-        <Logo size={28} />
-        <span className="text-[17px] font-bold tracking-tight text-zinc-900">Kairo</span>
-      </Link>
-      <div className="hidden items-center gap-9 text-sm font-medium text-zinc-600 md:flex">
-        {NAV_LINKS.map((l) => (
-          <Link key={l.label} href={l.href} className="transition-colors hover:text-zinc-900">
-            {l.label}
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5">
+        <Link href="/" className="flex items-center gap-2">
+          <Logo size={24} />
+          <span className="text-[15px] font-semibold tracking-tight text-ink">Kairo</span>
+        </Link>
+        <div className="hidden items-center gap-6 text-[13px] text-muted md:flex">
+          {NAV_LINKS.map((l) => (
+            <Link key={l.label} href={l.href} className="transition-colors hover:text-ink">
+              {l.label}
+            </Link>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            href={SIGN_IN_HREF}
+            className="rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted transition-colors hover:text-ink"
+          >
+            Log in
           </Link>
-        ))}
-      </div>
-      <div className="flex items-center gap-5">
-        <Link
-          href={SIGN_IN_HREF}
-          className="text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900"
-        >
-          Log in
-        </Link>
-        <Link
-          href={SIGN_UP_HREF}
-          className="inline-flex h-9 items-center justify-center rounded-lg bg-brand-sheen bg-[length:220%_100%] bg-[position:0%_0%] px-4 text-[13px] font-semibold text-white shadow-glow transition-[background-position,box-shadow,transform] duration-500 hover:-translate-y-px hover:bg-[position:100%_0%] hover:shadow-glow-lg active:translate-y-0 active:scale-[0.97]"
-        >
-          Start free
-        </Link>
+          <Link
+            href={SIGN_UP_HREF}
+            className="inline-flex h-8 items-center justify-center rounded-md bg-ink px-3.5 text-[13px] font-medium text-surface transition-colors hover:bg-ink/85"
+          >
+            Sign up
+          </Link>
+        </div>
       </div>
     </nav>
   );
@@ -87,35 +87,27 @@ const FOOTER_COLUMNS: { heading: string; items: { label: string; href: string }[
 ];
 
 export function MarketingFooter() {
-  const reduce = useReducedMotion();
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-b from-[#12141f] to-[#0a0b12] px-6 py-16 lg:px-14">
-      <div className="absolute left-1/2 top-0 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent via-indigo-500/60 to-transparent" />
-      <motion.div
-        {...(reduce ? reducedMotionProps : { variants: fadeInUp })}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: '-60px' }}
-        className="relative mx-auto max-w-6xl"
-      >
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="border-t border-edge bg-surface px-5 py-14">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="mb-3.5 flex items-center gap-2.5">
-              <Logo size={24} />
-              <span className="text-base font-bold text-white">Kairo</span>
+            <Link href="/" className="mb-3 flex items-center gap-2">
+              <Logo size={22} />
+              <span className="text-sm font-semibold text-ink">Kairo</span>
             </Link>
-            <p className="max-w-xs text-[13.5px] leading-relaxed text-zinc-400">
-              The calm, real-time project tracker for teams who ship.
+            <p className="max-w-xs text-[13px] leading-relaxed text-muted">
+              Workspaces, boards, and role-based access for teams that ship.
             </p>
           </div>
           {FOOTER_COLUMNS.map((col) => (
             <FooterColumn key={col.heading} heading={col.heading} items={col.items} />
           ))}
         </div>
-        <div className="mt-12 border-t border-zinc-800 pt-6 text-[13px] text-zinc-500">
-          © {new Date().getFullYear()} Kairo, Inc. All rights reserved.
+        <div className="mt-12 border-t border-edge pt-6 text-[12.5px] text-faint">
+          © {new Date().getFullYear()} Kairo
         </div>
-      </motion.div>
+      </div>
     </footer>
   );
 }
@@ -128,15 +120,15 @@ function FooterColumn({
   items: { label: string; href: string }[];
 }) {
   return (
-    <div className="flex flex-col gap-3">
-      <span className="mb-1.5 text-[12.5px] font-bold uppercase tracking-wide text-zinc-500">
+    <div className="flex flex-col gap-2.5">
+      <span className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-faint">
         {heading}
       </span>
       {items.map((item) => (
         <Link
           key={item.label}
           href={item.href}
-          className="text-sm text-zinc-300 transition-colors hover:text-white"
+          className="text-[13px] text-muted transition-colors hover:text-ink"
         >
           {item.label}
         </Link>
@@ -156,7 +148,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
   );
 }
 
-/** Consistent hero header for standalone marketing pages. */
+/** Consistent header for standalone marketing pages. */
 export function MarketingPageHeader({
   eyebrow,
   title,
@@ -167,16 +159,16 @@ export function MarketingPageHeader({
   description?: string;
 }) {
   return (
-    <section className="border-b border-edge bg-panel px-6 py-16 lg:px-14 lg:py-20">
+    <section className="border-b border-edge bg-surface px-5 py-14">
       <div className="mx-auto max-w-3xl">
         {eyebrow && (
-          <p className="mb-3 text-[13px] font-bold uppercase tracking-wide text-indigo-600">
+          <p className="mb-2 font-mono text-[12px] uppercase tracking-wider text-muted">
             {eyebrow}
           </p>
         )}
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">{title}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-ink">{title}</h1>
         {description && (
-          <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-zinc-600">{description}</p>
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted">{description}</p>
         )}
       </div>
     </section>

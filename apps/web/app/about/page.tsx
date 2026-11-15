@@ -46,8 +46,8 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 sm:grid-cols-4">
           {STATS.map((s) => (
             <div key={s.label} className="text-center">
-              <div className="text-3xl font-bold tracking-tight text-zinc-900">{s.value}</div>
-              <div className="mt-1 text-[13px] text-zinc-500">{s.label}</div>
+              <div className="text-3xl font-bold tracking-tight text-ink">{s.value}</div>
+              <div className="mt-1 text-[13px] text-muted">{s.label}</div>
             </div>
           ))}
         </div>
@@ -55,12 +55,12 @@ export default function AboutPage() {
 
       <section className="px-6 py-16 lg:px-14 lg:py-20">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-zinc-900">What we believe</h2>
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-ink">What we believe</h2>
           <div className="grid gap-8 sm:grid-cols-3">
             {VALUES.map((v) => (
               <div key={v.title}>
-                <h3 className="mb-2 text-base font-semibold text-zinc-900">{v.title}</h3>
-                <p className="text-sm leading-relaxed text-zinc-500">{v.body}</p>
+                <h3 className="mb-2 text-base font-semibold text-ink">{v.title}</h3>
+                <p className="text-sm leading-relaxed text-muted">{v.body}</p>
               </div>
             ))}
           </div>
@@ -68,22 +68,22 @@ export default function AboutPage() {
       </section>
 
       <section className="bg-panel px-6 py-16 text-center lg:px-14">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">
           Want to help us build it?
         </h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+        <p className="mx-auto mt-2 max-w-md text-sm text-muted">
           We’re a small, fully-remote team — and we’re hiring.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
             href="/careers"
-            className="inline-flex h-11 items-center justify-center rounded-lg bg-brand px-5 text-sm font-medium text-white shadow-glow transition-opacity hover:opacity-90"
+            className="inline-flex h-11 items-center justify-center rounded-lg bg-accent px-5 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             See open roles
           </Link>
           <Link
             href={SIGN_UP_HREF}
-            className="inline-flex h-11 items-center justify-center rounded-lg border border-edge px-5 text-sm font-medium text-zinc-700 transition-colors hover:border-indigo-400 hover:text-zinc-900"
+            className="inline-flex h-11 items-center justify-center rounded-lg border border-edge px-5 text-sm font-medium text-ink transition-colors hover:border-accent/50 hover:text-ink"
           >
             Try Kairo
           </Link>

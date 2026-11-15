@@ -47,8 +47,9 @@ Every push runs lint → typecheck → tests → build against real Postgres +
 Redis, then a second job runs Playwright e2e against a live server.
 
 ### A marketing site, not just an app
-Landing, pricing, blog, docs, changelog, careers — built with a custom
-Framer Motion system, because a SaaS needs somewhere to land first.
+Landing, pricing, blog, docs, changelog, careers — a dense, flat design
+system (CSS-variable tokens, light + dark), because a SaaS needs somewhere
+to land first.
 
 ---
 
@@ -56,6 +57,8 @@ Framer Motion system, because a SaaS needs somewhere to land first.
 
 - Multi-tenant workspaces → teams → projects → issues, RBAC (4 roles)
 - Real-time Kanban board — drag/drop, optimistic UI, live presence
+- List view — sortable table over the same issues, shared filters + deep links
+- Dark mode — CSS-variable token system, persisted per device, no flash
 - JWT auth with rotating refresh tokens + reuse/theft detection
 - Stripe billing (Checkout + webhooks), graceful FREE-plan fallback
 - Background jobs via BullMQ (notifications, email)

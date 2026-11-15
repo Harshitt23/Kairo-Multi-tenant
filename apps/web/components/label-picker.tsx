@@ -43,7 +43,7 @@ export function LabelPicker({
 
   return (
     <div>
-      <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-zinc-500">
+      <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted">
         Labels
       </span>
       <div className="flex flex-wrap gap-1.5">
@@ -58,7 +58,7 @@ export function LabelPicker({
                 'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors',
                 on
                   ? 'border-transparent text-white'
-                  : 'border-edge bg-panel text-zinc-600 hover:border-zinc-300',
+                  : 'border-edge bg-panel text-muted hover:border-edge',
               )}
               style={on ? { backgroundColor: l.color } : undefined}
             >
@@ -71,7 +71,7 @@ export function LabelPicker({
           );
         })}
         {labels.length === 0 && (
-          <span className="text-xs text-zinc-500">No labels yet — create one below.</span>
+          <span className="text-xs text-muted">No labels yet — create one below.</span>
         )}
       </div>
 
@@ -82,7 +82,7 @@ export function LabelPicker({
               key={c}
               type="button"
               onClick={() => setColor(c)}
-              className={cn('h-4 w-4 rounded-full', color === c && 'ring-2 ring-zinc-400 ring-offset-1')}
+              className={cn('h-4 w-4 rounded-full', color === c && 'ring-2 ring-faint ring-offset-1')}
               style={{ backgroundColor: c }}
               aria-label={`Use color ${c}`}
             />
@@ -98,13 +98,13 @@ export function LabelPicker({
             }
           }}
           placeholder="New label…"
-          className="h-7 flex-1 rounded-md border border-edge bg-surface px-2 text-xs text-zinc-900 outline-none focus:border-indigo-500"
+          className="h-7 flex-1 rounded-md border border-edge bg-surface px-2 text-xs text-ink outline-none focus:border-accent"
         />
         <button
           type="button"
           onClick={add}
           disabled={!name.trim() || create.isPending}
-          className="h-7 rounded-md bg-indigo-600 px-2.5 text-xs font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+          className="h-7 rounded-md bg-accent px-2.5 text-xs font-medium text-white hover:bg-accent disabled:opacity-50"
         >
           Add
         </button>

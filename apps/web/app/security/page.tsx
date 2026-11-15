@@ -53,14 +53,14 @@ export default function SecurityPage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {PRACTICES.map((p) => (
               <div key={p.title}>
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth={2}>
                     <rect x="4" y="11" width="16" height="9" rx="2" />
                     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-base font-semibold text-zinc-900">{p.title}</h3>
-                <p className="text-sm leading-relaxed text-zinc-500">{p.body}</p>
+                <h3 className="mb-2 text-base font-semibold text-ink">{p.title}</h3>
+                <p className="text-sm leading-relaxed text-muted">{p.body}</p>
               </div>
             ))}
           </div>
@@ -68,14 +68,14 @@ export default function SecurityPage() {
       </section>
 
       <section className="border-y border-edge bg-panel px-6 py-14 text-center lg:px-14">
-        <p className="mb-6 text-[12.5px] font-semibold uppercase tracking-wide text-zinc-400">
+        <p className="mb-6 text-[12.5px] font-semibold uppercase tracking-wide text-faint">
           Compliance & controls
         </p>
         <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3">
           {COMPLIANCE.map((c) => (
             <span
               key={c}
-              className="rounded-full border border-edge bg-surface px-4 py-1.5 text-[13px] font-medium text-zinc-700"
+              className="rounded-full border border-edge bg-surface px-4 py-1.5 text-[13px] font-medium text-ink"
             >
               {c}
             </span>
@@ -84,15 +84,15 @@ export default function SecurityPage() {
       </section>
 
       <section className="px-6 py-16 text-center lg:px-14">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
+        <h2 className="text-2xl font-semibold tracking-tight text-ink">
           Found a vulnerability?
         </h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+        <p className="mx-auto mt-2 max-w-md text-sm text-muted">
           We appreciate responsible disclosure. Reach our security team directly.
         </p>
         <Link
           href="mailto:security@kairo.example?subject=Security%20report"
-          className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-brand px-5 text-sm font-medium text-white shadow-glow transition-opacity hover:opacity-90"
+          className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-accent px-5 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
           Contact security
         </Link>

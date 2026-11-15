@@ -15,8 +15,8 @@ export function TasksPanel({ orgSlug, theme }: { orgSlug: string; theme: Dashboa
   return (
     <DashboardCard theme={theme}>
       <div className="mb-3.5 flex items-center justify-between">
-        <span className="text-[14.5px] font-semibold text-zinc-900">Your tasks</span>
-        <span className="text-[11.5px] text-zinc-400">{open.length} open</span>
+        <span className="text-[14.5px] font-semibold text-ink">Your tasks</span>
+        <span className="text-[11.5px] text-faint">{open.length} open</span>
       </div>
       {isLoading && (
         <div className="flex flex-col gap-2.5">
@@ -26,7 +26,7 @@ export function TasksPanel({ orgSlug, theme }: { orgSlug: string; theme: Dashboa
         </div>
       )}
       {!isLoading && open.length === 0 && (
-        <p className="py-6 text-center text-sm text-zinc-500">Nothing assigned to you — nice.</p>
+        <p className="py-6 text-center text-sm text-muted">Nothing assigned to you — nice.</p>
       )}
       {!isLoading && open.length > 0 && (
         <div className="flex flex-col">
@@ -40,10 +40,10 @@ export function TasksPanel({ orgSlug, theme }: { orgSlug: string; theme: Dashboa
               >
                 <span
                   className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                    (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-zinc-300'
+                    (PRIORITY_DOT as Record<string, string>)[issue.priority] ?? 'bg-faint/60'
                   }`}
                 />
-                <span className="min-w-0 flex-1 truncate text-[12.5px] text-zinc-700">{issue.title}</span>
+                <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">{issue.title}</span>
                 {badge && (
                   <span className={`shrink-0 rounded px-1.5 py-0.5 text-[10.5px] font-medium ${badge.cls}`}>
                     {badge.text}

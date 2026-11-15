@@ -8,7 +8,7 @@ export default function OrgSettingsPage({ params }: { params: { orgSlug: string 
       <div className="mx-auto max-w-5xl">
         <div className="mb-5">
           <h1 className="text-lg font-semibold tracking-tight">Settings</h1>
-          <p className="mt-0.5 text-[13px] text-zinc-500">
+          <p className="mt-0.5 text-[13px] text-muted">
             Manage members and how you get notified.
           </p>
         </div>

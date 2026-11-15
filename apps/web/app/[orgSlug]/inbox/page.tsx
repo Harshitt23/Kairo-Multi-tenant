@@ -98,12 +98,12 @@ const TYPE_ICON: Record<string, string> = {
 };
 
 const TYPE_TONE: Record<string, { bg: string; fg: string }> = {
-  ISSUE_ASSIGNED: { bg: 'bg-indigo-50', fg: 'text-indigo-700' },
+  ISSUE_ASSIGNED: { bg: 'bg-accent/10', fg: 'text-accent' },
   MENTIONED: { bg: 'bg-pink-50', fg: 'text-pink-700' },
   COMMENT_CREATED: { bg: 'bg-blue-50', fg: 'text-blue-700' },
-  ISSUE_STATUS_CHANGED: { bg: 'bg-emerald-50', fg: 'text-emerald-700' },
-  INVITED: { bg: 'bg-violet-50', fg: 'text-violet-700' },
-  INVITE_ACCEPTED: { bg: 'bg-emerald-50', fg: 'text-emerald-700' },
+  ISSUE_STATUS_CHANGED: { bg: 'bg-emerald-500/10', fg: 'text-emerald-700 dark:text-emerald-400' },
+  INVITED: { bg: 'bg-accent/10', fg: 'text-accent' },
+  INVITE_ACCEPTED: { bg: 'bg-emerald-500/10', fg: 'text-emerald-700 dark:text-emerald-400' },
 };
 
 function TypeIcon({ type }: { type: string }) {
@@ -161,7 +161,7 @@ export default function InboxPage() {
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight">Inbox</h1>
-          <p data-testid="inbox-subtitle" className="mt-0.5 text-[13px] text-zinc-500">
+          <p data-testid="inbox-subtitle" className="mt-0.5 text-[13px] text-muted">
             {unread.length > 0 ? `${unread.length} unread notification${unread.length === 1 ? '' : 's'}` : 'You’re all caught up.'}
           </p>
         </div>
@@ -187,7 +187,7 @@ export default function InboxPage() {
               onClick={() => setTab(t.key)}
               className={cn(
                 'relative z-10 flex h-7 items-center gap-1.5 whitespace-nowrap rounded-md px-3.5 text-[12.5px] transition-colors',
-                active ? 'font-semibold text-zinc-900' : 'font-medium text-zinc-500',
+                active ? 'font-semibold text-ink' : 'font-medium text-muted',
               )}
             >
               {active && (
@@ -202,7 +202,7 @@ export default function InboxPage() {
                 <span
                   className={cn(
                     'inline-flex min-w-[15px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white',
-                    active ? 'bg-brand' : 'bg-zinc-400',
+                    active ? 'bg-accent' : 'bg-faint',
                   )}
                 >
                   {count}
@@ -232,11 +232,11 @@ export default function InboxPage() {
       <div className="mt-5 flex flex-col gap-4">
         {dayGroups.map((group) => (
           <div key={group.label}>
-            <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+            <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted">
               {group.label}
             </div>
             <motion.ul
-              className="overflow-hidden rounded-xl border border-edge bg-panel shadow-card"
+              className="overflow-hidden rounded-lg border border-edge bg-panel shadow-card"
               variants={staggerContainer}
               initial="hidden"
               animate="show"
@@ -249,21 +249,21 @@ export default function InboxPage() {
                     <button
                       onClick={() => isUnread && markRead.mutate([n.id])}
                       className={cn(
-                        'flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-indigo-50/40',
-                        isUnread ? 'bg-indigo-50/20' : 'bg-transparent',
+                        'flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-elevated/50',
+                        isUnread ? 'bg-accent/5' : 'bg-transparent',
                       )}
                     >
                       <span className={cn('mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg', tone.bg, tone.fg)}>
                         <TypeIcon type={n.type} />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className={cn('block text-[13.5px] leading-snug', isUnread ? 'text-zinc-900' : 'text-zinc-600')}>
+                        <span className={cn('block text-[13.5px] leading-snug', isUnread ? 'text-ink' : 'text-muted')}>
                           {describe(n)}
                         </span>
-                        <span className="mt-1 block text-xs text-zinc-500">{timeAgo(n.createdAt)}</span>
+                        <span className="mt-1 block text-xs text-muted">{timeAgo(n.createdAt)}</span>
                       </span>
                       {isUnread && (
-                        <span className="mt-1.5 h-[7px] w-[7px] shrink-0 rounded-full bg-indigo-500 shadow-[0_0_0_3px_rgba(99,102,241,0.18)]" />
+                        <span className="mt-1.5 h-[7px] w-[7px] shrink-0 rounded-full bg-accent shadow-[0_0_0_3px_rgba(99,102,241,0.18)]" />
                       )}
                     </button>
                   </motion.li>

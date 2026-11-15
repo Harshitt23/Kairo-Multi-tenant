@@ -11,8 +11,8 @@ import { Avatar, Logo } from './brand';
 import { CommandPalette, isMac, openCommandPalette } from './command-palette';
 import { CreateOrgDialog } from './create-org-dialog';
 import { CreateProjectDialog } from './create-project-dialog';
-import { AssistantDrawer } from './dashboard/assistant-drawer';
 import { NotificationsMenu } from './notifications-menu';
+import { ThemeToggle } from './theme-toggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -97,21 +97,21 @@ function NavLink({
         'relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] transition-colors',
         collapsed && 'justify-center',
         active
-          ? 'font-medium text-zinc-900'
-          : 'text-zinc-600 hover:bg-elevated/60 hover:text-zinc-800',
+          ? 'font-medium text-ink'
+          : 'text-muted hover:bg-elevated/60 hover:text-ink',
       )}
     >
       {active && (
         <motion.span
           layoutId="nav-active"
-          className="absolute inset-0 -z-10 rounded-md bg-indigo-50"
+          className="absolute inset-0 -z-10 rounded-md bg-accent/10"
           transition={{ type: 'spring', stiffness: 500, damping: 40 }}
         />
       )}
-      {icon && <span className={cn('relative shrink-0', active ? 'text-indigo-600' : 'text-zinc-500')}>
+      {icon && <span className={cn('relative shrink-0', active ? 'text-accent' : 'text-muted')}>
         {icon}
         {collapsed && trailing && (
-          <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-brand" />
+          <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-accent" />
         )}
       </span>}
       {!collapsed && <span className="truncate">{children}</span>}
@@ -153,7 +153,7 @@ function SidebarContent({
           <DropdownMenuTrigger
             title={collapsed ? (currentOrg?.name ?? orgSlug) : undefined}
             className={cn(
-              'flex w-full items-center gap-2.5 rounded-lg bg-indigo-50/60 px-2 py-1.5 text-left transition-colors hover:bg-indigo-100/70',
+              'flex w-full items-center gap-2.5 rounded-lg bg-elevated/60 px-2 py-1.5 text-left transition-colors hover:bg-elevated',
               collapsed && 'justify-center px-0',
             )}
           >
@@ -161,14 +161,14 @@ function SidebarContent({
             {!collapsed && (
               <>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[13px] font-semibold text-zinc-900">
+                  <span className="block truncate text-[13px] font-semibold text-ink">
                     {currentOrg?.name ?? orgSlug}
                   </span>
-                  <span className="block text-[11px] text-zinc-500">
+                  <span className="block text-[11px] text-muted">
                     {currentOrg?.memberships[0]?.role.toLowerCase() ?? 'workspace'}
                   </span>
                 </span>
-                <span className="text-zinc-600"><IconChevrons /></span>
+                <span className="text-muted"><IconChevrons /></span>
               </>
             )}
           </DropdownMenuTrigger>
@@ -184,7 +184,7 @@ function SidebarContent({
               >
                 <Avatar name={o.name} seed={o.id} size={20} />
                 <span className="truncate">{o.name}</span>
-                {o.slug === orgSlug && <span className="ml-auto text-indigo-600">✓</span>}
+                {o.slug === orgSlug && <span className="ml-auto text-accent">✓</span>}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -200,13 +200,13 @@ function SidebarContent({
         <div className="px-3 pb-2">
           <button
             onClick={openCommandPalette}
-            className="flex w-full items-center gap-2 rounded-md border border-edge bg-indigo-50/60 px-2.5 py-1.5 text-[13px] text-zinc-500 transition-all duration-150 hover:border-zinc-300 hover:bg-indigo-100/70 hover:text-zinc-700 active:scale-[0.99]"
+            className="flex w-full items-center gap-2 rounded-md border border-edge bg-elevated/60 px-2.5 py-1.5 text-[13px] text-muted transition-all duration-150 hover:border-edge hover:bg-elevated hover:text-ink active:scale-[0.99]"
           >
             <IconSearch />
             <span className="flex-1 text-left">Search…</span>
             <kbd
               suppressHydrationWarning
-              className="rounded border border-edge bg-surface px-1.5 py-px text-[10px] text-zinc-500"
+              className="rounded border border-edge bg-surface px-1.5 py-px text-[10px] text-muted"
             >
               {isMac ? '⌘K' : 'Ctrl K'}
             </kbd>
@@ -245,7 +245,7 @@ function SidebarContent({
           collapsed={collapsed}
           trailing={
             unreadCount > 0 ? (
-              <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-semibold text-white">
+              <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-semibold text-white">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             ) : undefined
@@ -268,13 +268,13 @@ function SidebarContent({
       {!collapsed && (
         <div className="mt-5 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
           <div className="mb-1 flex items-center justify-between px-2.5">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-600">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted">
               Your projects
             </span>
             <button
               onClick={() => setCreatingProject(true)}
               aria-label="New project"
-              className="rounded p-0.5 text-zinc-500 transition-colors hover:bg-elevated hover:text-zinc-800"
+              className="rounded p-0.5 text-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               <IconPlus />
             </button>
@@ -287,7 +287,7 @@ function SidebarContent({
                 active={pathname.startsWith(`/${orgSlug}/${p.key}/`)}
                 onNavigate={onNavigate}
                 icon={
-                  <span className="inline-flex h-4 min-w-7 items-center justify-center rounded bg-indigo-50 px-1 text-[10px] font-bold tracking-wide text-indigo-700">
+                  <span className="inline-flex h-4 min-w-7 items-center justify-center rounded bg-accent/10 px-1 text-[10px] font-bold tracking-wide text-accent">
                     {p.key}
                   </span>
                 }
@@ -298,7 +298,7 @@ function SidebarContent({
             {projects.isLoading &&
               [0, 1].map((i) => <div key={i} className="mx-2.5 h-6 animate-pulse rounded bg-elevated" />)}
             {projects.data?.length === 0 && (
-              <p className="px-2.5 py-1 text-xs text-zinc-600">No projects yet</p>
+              <p className="px-2.5 py-1 text-xs text-muted">No projects yet</p>
             )}
           </div>
         </div>
@@ -314,21 +314,21 @@ function SidebarContent({
           <Link
             href={`/${orgSlug}/docs`}
             onClick={onNavigate}
-            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <IconDocs /> Docs
           </Link>
           <Link
             href={`/${orgSlug}/changelog`}
             onClick={onNavigate}
-            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <IconChangelog /> Changelog
           </Link>
           <Link
             href={`/${orgSlug}/blog`}
             onClick={onNavigate}
-            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+            className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12.5px] text-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <IconBlog /> Blog
           </Link>
@@ -342,16 +342,16 @@ function SidebarContent({
           {!collapsed && (
             <>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13px] font-medium text-zinc-800">
+                <span className="block truncate text-[13px] font-medium text-ink">
                   {me.data?.name ?? 'Loading…'}
                 </span>
-                <span className="block truncate text-[11px] text-zinc-500">{me.data?.email}</span>
+                <span className="block truncate text-[11px] text-muted">{me.data?.email}</span>
               </span>
               <button
                 onClick={signOut}
                 aria-label="Sign out"
                 title="Sign out"
-                className="rounded-md p-1.5 text-zinc-500 transition-colors hover:bg-elevated hover:text-red-600"
+                className="rounded-md p-1.5 text-muted transition-colors hover:bg-elevated hover:text-red-600"
               >
                 <IconLogout />
               </button>
@@ -364,7 +364,7 @@ function SidebarContent({
         <div className="border-t border-edge px-3 py-2">
           <button
             onClick={onToggleCollapse}
-            className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12px] text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+            className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[12px] text-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <IconCollapse />
             Collapse
@@ -377,7 +377,7 @@ function SidebarContent({
             onClick={onToggleCollapse}
             aria-label="Expand sidebar"
             title="Expand sidebar"
-            className="flex w-full items-center justify-center rounded-md p-2 text-zinc-500 transition-colors hover:bg-elevated/60 hover:text-zinc-800"
+            className="flex w-full items-center justify-center rounded-md p-2 text-muted transition-colors hover:bg-elevated/60 hover:text-ink"
           >
             <span className="[transform:rotate(180deg)]"><IconCollapse /></span>
           </button>
@@ -397,7 +397,6 @@ function SidebarContent({
 export function AppShell({ orgSlug, children }: { orgSlug: string; children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [assistantOpen, setAssistantOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -414,7 +413,7 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
       {/* mobile drawer */}
       {drawerOpen && (
         <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-zinc-900/30 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
           <aside className="absolute inset-y-0 left-0 w-64 animate-fade-in border-r border-edge bg-panel">
             <SidebarContent orgSlug={orgSlug} onNavigate={() => setDrawerOpen(false)} />
           </aside>
@@ -427,12 +426,15 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
-            className="rounded-md p-1.5 text-zinc-600 hover:bg-elevated hover:text-zinc-800"
+            className="rounded-md p-1.5 text-muted hover:bg-elevated hover:text-ink"
           >
             <IconMenu />
           </button>
           <Logo size={24} />
-          <span className="text-sm font-semibold text-zinc-900">Kairo</span>
+          <span className="text-sm font-semibold text-ink">Kairo</span>
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* desktop utility bar — search / assistant / notifications, available
@@ -440,27 +442,19 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
         <div className="hidden h-14 shrink-0 items-center gap-3 border-b border-edge bg-surface/80 px-5 backdrop-blur md:flex">
           <button
             onClick={openCommandPalette}
-            className="flex max-w-md flex-1 items-center gap-2 rounded-md border border-edge bg-indigo-50/60 px-3 py-1.5 text-[13px] text-zinc-500 transition-all duration-150 hover:border-zinc-300 hover:bg-indigo-100/70 hover:text-zinc-700"
+            className="flex max-w-md flex-1 items-center gap-2 rounded-md border border-edge bg-elevated/60 px-3 py-1.5 text-[13px] text-muted transition-all duration-150 hover:border-edge hover:bg-elevated hover:text-ink"
           >
             <IconSearch />
             <span className="flex-1 text-left">Search or jump to…</span>
             <kbd
               suppressHydrationWarning
-              className="rounded border border-edge bg-elevated px-1.5 py-px text-[10px] text-zinc-500"
+              className="rounded border border-edge bg-elevated px-1.5 py-px text-[10px] text-muted"
             >
               {isMac ? '⌘K' : 'Ctrl K'}
             </kbd>
           </button>
           <div className="flex-1" />
-          <button
-            onClick={() => setAssistantOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-edge bg-panel px-3 py-1.5 text-[12.5px] font-medium text-zinc-700 transition-colors hover:border-indigo-200"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
-            </svg>
-            Assistant
-          </button>
+          <ThemeToggle />
           <NotificationsMenu />
         </div>
 
@@ -468,7 +462,6 @@ export function AppShell({ orgSlug, children }: { orgSlug: string; children: Rea
       </div>
 
       <CommandPalette orgSlug={orgSlug} />
-      <AssistantDrawer open={assistantOpen} onClose={() => setAssistantOpen(false)} />
     </div>
   );
 }

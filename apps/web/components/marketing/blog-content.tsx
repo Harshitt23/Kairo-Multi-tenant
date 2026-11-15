@@ -50,21 +50,21 @@ export function BlogContent() {
       />
       <section className="px-6 py-16 lg:px-14 lg:py-20">
         <div className="mx-auto max-w-5xl">
-          <article className="mb-10 overflow-hidden rounded-2xl border border-edge bg-panel shadow-card">
+          <article className="mb-10 overflow-hidden rounded-lg border border-edge bg-panel shadow-card">
             <div className="grid gap-0 sm:grid-cols-2">
-              <div className="aspect-[16/10] bg-brand sm:aspect-auto" />
+              <div className="aspect-[16/10] bg-accent sm:aspect-auto" />
               <div className="flex flex-col justify-center p-8">
-                <span className="mb-3 w-fit rounded-full bg-indigo-50 px-2.5 py-0.5 text-[11px] font-bold text-indigo-700">
+                <span className="mb-3 w-fit rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-bold text-accent">
                   {featured.tag}
                 </span>
-                <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
+                <h2 className="text-xl font-semibold tracking-tight text-ink">
                   {featured.title}
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-500">{featured.excerpt}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{featured.excerpt}</p>
                 <div className="mt-5 flex items-center gap-2.5">
                   <Avatar name={featured.author} seed={featured.seed} size={28} />
-                  <span className="text-[13px] text-zinc-600">{featured.author}</span>
-                  <span className="text-[13px] text-zinc-400">· {featured.date}</span>
+                  <span className="text-[13px] text-muted">{featured.author}</span>
+                  <span className="text-[13px] text-faint">· {featured.date}</span>
                 </div>
               </div>
             </div>
@@ -74,17 +74,17 @@ export function BlogContent() {
             {rest.map((p) => (
               <article
                 key={p.title}
-                className="flex flex-col rounded-2xl border border-edge bg-panel p-6 shadow-card"
+                className="flex flex-col rounded-lg border border-edge bg-panel p-6 shadow-card"
               >
-                <span className="mb-3 w-fit rounded-full bg-indigo-50 px-2.5 py-0.5 text-[11px] font-bold text-indigo-700">
+                <span className="mb-3 w-fit rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-bold text-accent">
                   {p.tag}
                 </span>
-                <h3 className="text-base font-semibold text-zinc-900">{p.title}</h3>
-                <p className="mt-2 flex-1 text-[13.5px] leading-relaxed text-zinc-500">{p.excerpt}</p>
+                <h3 className="text-base font-semibold text-ink">{p.title}</h3>
+                <p className="mt-2 flex-1 text-[13.5px] leading-relaxed text-muted">{p.excerpt}</p>
                 <div className="mt-5 flex items-center gap-2.5">
                   <Avatar name={p.author} seed={p.seed} size={24} />
-                  <span className="text-[13px] text-zinc-600">{p.author}</span>
-                  <span className="text-[13px] text-zinc-400">· {p.date}</span>
+                  <span className="text-[13px] text-muted">{p.author}</span>
+                  <span className="text-[13px] text-faint">· {p.date}</span>
                 </div>
               </article>
             ))}

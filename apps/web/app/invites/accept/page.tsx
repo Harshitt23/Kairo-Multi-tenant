@@ -57,7 +57,7 @@ function AcceptInvite() {
         action={
           <Link
             href={`/login?next=${encodeURIComponent(`/invites/accept?token=${token}`)}`}
-            className="mt-6 inline-flex rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-opacity hover:opacity-90"
+            className="mt-6 inline-flex rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
           >
             Sign in / Register
           </Link>
@@ -72,7 +72,7 @@ function AcceptInvite() {
         title="Couldn't accept invite"
         description={error}
         action={
-          <Link href="/" className="mt-6 inline-block text-sm text-indigo-600 hover:underline">
+          <Link href="/" className="mt-6 inline-block text-sm text-accent hover:underline">
             Go to your organizations
           </Link>
         }
@@ -86,7 +86,7 @@ function AcceptInvite() {
 function CenteredSpinner() {
   return (
     <main className="grid min-h-screen place-items-center">
-      <Spinner className="h-6 w-6 text-zinc-500" />
+      <Spinner className="h-6 w-6 text-muted" />
     </main>
   );
 }
@@ -107,7 +107,7 @@ function StatusCard({
           <Logo size={44} />
         </div>
         <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-zinc-600">{description}</p>
+        <p className="mx-auto mt-2 max-w-sm text-sm text-muted">{description}</p>
         {action}
       </div>
     </main>
