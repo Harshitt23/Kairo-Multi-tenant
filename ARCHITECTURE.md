@@ -124,7 +124,7 @@ plan and keeps working when Stripe isn't configured (local dev).
 - Unit (Vitest for `@kairo/types`, Jest for API guards/services), integration
   against a real Postgres+Redis in CI, e2e with Playwright (planned).
 - GitHub Actions: install → lint → typecheck → unit tests → `prisma migrate`
-  check → build, with Postgres/Redis service containers.
+  check → build, with Postgres/Redis service container.
 
 ## 9. Follow-ups
 
